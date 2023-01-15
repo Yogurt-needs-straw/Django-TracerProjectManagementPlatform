@@ -64,24 +64,27 @@
 {% block content %}
 
     <div class="container-fluid project">
+    <div style="margin: 10px 0;">
         <a class="btn btn-primary" data-toggle="modal" data-target="#addModal"><i class="fa fa-plus-circle" aria-hidden="true"></i> 新建项目</a>
+
+    </div>
     <!-- 星标的 -->
     <div class="panel panel-default">
       <div class="panel-heading"><i class="fa fa-star" aria-hidden="true"></i> 星标</div>
       <div class="panel-body">
         {% for item in project_dict.star %}
             <div class="item">
-                <a href="#" class="title" style="background-color: {{ item.get_color_display }};">{{ item.name }}</a>
+                <a href="#" class="title" style="background-color: {{ item.value.get_color_display }};">{{ item.value.name }}</a>
                 <div class="info">
                     <div>
-                        <a href="">
+                        <a href="/project/unstar/{{ item.type }}/{{ item.value.id }}">
                             <i class="fa fa-star" aria-hidden="true" style="color: #f0ad4e;"></i>
                         </a>
-                        <span>{{ item.creator.username }}</span>
+                        <span>{{ item.value.creator.username }}</span>
                     </div>
                     <div>
                         <i class="fa fa-user-o" aria-hidden="true"></i>
-                        <span>{{ item.join_count }}</span>
+                        <span>{{ item.value.join_count }}</span>
                     </div>
                 </div>
             </div>
@@ -98,7 +101,7 @@
                 <a href="#" class="title" style="background-color: {{ item.get_color_display }};">{{ item.name }}</a>
                 <div class="info">
                     <div>
-                        <a href="">
+                        <a href="/project/star/my/{{ item.id }}">
                             <i class="fa fa-star" aria-hidden="true" style="color: #d5d5d5"></i>
                         </a>
                         <span>{{ item.creator.username }}</span>
@@ -123,7 +126,7 @@
                 <a href="#" class="title" style="background-color: {{ item.get_color_display }};">{{ item.name }}</a>
                 <div class="info">
                     <div>
-                        <a href="">
+                        <a href="/project/star/join/{{ item.id }}">
                             <i class="fa fa-star" aria-hidden="true" style="color: #d5d5d5"></i>
                         </a>
                         <span>{{ item.creator.username }}</span>
