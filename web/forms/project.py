@@ -1,11 +1,14 @@
 
 from django import forms
 from django.core.exceptions import ValidationError
-
+from web.forms.widgets import ColorRadioSelect
 from web import models
 from web.forms.BootStrapForm import BootStrapForm
 
 class ProjectModelForm(BootStrapForm, forms.ModelForm):
+    # 排除color插件 不添加 form-control
+    bootstrap_class_exclude = ['color']
+
     # 修改model.form属性方式一
     # desc = forms.CharField(widget=forms.Textarea)
 
@@ -14,7 +17,8 @@ class ProjectModelForm(BootStrapForm, forms.ModelForm):
         fields = ['name', 'color', 'desc']
         # 重写插件属性
         widgets = {
-            'desc': forms.Textarea
+            'desc': forms.Textarea,
+            'color': ColorRadioSelect(attrs={'class': 'color-radio'}),
         }
 
     # 重写init方法，添加request参数

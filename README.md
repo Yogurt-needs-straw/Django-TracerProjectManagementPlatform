@@ -38,3 +38,100 @@ path，匹配任何非空字符串，包含了路径分隔符。
 我参与的项目：ProjectUser的star=False
 ```
 
+
+
+##### 3.选择颜色
+
+> 思路：1.排除默认添加的color插件，不添加form-control  2.不使用模板中的select radio标签。3.构建新的radio标签。4.隐藏radio选项，将色块显现，用css对色块形状进行修改。
+
+3.1 **部分样式应用BootStrapForm**
+
+```python
+class BootStrapForm(object):
+
+    bootstrap_class_exclude = []
+
+    # 样式重写
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for name, field in self.fields.items():
+            # 排除color选项 不添加 form-control
+            if name in self.bootstrap_class_exclude:
+                continue
+
+            # 给所有标签添加class属性 form-control
+            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs['placeholder'] = '请输入%s' % (field.label,)
+
+```
+
+```python
+class ProjectModelForm(BootStrapForm, forms.ModelForm):
+    # 排除color插件 不添加 form-control  
+    bootstrap_class_exclude = ['color']  # 排除默认添加
+
+    class Meta:
+		model = model.Project
+        fields = "__all__"
+```
+
+
+
+3.2**定制ModelForm的插件**
+
+```python
+class ProjectModelForm(BootStrapForm, forms.ModelForm):
+    
+    class Meta:
+        model = models.Project
+        fields = "__all__"
+        # 重写插件属性
+        widgets = {
+            'desc': forms.Textarea,
+            'color': ColorRadioSelect(attrs={'class': 'color-radio'}),
+        }
+```
+
+```python
+from django.forms import RadioSelect
+
+
+class ColorRadioSelect(RadioSelect):
+
+    # template_name = 'django/forms/widgets/checkbox_select.html'
+    # option_template_name = 'django/forms/widgets/checkbox_option.html'
+
+    template_name = 'widgets/color_radio/radio.html'
+    option_template_name = 'widgets/color_radio/radio_option.html'
+```
+
+template_name = 'widgets/color_radio/radio.html'
+
+```django
+{% with id=widget.attrs.id %}
+    <div{% if id %} id="{{ id }}"{% endif %}{% if widget.attrs.class %} class="{{ widget.attrs.class }}"{% endif %}>
+        {% for group, options, index in widget.optgroups %}
+            {% for option in options %}
+                <label {% if option.attrs.id %} for="{{ option.attrs.id }}"{% endif %} >
+                    {% include option.template_name with widget=option %}
+                </label>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endwith %}
+
+```
+
+​    option_template_name = 'widgets/color_radio/radio_option.html'
+
+```django
+{% include "django/forms/widgets/input.html" %}
+<span class="cycle" style="background-color:{{ option.label }}"></span>
+```
+
+
+
+3.3 **项目选择颜色**
+
+3.1、3.2 知识点的应用 + 前端样式的编写
+
