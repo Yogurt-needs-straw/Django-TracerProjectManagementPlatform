@@ -135,3 +135,60 @@ template_name = 'widgets/color_radio/radio.html'
 
 3.1、3.2 知识点的应用 + 前端样式的编写
 
+
+
+##### 4.切换菜单
+
+> 思路：使用@register.inclusion_tag 装饰器 将切换菜单嵌入到 manage 模板文件中
+
+```python
+1.数据库中获取
+	我创建的：
+    我参与的：
+2.循环显示
+3.当前页面需要显示 / 其他页面也需要显示 [inclusion_tap]
+```
+
+```python
+@register.inclusion_tag('inclusion/all_project_list.html')
+def all_project_list(request):
+    ''' 菜单栏项目列表 '''
+    # 1.获取创建的所有项目
+    my_project_list = models.Project.objects.filter(creator=request.tracer.user)
+
+    # 2.获取参与的所有项目
+    join_project_list = models.ProjectUser.objects.filter(user=request.tracer.user)
+
+    return {"my": my_project_list, "join": join_project_list}
+```
+
+
+
+all_project_list.html
+
+```html
+<ul class="dropdown-menu">
+    {# 判断是否有值 决定是否显示 #}
+
+    {% if my %}
+    {# 创建的项目   #}
+    <li><i class="fa fa-list" aria-hidden="true"></i> 我创建的项目</li>
+      {% for item in my %}
+        <li><a href="#">{{ item.name }}</a></li>
+      {% endfor %}
+    <li role="separator" class="divider"></li>
+    {% endif %}
+
+    {% if join %}
+    {# 参与的项目   #}
+      <li><i class="fa fa-handshake-o" aria-hidden="true"></i> 我参与的项目</li>
+      {% for item in join %}
+        <li><a href="#">{{ item.project.name }}</a></li>
+      {% endfor %}
+    <li role="separator" class="divider"></li>
+    {% endif %}
+
+      <li><a href="/project/list">所有项目</a></li>
+  </ul>
+```
+
