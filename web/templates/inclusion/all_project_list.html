@@ -8,7 +8,7 @@
     {# 创建的项目   #}
     <li><i class="fa fa-list" aria-hidden="true"></i> 我创建的项目</li>
       {% for item in my %}
-        <li><a href="#">{{ item.name }}</a></li>
+        <li><a href="/manage/{{ item.id }}/dashboard/">{{ item.name }}</a></li>
       {% endfor %}
     <li role="separator" class="divider"></li>
     {% endif %}
@@ -17,7 +17,7 @@
     {# 参与的项目   #}
       <li><i class="fa fa-handshake-o" aria-hidden="true"></i> 我参与的项目</li>
       {% for item in join %}
-        <li><a href="#">{{ item.project.name }}</a></li>
+        <li><a href="/manage/{{ item.project.id }}/dashboard/">{{ item.project.name }}</a></li>
       {% endfor %}
     <li role="separator" class="divider"></li>
     {% endif %}

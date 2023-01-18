@@ -192,3 +192,38 @@ all_project_list.html
   </ul>
 ```
 
+
+
+##### 5.项目管理
+
+> 思路：项目路由
+>
+> /manage/[项目id]/dashboard
+>
+> /manage/[项目id]/issues
+>
+> /manage/[项目id]/statistics
+>
+> /manage/[项目id]/file
+>
+> /manage/[项目id]/wiki
+>
+> /manage/[项目id]/setting
+
+路由设计
+
+```python
+    # 进入项目管理
+    # 使用路由分发
+    path('manage/<int:project_id>/', include([
+        path('dashboard/', manage.project_dashboard, name='project_dashboard'),
+        path('issues/', manage.project_issues, name='project_issues'),
+        path('statistics/', manage.project_statistics, name='project_statistics'),
+        path('file/', manage.project_file, name='project_file'),
+        path('wiki/', manage.project_wiki, name='project_wiki'),
+        path('setting/', manage.project_setting, name='project_setting'),
+    ], None)),
+```
+
+
+

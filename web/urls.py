@@ -1,7 +1,7 @@
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 
-from web.views import account, home, project
+from web.views import account, home, project, manage
 
 app_name = 'web'
 
@@ -24,5 +24,16 @@ urlpatterns = [
 
     # 取消星标
     path('project/unstar/<str:project_type>/<int:project_id>/', project.project_unstar, name='project_unstar'),
+
+    # 进入项目管理
+    # 使用路由分发
+    path('manage/<int:project_id>/', include([
+        path('dashboard/', manage.project_dashboard, name='project_dashboard'),
+        path('issues/', manage.project_issues, name='project_issues'),
+        path('statistics/', manage.project_statistics, name='project_statistics'),
+        path('file/', manage.project_file, name='project_file'),
+        path('wiki/', manage.project_wiki, name='project_wiki'),
+        path('setting/', manage.project_setting, name='project_setting'),
+    ], None)),
 
 ]

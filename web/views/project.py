@@ -101,4 +101,3 @@ def project_unstar(request, project_type, project_id):
 
     return HttpResponse('请求错误')
 
-
