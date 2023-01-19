@@ -225,5 +225,32 @@ all_project_list.html
     ], None)),
 ```
 
+##### 5.1 进入项目展示菜单
 
+```
+- 进入项目
+- 展示菜单
+```
+
+**5.1.1 是否已经进入项目？**【中间件】
+
+判断URL是否是manage开头
+
+project_id 判断 是否是该用户的 是什么类型的项目
+
+**5.1.2 显示菜单**
+
+依赖：是否已经进入项目？
+
+```html
+通过 request.tracer.project 判断
+<ul class="nav navbar-nav">
+      <li><a href="#">概述</a></li>
+      <li><a href="#">wiki</a></li>
+</ul>
+```
+
+**5.1.3 页面样式调整**
+
+去掉 all_project_list 模板中的 “<ul class="nav navbar-nav">” ，在manage.html中添加<ul>标签，将项目菜单栏合为一个<ul>
 

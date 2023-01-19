@@ -10,11 +10,13 @@ class Tracer(object):
     def __init__(self):
         self.user = None
         self.price_policy = None
+        self.project = None
 
 # 中间件
 # 用户是否已经登录
 class AuthMiddleware(MiddlewareMixin):
 
+    ''' 如果用户已登录，则request中赋值'''
     def process_request(self, request):
         ''' 如果用户已登录，则request中赋值'''
 
@@ -77,4 +79,31 @@ class AuthMiddleware(MiddlewareMixin):
                 # 用户当前自己的额度
                 request.price_policy = _object.price_policy
         '''
+
+    ''' 获取project_id '''
+    def process_view(self, request, view, args, kwargs):
+
+        # 判断URL是否是以manage开头，如果是则判断项目ID是否是我.
+        if not request.path_info.startswith('/manage/'):
+            return
+
+        # project_id 是我创建 or 我参与的
+        project_id = kwargs.get('project_id')
+
+        # 是否是我创建的
+        project_object = models.Project.objects.filter(creator=request.tracer.user, id=project_id).first()
+        if project_object:
+            # 是我创建的项目的话，我就让他通过
+            request.tracer.project = project_object
+            return
+
+        # 是否是我参与的项目
+        project_user_object = models.ProjectUser.objects.filter(user=request.tracer.user, project_id=project_id).first()
+
+        if project_user_object:
+            # 是我参与的项目
+            request.tracer.project = project_user_object.project
+            return
+
+        return redirect('/project/list/')
 

@@ -36,7 +36,17 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-    {% all_project_list request %}
+      <ul class="nav navbar-nav">
+      {% all_project_list request %}
+
+      <!-- 判断是否进入项目了 -->
+      {% if request.tracer.project %}
+
+          <li><a href="#">概述</a></li>
+          <li><a href="#">wiki</a></li>
+
+      {% endif %}
+      </ul>
 
       <ul class="nav navbar-nav navbar-right">
       <li><a href="#">工作台</a></li>
