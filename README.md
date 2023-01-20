@@ -252,7 +252,7 @@ project_id 判断 是否是该用户的 是什么类型的项目
 
 **5.1.3 页面样式调整**
 
-去掉 all_project_list 模板中的 “<ul class="nav navbar-nav">” ，在manage.html中添加<ul>标签，将项目菜单栏合为一个<ul>
+去掉 all_project_list 模板中的 <ul class="nav navbar-nav"> ，在manage.html中添加<ul>标签，将项目菜单栏合为一个<ul>
 
 **5.1.4 项目菜单默认选中**
 
