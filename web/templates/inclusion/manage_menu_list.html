@@ -1,0 +1,4 @@
+<!-- 获取当前请求的URL并和所有的菜单进行比较 -->
+{% for item in data_list %}
+<li {% if item.class%} class="active" {% endif %}><a href="{{ item.url }}">{{ item.title }}</a></li>
+{% endfor %}

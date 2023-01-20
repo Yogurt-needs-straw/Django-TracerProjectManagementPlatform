@@ -41,10 +41,8 @@
 
       <!-- 判断是否进入项目了 -->
       {% if request.tracer.project %}
-
-          <li><a href="#">概述</a></li>
-          <li><a href="#">wiki</a></li>
-
+          <!-- 获取当前请求的URL并和所有的菜单进行比较 -->
+            {% manage_menu_list request %}
       {% endif %}
       </ul>
 

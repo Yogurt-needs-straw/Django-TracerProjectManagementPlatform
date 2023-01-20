@@ -254,3 +254,24 @@ project_id 判断 是否是该用户的 是什么类型的项目
 
 去掉 all_project_list 模板中的 “<ul class="nav navbar-nav">” ，在manage.html中添加<ul>标签，将项目菜单栏合为一个<ul>
 
+**5.1.4 项目菜单默认选中**
+
+> 思路：使用 inclusion_tag 实现项目切换
+
+注意 django.urls 中的 reverse 用法 reverse("[app_name]:[urlname]")
+
+```python
+@register.inclusion_tag('inclusion/manage_menu_list.html')
+def manage_menu_list(request):
+    data_list = [
+        {'title': '概览', 'url': reverse("web:dashboard", kwargs={'project_id': request.tracer.project.id})},
+        {'title': '问题', 'url': reverse('web:issues', kwargs={'project_id': request.tracer.project.id})},
+        {'title': '统计', 'url': reverse('web:statistics', kwargs={'project_id': request.tracer.project.id})},
+        {'title': 'wiki', 'url': reverse('web:wiki', kwargs={'project_id': request.tracer.project.id})},
+        {'title': '文件', 'url': reverse('web:file', kwargs={'project_id': request.tracer.project.id})},
+        {'title': '配置', 'url': reverse('web:setting', kwargs={'project_id': request.tracer.project.id})},
+    ]
+
+    return {'data_list': data_list}
+```
+

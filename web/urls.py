@@ -28,12 +28,12 @@ urlpatterns = [
     # 进入项目管理
     # 使用路由分发
     path('manage/<int:project_id>/', include([
-        path('dashboard/', manage.project_dashboard, name='project_dashboard'),
-        path('issues/', manage.project_issues, name='project_issues'),
-        path('statistics/', manage.project_statistics, name='project_statistics'),
-        path('file/', manage.project_file, name='project_file'),
-        path('wiki/', manage.project_wiki, name='project_wiki'),
-        path('setting/', manage.project_setting, name='project_setting'),
+        path('dashboard/', manage.project_dashboard, name='dashboard'),
+        path('issues/', manage.project_issues, name='issues'),
+        path('statistics/', manage.project_statistics, name='statistics'),
+        path('file/', manage.project_file, name='file'),
+        path('wiki/', manage.project_wiki, name='wiki'),
+        path('setting/', manage.project_setting, name='setting'),
     ], None)),
 
 ]
