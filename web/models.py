@@ -83,3 +83,13 @@ class ProjectUser(models.Model):
     star = models.BooleanField(verbose_name='星标', default=False)
 
     create_datetime = models.DateTimeField(verbose_name='加入时间', auto_now_add=True)
+
+class Wiki(models.Model):
+    project = models.ForeignKey(verbose_name='项目', to='Project', on_delete=models.CASCADE)
+    title = models.CharField(verbose_name='标题', max_length=32)
+    content = models.TextField(verbose_name='内容')
+
+    # 子关联  related_name 反向关联字段
+    parent = models.ForeignKey(verbose_name='父文章', to='Wiki', null=True, blank=True, on_delete=models.CASCADE, related_name='children')
+
+

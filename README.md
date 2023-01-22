@@ -275,3 +275,71 @@ def manage_menu_list(request):
     return {'data_list': data_list}
 ```
 
+#### 6 wiki
+
+- 表结构设计
+- 快速开发
+- 应用markdown组件
+- 腾讯COS做上传
+
+##### 6.1 表结构设计
+
+| ID   | 标题 | 内容 | 项目ID | 父ID |
+| ---- | ---- | ---- | ------ | ---- |
+| 1    | xx   | xxxx | 1      | null |
+| 2    | xx   | xxxx | 2      | 1    |
+| 3    |      |      | 3      | 1    |
+
+**models.py**
+
+```python
+class Wiki(models.Model):
+    project = models.ForeignKey(verbose_name='项目', to='Project', on_delete=models.CASCADE)
+    title = models.CharField(verbose_name='标题', max_length=32)
+    content = models.TextField(verbose_name='内容')
+
+    # 子关联  related_name 反向关联字段
+    parent = models.ForeignKey(verbose_name='父文章', to='Wiki', null=True, blank=True, on_delete=models.CASCADE, related_name='children')
+```
+
+**注意1：**
+
+设置字段时，使用to时，在定义外键的时候加上"on_delete=“；
+
+> 原因：django升级到2.0之后，表与表之间关联的时候必须写"on_delete"参数，否则会报错
+
+例如：
+
+```python
+book = models.ForeignKey(BookInfo,on_delete=models.CASCADE)
+```
+
+扩展补充
+(1)、on_delete = None：
+删除关联表的数据时，当前表与关联表的filed的行为。
+(2)、on_delete = models.CASCADE：
+表示级联删除，当关联表（子表）中的数据删除时，与其相对应的外键（父表）中的数据也删除。
+(3)、on_delete = models.DO_NOTHING:
+你删你的，父亲（外键）不想管你
+(4)、on_delete = models.PROTECT:
+保护模式，如采用这个方法，在删除关联数据时会抛出ProtectError错误
+(5)、on_delete = models.SET_DEFAULT:
+设置默认值，删除子表字段时，外键字段设置为默认值，所以定义外键的时候注意加上一个默认值。
+(6)、on_delete = models.SET（值）:
+删除关联数据时，自定义一个值，该值只能是对应指定的实体
+(7)、on_delete = models.SET_NULL
+置空模式，删除时，外键字段被设置为空，前提就是blank=True, null=True,定义该字段时，允许为空。理解：删除关联数据（子表），与之关联的值设置默认值为null（父表中），这个前提需要父表中的字段可以为空。
+
+**注意2：**
+
+**通过主表来查询子表**
+
+> A.objects.get(id=A_id).test.all().order_by('-created'),
+>
+> django 默认每个主表的对象都有一个是外键的属性，可以通过它来查询到所有属于主表的子表的信息。这个属性的名称默认是以子表的名称小写加上_set()来表示(上面默认以b_set访问)，默认返回的是一个querydict对象。
+>
+> related_name 可以给这个外键定义好一个别的名称
+
+**通过子表来查询主表**
+
+> B.objects.filter(a=A_id).order_by('-created')
