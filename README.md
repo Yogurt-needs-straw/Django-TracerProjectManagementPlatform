@@ -343,3 +343,6 @@ book = models.ForeignKey(BookInfo,on_delete=models.CASCADE)
 **通过子表来查询主表**
 
 > B.objects.filter(a=A_id).order_by('-created')
+
+**6. wiki开发流程**
+
