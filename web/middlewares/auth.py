@@ -52,9 +52,12 @@ class AuthMiddleware(MiddlewareMixin):
 
         # 判断是否已过期
         current_datetime = datetime.datetime.now()
-        if _object.end_datetime and _object.end_datetime < current_datetime:
-            # 获取到有效的交易记录
-            _object = models.Transaction.objects.filter(user=user_object, status=2, price_policy__category=1).first()
+        if _object.end_datetime:
+            if _object.end_datetime < current_datetime:
+                print(_object.end_datetime)
+                print(current_datetime)
+                # 获取到有效的交易记录
+                _object = models.Transaction.objects.filter(user=user_object, status=2, price_policy__category=1).first()
 
         # 将交易信息赋值给请求
         request.tracer.price_policy = _object.price_policy

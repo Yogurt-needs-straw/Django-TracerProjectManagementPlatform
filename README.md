@@ -344,5 +344,44 @@ book = models.ForeignKey(BookInfo,on_delete=models.CASCADE)
 
 > B.objects.filter(a=A_id).order_by('-created')
 
-**6. wiki开发流程**
+**6.2 wiki开发**
+
+6.2.1 wiki 首页展示
+
+> 新建 wiki views展示页
+
+页面样式
+
+```html
+<div class="container-fluid">
+    <div class="panel panel-default">
+      <div class="panel-heading"><i class="fa fa-book" aria-hidden="true"></i> wiki文档</div>
+      <div class="panel-body">
+          <div class="col-sm-3 title-list">
+              目录
+          </div>
+          <div class="col-sm-9 content">
+              <div style="text-align: center;margin-top: 50px;">
+                  <h4> 《{{ request.tracer.project.name }}》wili文档库 </h4>
+                  <a href="#">
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i> 新建文章
+                  </a>
+              </div>
+          </div>
+      </div>
+    </div>
+    </div>
+```
+
+
+
+6.2.2 添加文章
+
+6.2.3 预览文章
+
+6.2.4 修改文章
+
+6.2.5 删除文章
+
+
 

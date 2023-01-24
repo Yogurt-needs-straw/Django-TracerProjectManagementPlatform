@@ -1,5 +1,42 @@
 {% extends 'layout/manage.html' %}
+{% block css %}
+    <style>
+    .panel-default{
+        margin-top: 10px;
+    }
+    .panel-body{
+        padding: 0;
+    }
+    .title-list{
+        border-right: 1px solid  #dddddd;
+        min-height: 500px;
+    }
+
+    .content{
+        border-left: 1px solid #dddddd;
+        min-height: 600px;
+        margin-left: -1px;
+    }
+    </style>
+{% endblock %}
 
 {% block content %}
-    <h1>wiki</h1>
+    <div class="container-fluid">
+    <div class="panel panel-default">
+      <div class="panel-heading"><i class="fa fa-book" aria-hidden="true"></i> wiki文档</div>
+      <div class="panel-body">
+          <div class="col-sm-3 title-list">
+              目录
+          </div>
+          <div class="col-sm-9 content">
+              <div style="text-align: center;margin-top: 50px;">
+                  <h4> 《{{ request.tracer.project.name }}》wili文档库 </h4>
+                  <a href="#">
+                      <i class="fa fa-plus-circle" aria-hidden="true"></i> 新建文章
+                  </a>
+              </div>
+          </div>
+      </div>
+    </div>
+    </div>
 {% endblock %}

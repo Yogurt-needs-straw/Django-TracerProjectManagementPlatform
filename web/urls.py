@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, re_path, include
 
-from web.views import account, home, project, manage
+from web.views import account, home, project, manage, wiki
 
 app_name = 'web'
 
@@ -32,7 +32,7 @@ urlpatterns = [
         path('issues/', manage.project_issues, name='issues'),
         path('statistics/', manage.project_statistics, name='statistics'),
         path('file/', manage.project_file, name='file'),
-        path('wiki/', manage.project_wiki, name='wiki'),
+        path('wiki/', wiki.project_wiki, name='wiki'),
         path('setting/', manage.project_setting, name='setting'),
     ], None)),
 

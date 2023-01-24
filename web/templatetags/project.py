@@ -15,7 +15,7 @@ def all_project_list(request):
     # 2.获取参与的所有项目
     join_project_list = models.ProjectUser.objects.filter(user=request.tracer.user)
 
-    return {"my": my_project_list, "join": join_project_list}
+    return {"my": my_project_list, "join": join_project_list, "request": request}
 
 ''' 项目菜单栏默认选中 '''
 @register.inclusion_tag('inclusion/manage_menu_list.html')
