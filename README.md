@@ -1,3 +1,5 @@
+
+
 # Django-TracerProjectManagementPlatform
 
 这个是一个项目管理平台
@@ -350,7 +352,7 @@ book = models.ForeignKey(BookInfo,on_delete=models.CASCADE)
 
 > 新建 wiki views展示页
 
-页面样式
+**页面样式**
 
 ```html
 <div class="container-fluid">
@@ -373,9 +375,67 @@ book = models.ForeignKey(BookInfo,on_delete=models.CASCADE)
     </div>
 ```
 
-
+**多级目录**
 
 6.2.2 添加文章
+
+> 思路：使用Form表单提交添加的参数，使用reverse方法返回页面
+>
+> url = reverse('web:wiki', kwargs={'project_id': project_id})
+>
+> 注意点：
+>
+> 使用在models中使用 `__str__` 对父文章进行关联显示标题信息
+>
+> ```python
+> def __str__(self):
+>     return self.title
+> ```
+
+```html
+<div class="panel-body">
+          <div class="col-sm-3 title-list">
+              <div>目录</div>
+          </div>
+          <div class="col-sm-9 content">
+              <form method="post">
+              {% csrf_token %}
+              {% for field in form %}
+              <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                <span class="error-msg">{{ field.errors.0 }}</span>
+              </div>
+              {% endfor %}
+              <button type="submit" class="btn btn-primary">提 交</button>
+              </form>
+          </div>
+      </div>
+```
+
+forms/wiki
+
+```python
+class WikiModelForm(BootStrapForm, forms.ModelForm):
+
+    class Meta:
+        model = models.Wiki
+        exclude = ['project']
+```
+
+views/wiki
+
+```python
+form = WikiModelForm(request.POST)
+    if form.is_valid():
+        form.instance.project = request.tracer.project
+        form.save()
+        url = reverse('web:wiki', kwargs={'project_id': project_id})
+        # print(url)
+        return redirect(url)
+```
+
+
 
 6.2.3 预览文章
 

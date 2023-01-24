@@ -92,4 +92,5 @@ class Wiki(models.Model):
     # 子关联  related_name 反向关联字段
     parent = models.ForeignKey(verbose_name='父文章', to='Wiki', null=True, blank=True, on_delete=models.CASCADE, related_name='children')
 
-
+    def __str__(self):
+        return self.title

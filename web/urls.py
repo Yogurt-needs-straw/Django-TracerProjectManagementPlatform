@@ -32,7 +32,10 @@ urlpatterns = [
         path('issues/', manage.project_issues, name='issues'),
         path('statistics/', manage.project_statistics, name='statistics'),
         path('file/', manage.project_file, name='file'),
+
         path('wiki/', wiki.project_wiki, name='wiki'),
+        path('wiki/add/', wiki.wiki_add, name='wiki_add'),
+
         path('setting/', manage.project_setting, name='setting'),
     ], None)),
 

@@ -43,12 +43,17 @@
               <div>目录</div>
           </div>
           <div class="col-sm-9 content">
-              <div style="text-align: center;margin-top: 50px;">
-                  <h4> 《{{ request.tracer.project.name }}》wili文档库 </h4>
-                  <a href="add/">
-                      <i class="fa fa-plus-circle" aria-hidden="true"></i> 新建文章
-                  </a>
+              <form method="post">
+              {% csrf_token %}
+              {% for field in form %}
+              <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                <span class="error-msg">{{ field.errors.0 }}</span>
               </div>
+              {% endfor %}
+              <button type="submit" class="btn btn-primary">提 交</button>
+              </form>
           </div>
       </div>
     </div>
