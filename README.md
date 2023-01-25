@@ -379,18 +379,22 @@ book = models.ForeignKey(BookInfo,on_delete=models.CASCADE)
 
 6.2.2 添加文章
 
-> 思路：使用Form表单提交添加的参数，使用reverse方法返回页面
+> 思路：1.使用Form表单提交添加的参数，使用reverse方法返回页面
 >
 > url = reverse('web:wiki', kwargs={'project_id': project_id})
 >
+> 2.重写init方法，重置展示方法，将本项目相关的文档展示出来，而不是所有文章
+>
 > 注意点：
 >
-> 使用在models中使用 `__str__` 对父文章进行关联显示标题信息
+> 1.使用在models中使用 `__str__` 对父文章进行关联显示标题信息
 >
 > ```python
 > def __str__(self):
->     return self.title
+>  return self.title
 > ```
+>
+> 2.通过创建自定义元组，将自定义元组返回给前端
 
 ```html
 <div class="panel-body">
@@ -435,7 +439,22 @@ form = WikiModelForm(request.POST)
         return redirect(url)
 ```
 
+forms/wiki 重写init方法，重置展示方法，将本项目相关的文档展示出来，而不是所有文章。
 
+```python
+    def __init__(self, request, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # 找到想要的字段把他绑定显示的数据重置
+
+        # 添加不选择父文章，创建父文章
+        total_data_list = [('', '请选择'), ]
+
+        # 数据库中获取，当前项目所有的wiki标题
+        data_list = models.Wiki.objects.filter(project=request.tracer.project).values_list('id', 'title')
+        total_data_list.extend(data_list)
+        self.fields['parent'].choices = total_data_list
+```
 
 6.2.3 预览文章
 

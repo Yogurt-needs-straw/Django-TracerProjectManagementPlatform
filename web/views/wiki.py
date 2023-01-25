@@ -12,10 +12,10 @@ def project_wiki(request, project_id):
 def wiki_add(request, project_id):
     ''' wiki添加 '''
     if request.method == 'GET':
-        form = WikiModelForm()
+        form = WikiModelForm(request)
         return render(request, 'wiki/wiki_add.html', {'form': form})
 
-    form = WikiModelForm(request.POST)
+    form = WikiModelForm(request, data=request.POST)
     if form.is_valid():
         form.instance.project = request.tracer.project
         form.save()
