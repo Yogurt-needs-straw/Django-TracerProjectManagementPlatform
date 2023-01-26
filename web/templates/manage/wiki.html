@@ -16,7 +16,13 @@
         border-right: 1px solid  #dddddd;
         min-height: 500px;
     }
-
+    .title-list ul{
+        padding-left: 15px;
+    }
+    .title-list ul a{
+        display: block;
+        padding: 5px 0;
+    }
     .content{
         border-left: 1px solid #dddddd;
         min-height: 600px;
@@ -40,7 +46,9 @@
       </div>
       <div class="panel-body">
           <div class="col-sm-3 title-list">
-              <div>目录</div>
+              <ul id="catalog">
+
+              </ul>
           </div>
           <div class="col-sm-9 content">
               <div style="text-align: center;margin-top: 50px;">
@@ -53,4 +61,40 @@
       </div>
     </div>
     </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+    $(function () {
+        initCatalog();
+    });
+    
+    function initCatalog() {
+        $.ajax({
+            url:"catalog/",
+            type:"GET",
+            dataType:"JSON",
+            success:function (res) {
+                if (res.status){
+                    $.each(res.data, function (index, item) {
+                        // item=[1, '123', null],
+                        // 添加标签设置
+                        var li = $("<li>").attr('id', "id_"+item.id).append($("<a>").text(item.title)).append($("<ul>"));
+                        // 先处理父目录
+                        if (!item.parent_id){
+                            // 添加到catalog中
+                            $("#catalog").append(li);
+                        }else {
+                            // 找到父标签然后添加
+                            $("#id_"+item.parent_id).children('ul').append(li);
+                        }
+                    })
+                }else {
+                    alert("初始化目录失败");
+                }
+            }
+
+        })
+    }
+    </script>
 {% endblock %}

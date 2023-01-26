@@ -377,6 +377,58 @@ book = models.ForeignKey(BookInfo,on_delete=models.CASCADE)
 
 **多级目录**
 
+> 思路：
+>
+> 方式一：通过模板渲染。1.数据库获取数据带有层级的划分。2.将数据进行构造，通过字典类型返回。缺点：比较复杂、效率低
+>
+> - queryset = model.wiki.object.filter(project_id=2)
+> - 数据构造 [{id:1,title:"",children:[]}]
+>
+> 方式二：后端+前端 结合实现，使用ajax与ID选择器
+>
+> - 前端：打开页面，发送ajax请求，获取所有的文章标题信息。
+> - 后端：获取所有的文章信息。
+>
+> **知识点**：
+>
+> 1. .values 与 .values_list 返回数据类型不一样，.values返回的是字典数据类型，.values_list返回的是列表数据类型。
+>
+> 2. 调用JsonResponse会自动使用json.dumps进行数据类型格式化，但是Queryset类型无法被格式化会报错误，通过list转换成列表类型就可以了。
+
+js加载显示
+
+```javascript
+function initCatalog() {
+        $.ajax({
+            url:"catalog/",
+            type:"GET",
+            dataType:"JSON",
+            success:function (res) {
+                if (res.status){
+                    $.each(res.data, function (index, item) {
+                        // item=[1, '123', null],
+                        // 添加标签设置
+                        var li = $("<li>").attr('id', "id_"+item.id).append($("<a>").text(item.title)).append($("<ul>"));
+                        // 先处理父目录
+                        if (!item.parent_id){
+                            // 添加到catalog中
+                            $("#catalog").append(li);
+                        }else {
+                            // 找到父标签然后添加
+                            $("#id_"+item.parent_id).children('ul').append(li);
+                        }
+                    })
+                }else {
+                    alert("初始化目录失败");
+                }
+            }
+
+        })
+    }
+```
+
+
+
 6.2.2 添加文章
 
 > 思路：1.使用Form表单提交添加的参数，使用reverse方法返回页面
