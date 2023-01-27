@@ -10,11 +10,14 @@ def project_wiki(request, project_id):
     ''' wiki的首页 '''
 
     wiki_id = request.GET.get('wiki_id')
-    if wiki_id:
-        print("文章详情页")
-    else:
-        print("文章首页")
-    return render(request, 'manage/wiki.html')
+    # 判断wiki_id回传数据，是否仅是数字
+    if (not wiki_id) or (not wiki_id.isdecimal()):
+        # 如果带有字符串，返回首页
+        return render(request, 'manage/wiki.html')
+
+    wiki_object = models.Wiki.objects.filter(id=wiki_id, project_id=project_id).first()
+
+    return render(request, 'manage/wiki.html', {'wiki_object': wiki_object})
 
 
 def wiki_add(request, project_id):

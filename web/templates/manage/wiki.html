@@ -51,12 +51,16 @@
               </ul>
           </div>
           <div class="col-sm-9 content">
+              {% if wiki_object %}
+                  {{ wiki_object.content }}
+              {% else %}
               <div style="text-align: center;margin-top: 50px;">
                   <h4> 《{{ request.tracer.project.name }}》wili文档库 </h4>
                   <a href="add/">
                       <i class="fa fa-plus-circle" aria-hidden="true"></i> 新建文章
                   </a>
               </div>
+              {% endif %}
           </div>
       </div>
     </div>
