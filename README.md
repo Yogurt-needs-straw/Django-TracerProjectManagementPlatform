@@ -286,11 +286,11 @@ def manage_menu_list(request):
 
 ##### 6.1 表结构设计
 
-| ID   | 标题 | 内容 | 项目ID | 父ID |
-| ---- | ---- | ---- | ------ | ---- |
-| 1    | xx   | xxxx | 1      | null |
-| 2    | xx   | xxxx | 2      | 1    |
-| 3    |      |      | 3      | 1    |
+| ID   | 标题 | 内容 | 项目ID | 父ID | 深度 |
+| ---- | ---- | ---- | ------ | ---- | ---- |
+| 1    | xx   | xxxx | 1      | null | 1    |
+| 2    | xx   | xxxx | 2      | 1    | 2    |
+| 3    |      |      | 3      | 1    | 2    |
 
 **models.py**
 
@@ -427,7 +427,42 @@ function initCatalog() {
     }
 ```
 
+多级目录展示部分存在两个问题：
 
+- 父目录要提前出现：通过 排序 + 字段 (深度 depth) 将父级目录先展示出来
+
+> 深度
+>
+> depth = models.IntegerField(verbose_name='深度', default=1)
+>
+> ```python
+> # 判断用户是否已经选择了父文章
+> if form.instance.parent:
+>     form.instance.depth = form.instance.parent.depth + 1
+> else:
+>     form.instance.parent = 1
+> ```
+
+- 点击目录查看文章详细
+
+> 通过判断 wiki/ 后是否带有 wiki_id
+>
+> ```python
+> wiki_id = request.GET.get('wiki_id')
+> if wiki_id:
+>     print("文章详情页")
+> else:
+>     print("文章首页")
+> ```
+>
+> 前端实现
+>
+> ```javascript
+> // 文章连接url
+> var href = WIKI_DETAIL_URL + "?wiki_id=" + item.id;
+> // 添加标签设置
+> var li = $("<li>").attr('id', "id_"+item.id).append($("<a>").text(item.title).attr('href', href)).append($("<ul>"));
+> ```
 
 6.2.2 添加文章
 

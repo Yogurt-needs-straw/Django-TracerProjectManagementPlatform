@@ -8,7 +8,7 @@ class WikiModelForm(BootStrapForm, forms.ModelForm):
 
     class Meta:
         model = models.Wiki
-        exclude = ['project', ]
+        exclude = ['project', 'depth', ]
 
     # 重写init方法，重置展示方法，将本项目相关的文档展示出来，而不是所有文章
     def __init__(self, request, *args, **kwargs):
