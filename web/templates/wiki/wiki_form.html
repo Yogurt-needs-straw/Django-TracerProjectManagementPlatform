@@ -39,36 +39,30 @@
             <i class="fa fa-book" aria-hidden="true"></i> wiki文档
           </div>
           <div class="function">
-              <a href="add/" class="btn btn-success btn-xs" type="button">
+              <a href="/wiki/add/" class="btn btn-success btn-xs" type="button">
                   <i class="fa fa-plus-circle" aria-hidden="true"></i> 新建
               </a>
-              {% if wiki_object %}
-              <a href="edit/{{ wiki_object.id }}" class="btn btn-primary btn-xs" type="button">
-                  <i class="fa fa-edit" aria-hidden="true"></i> 编辑
-              </a>
-              <a href="delete/{{ wiki_object.id }}" class="btn btn-danger btn-xs" type="button">
-                  <i class="fa fa-trash" aria-hidden="true"></i> 删除
-              </a>
-              {% endif %}
           </div>
       </div>
       <div class="panel-body">
           <div class="col-sm-3 title-list">
+{#              <div>目录</div>#}
               <ul id="catalog">
 
               </ul>
           </div>
           <div class="col-sm-9 content">
-              {% if wiki_object %}
-                  {{ wiki_object.content }}
-              {% else %}
-              <div style="text-align: center;margin-top: 50px;">
-                  <h4> 《{{ request.tracer.project.name }}》wili文档库 </h4>
-                  <a href="add/">
-                      <i class="fa fa-plus-circle" aria-hidden="true"></i> 新建文章
-                  </a>
+              <form method="post">
+              {% csrf_token %}
+              {% for field in form %}
+              <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                <span class="error-msg">{{ field.errors.0 }}</span>
               </div>
-              {% endif %}
+              {% endfor %}
+              <button type="submit" class="btn btn-primary">提 交</button>
+              </form>
           </div>
       </div>
     </div>
@@ -83,10 +77,10 @@
     $(function () {
         initCatalog();
     });
-    
+
     function initCatalog() {
         $.ajax({
-            url:"catalog/",
+            url:"/manage/" + {{ request.tracer.project.id }} + "/wiki/catalog/",
             type:"GET",
             dataType:"JSON",
             success:function (res) {
