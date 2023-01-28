@@ -62,3 +62,12 @@ def catalog(request, project_id):
 #     return HttpResponse('查看文章详细')
 
 
+def delete(request, project_id, wiki_id):
+    ''' 删除文章 '''
+
+    models.Wiki.objects.filter(project_id=project_id, id=wiki_id).delete()
+
+    url = reverse('web:wiki', kwargs={'project_id': project_id})
+    # print(url)
+    return redirect(url)
+

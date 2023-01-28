@@ -549,5 +549,11 @@ forms/wiki 重写init方法，重置展示方法，将本项目相关的文档�
 
 6.2.5 删除文章
 
+> 思路：获取到文章的 project_id 和 wiki_id 然后通过url进行删除
+
+```python
+path('wiki/delete/<int:wiki_id>/', wiki.delete, name='wiki_delete'),
+```
+
 
 

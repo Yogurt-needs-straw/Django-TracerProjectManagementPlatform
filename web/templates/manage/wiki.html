@@ -39,9 +39,17 @@
             <i class="fa fa-book" aria-hidden="true"></i> wiki文档
           </div>
           <div class="function">
-              <a href="/wiki/add/" class="btn btn-success btn-xs" type="button">
+              <a href="add/" class="btn btn-success btn-xs" type="button">
                   <i class="fa fa-plus-circle" aria-hidden="true"></i> 新建
               </a>
+              {% if wiki_object %}
+              <a href="add/" class="btn btn-primary btn-xs" type="button">
+                  <i class="fa fa-edit" aria-hidden="true"></i> 编辑
+              </a>
+              <a href="delete/{{ wiki_object.id }}" class="btn btn-danger btn-xs" type="button">
+                  <i class="fa fa-trash" aria-hidden="true"></i> 删除
+              </a>
+              {% endif %}
           </div>
       </div>
       <div class="panel-body">
