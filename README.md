@@ -555,5 +555,48 @@ forms/wiki 重写init方法，重置展示方法，将本项目相关的文档�
 path('wiki/delete/<int:wiki_id>/', wiki.delete, name='wiki_delete'),
 ```
 
+**6.3应用Markdown编辑器**
 
+> 思路：markdown编辑器，mdeditor
+
+项目中想要应用markdown编辑器：
+
+- 添加和编辑的页面中 textarea 输入框。-> 转换为markdown编辑器
+
+  1. textarea框通过div包裹以便以后查找并转化为编辑器
+
+     ```html
+     <div id="editor">...</div>
+     ```
+
+  2. 应用 js 和 css
+
+     ```html
+     <link rel="stylesheet" href="{% static 'plugin/editor-md/css/editormd.min.css' %}">
+     ```
+
+     ```javascript
+     <script src={% static 'plugin/editor-md/editormd.min.js' %}></script>
+     ```
+
+  3. 进行初始化
+     ```js
+     /*
+         初始化markdown编辑器(textare转换为编辑器)
+          */
+     $(function () {
+         initEdtorMd();
+     });
+     function initEdtorMd() {
+         editormd("editor",{
+             placeholder: "请输入内容",
+             height: 500,
+             path: "{% static 'plugin/editor-md/lib/' %}"
+         })
+     }
+     ```
+
+     
+
+​			
 
