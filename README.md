@@ -558,6 +558,14 @@ path('wiki/delete/<int:wiki_id>/', wiki.delete, name='wiki_delete'),
 **6.3应用Markdown编辑器**
 
 > 思路：markdown编辑器，mdeditor
+>
+> 注意点：使用 z-index: 1001; 解决markdown全屏菜单栏显示问题
+>
+> ```css
+> .editormd-fullscreen{
+>     z-index: 1001;
+> }
+> ```
 
 项目中想要应用markdown编辑器：
 
