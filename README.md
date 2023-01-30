@@ -604,7 +604,43 @@ path('wiki/delete/<int:wiki_id>/', wiki.delete, name='wiki_delete'),
      }
      ```
 
-     
 
-​			
+**使用markdown编辑器预览页面**
+
+1. 内容区域
+
+```html
+<div id="previewMarkdown">
+    <textarea>{{ wiki_object.content }}</textarea>
+</div>
+```
+
+2. 引入css，js
+
+```html
+<link rel="stylesheet" href="{% static 'plugin/editor-md/css/editormd.preview.min.css' %}">
+<script src={% static 'plugin/editor-md/editormd.min.js' %}></script>
+<script src={% static 'plugin/editor-md/lib/marked.min.js' %}></script>
+<script src={% static 'plugin/editor-md/lib/prettify.min.js' %}></script>
+<script src={% static 'plugin/editor-md/lib/raphael.min.js' %}></script>
+<script src={% static 'plugin/editor-md/lib/underscore.min.js' %}></script>
+<script src={% static 'plugin/editor-md/lib/sequence-diagram.min.js' %}></script>
+<script src={% static 'plugin/editor-md/lib/flowchart.min.js' %}></script>
+<script src={% static 'plugin/editor-md/lib/jquery.flowchart.min.js' %}></script>
+```
+
+3. 初始化
+
+```javascript
+$(function () {
+    previewMarkdown();
+});
+function previewMarkdown() {
+    editormd.markdownToHTML("previewMarkdown", {
+        htmlDebode:  "style,script,iframe"
+    });
+}
+```
+
+4. 通过markdown组件上传图片功能
 
