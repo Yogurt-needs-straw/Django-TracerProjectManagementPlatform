@@ -60,11 +60,11 @@ if __name__ == '__main__':
     img.show()
 
     # 2. 写入文件
-    # with open('code.png','wb') as f:
-    #     img.save(f,format='png')
+    with open('code.png','wb') as f:
+        img.save(f,format='png')
 
     # 3. 写入内存(Python3)
-    from io import BytesIO
-    stream = BytesIO()
-    img.save(stream, 'png')
-    stream.getvalue()
+    # from io import BytesIO
+    # stream = BytesIO()
+    # img.save(stream, 'png')
+    # stream.getvalue()

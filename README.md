@@ -644,3 +644,73 @@ function previewMarkdown() {
 
 4. 通过markdown组件上传图片功能
 
+
+
+**6.4 腾讯对象存储**
+
+**6.4.1 开通腾讯对象存储以及创建桶**
+
+**6.4.2 python实现上传文件**
+
+- 使用 pip 安装（推荐）
+
+  ```sh
+   pip install -U cos-python-sdk-v5
+  ```
+
+**通过 COS 默认域名初始化（默认方式）**
+
+通过 COS 默认域名访问时，SDK 会以 **{bucket-appid}.cos.{region}.myqcloud.com** 的域名形式访问 COS。
+
+```python
+# -*- coding=utf-8
+from qcloud_cos import CosConfig
+from qcloud_cos import CosS3Client
+import sys
+import os
+import logging
+
+# 正常情况日志级别使用 INFO，需要定位时可以修改为 DEBUG，此时 SDK 会打印和服务端的通信信息
+logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+
+# 1. 设置用户属性, 包括 secret_id, secret_key, region等。Appid 已在 CosConfig 中移除，请在参数 Bucket 中带上 Appid。Bucket 由 BucketName-Appid 组成
+secret_id = os.environ['COS_SECRET_ID']     # 用户的 SecretId，建议使用子账号密钥，授权遵循最小权限指引，降低使用风险。子账号密钥获取可参见 https://cloud.tencent.com/document/product/598/37140
+secret_key = os.environ['COS_SECRET_KEY']   # 用户的 SecretKey，建议使用子账号密钥，授权遵循最小权限指引，降低使用风险。子账号密钥获取可参见 https://cloud.tencent.com/document/product/598/37140
+region = 'ap-beijing'      # 替换为用户的 region，已创建桶归属的 region 可以在控制台查看，https://console.cloud.tencent.com/cos5/bucket
+                           # COS 支持的所有 region 列表参见 https://cloud.tencent.com/document/product/436/6224
+token = None               # 如果使用永久密钥不需要填入 token，如果使用临时密钥需要填入，临时密钥生成和使用指引参见 https://cloud.tencent.com/document/product/436/14048
+scheme = 'https'           # 指定使用 http/https 协议来访问 COS，默认为 https，可不填
+
+config = CosConfig(Region=region, SecretId=secret_id, SecretKey=secret_key, Token=token, Scheme=scheme)
+client = CosS3Client(config)
+```
+
+> 注意：
+>
+> 正常情况下一个 region 只需要生成一个 CosS3Client 实例，然后循环上传或下载对象，不能每次访问都生成 CosS3Client 实例，否则 python 进程会占用过多的连接和线程。
+
+> 说明：
+>
+> 关于临时密钥如何生成和使用，请参见 [临时密钥生成及使用指引](https://cloud.tencent.com/document/product/436/14048)。
+
+```python
+# 创建桶
+response = client.create_bucket(
+    Bucket='examplebucket-1250000000'
+)
+```
+
+```python
+# 上传文件
+#### 高级上传接口（推荐）
+# 根据文件大小自动选择简单上传或分块上传，分块上传具备断点续传功能。
+response = client.upload_file(
+    Bucket='examplebucket-1250000000',
+    LocalFilePath='local.txt',  # 本地文件的路径
+    Key='picture.jpg',   # 上传到桶之后的文件名
+    PartSize=1,    
+    MAXThread=10,
+    EnableMD5=False
+)
+print(response['ETag'])
+```
