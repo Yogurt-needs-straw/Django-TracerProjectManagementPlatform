@@ -750,3 +750,20 @@ response = client.create_bucket(
 )
 ```
 
+**6.5 项目中集成cos**
+
+希望我们的项目中用到的图片可以放在cos中，防止我们的服务处理图片时压力过大。
+
+**6.5.1 创建项目时创建桶**
+
+```python
+# 为项目创建一个桶
+name = form.cleaned_data['name']
+bucket = "{}-{}-bucket-{}-1302952368".format(name, request.tracer.user.mobile_phone, str(int(time.time())))
+region = "ap-nanjing"
+```
+
+
+
+**6.5.2 markdown上传图片到cos**
+

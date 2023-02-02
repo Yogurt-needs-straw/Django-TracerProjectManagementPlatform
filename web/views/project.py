@@ -1,6 +1,9 @@
+import time
+
 from django.http import JsonResponse
 from django.shortcuts import render, HttpResponse, redirect
 
+from utils.tencent.cos import creat_bucket
 from web import models
 from web.forms.project import ProjectModelForm
 
@@ -15,6 +18,7 @@ def project_list(request):
 
     if request.method == "GET":
         # GET请求查看项目列表
+
         '''
         1.从数据库中获取两部分数据
             我创建的所有项目：已星标、未星标
@@ -51,8 +55,19 @@ def project_list(request):
     form = ProjectModelForm(request, data=request.POST)
     # 校验表单获取的数据
     if form.is_valid():
+        '''创建桶'''
+        # 为项目创建一个桶
+        name = form.cleaned_data['name']
+        bucket = "{}-{}-bucket-{}-1302952368".format(name, request.tracer.user.mobile_phone, str(int(time.time())))
+        region = "ap-nanjing"
+
+        creat_bucket(bucket, region)
+        # 把桶和区域写到数据库
+
         # 验证通过: 项目名、颜色、项目描述、创建者(当前用户)
         # 创建者(当前用户)
+        form.instance.bucket = bucket
+        form.instance.region = region
         form.instance.creator = request.tracer.user
         # 创建项目
         form.save()

@@ -137,6 +137,11 @@ TENCENT_SMS_TEMPLATE = {
     'login': 66665
 }
 
+# 腾讯cos的id和key
+TENCENT_COS_ID = "xxxxx"
+TENCENT_COS_KEY = "xxxxx"
+
+
 # ########## 登录白名单：无需登录就可以访问的页面 #######
 WHITE_REGEX_URL_LIST = [
     "/register/",
