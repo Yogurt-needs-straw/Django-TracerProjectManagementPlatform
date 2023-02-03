@@ -64,10 +64,11 @@ def project_list(request):
         creat_bucket(bucket, region)
         # 把桶和区域写到数据库
 
-        # 验证通过: 项目名、颜色、项目描述、创建者(当前用户)
-        # 创建者(当前用户)
         form.instance.bucket = bucket
         form.instance.region = region
+
+        # 验证通过: 项目名、颜色、项目描述、创建者(当前用户)
+        # 创建者(当前用户)
         form.instance.creator = request.tracer.user
         # 创建项目
         form.save()

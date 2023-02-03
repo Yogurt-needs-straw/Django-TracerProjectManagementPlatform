@@ -1,4 +1,6 @@
 import hashlib
+import uuid
+
 from django.conf import settings
 
 def md5(string):
@@ -8,3 +10,9 @@ def md5(string):
     hash_object.update(string.encode('utf-8'))
 
     return hash_object.hexdigest()
+
+def uid(mobile_phone):
+    ''' 不重复数据 '''
+    data = "{}-{}".format(str(uuid.uuid4()), mobile_phone)
+    # print(data)
+    return md5(data)

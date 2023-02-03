@@ -1,7 +1,10 @@
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
+from utils.encrypt import uid
+from utils.tencent.cos import upload_file
 from web import models
 from web.forms.wiki import WikiModelForm
 
@@ -99,3 +102,40 @@ def edit(request, project_id, wiki_id):
         return redirect(preview_url)
 
     return render(request, 'wiki/wiki_form.html', {'form': form})
+
+@csrf_exempt  # 免除csrf token
+def upload(request, project_id):
+    ''' markdown 插件上传图片 '''
+    result = {
+        'success': 0,
+        'massage': None,
+        'url': None
+    }
+
+    image_object = request.FILES.get('editormd-image-file')
+
+    # 判断是否存在文件对象
+    if not image_object:
+        result['massage'] = "文件不存在"
+        return JsonResponse(result)
+
+    ext = image_object.name.rsplit('.')[-1]
+    random_filename = uid(request.tracer.user.mobile_phone)
+    key = "{}.{}".format(random_filename, ext)
+
+    # 文件对象上传到当前项目的桶中
+    image_url = upload_file(
+        request.tracer.project.bucket,
+        request.tracer.project.region,
+        image_object,
+        key
+    )
+
+    # print(image_url)
+
+    result['success'] = 1
+    result['url'] = image_url
+
+    return JsonResponse(result)
+
+

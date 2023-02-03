@@ -89,6 +89,7 @@
     <script>
 
     var WIKI_DETAIL_URL = ""
+    var WIKI_UPLOAD_URL = "/manage/"+ {{ request.tracer.project.id }} + "/wiki/upload/"
 
     $(function () {
         initCatalog();
@@ -102,7 +103,10 @@
         editormd("editor",{
             placeholder: "请输入内容",
             height: 500,
-            path: "{% static 'plugin/editor-md/lib/' %}"
+            path: "{% static 'plugin/editor-md/lib/' %}",
+            imageUpload: true, // 上传本地文件
+            imageFormats:["jpg","jpeg","png","gif"],
+            imageUploadURL:WIKI_UPLOAD_URL,
         })
     }
 

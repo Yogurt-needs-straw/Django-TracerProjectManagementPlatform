@@ -31,6 +31,25 @@ def creat_bucket(bucket, region = "ap-nanjing"):
         ACL="public-read",  # private / public-read / public-read-write
     )
 
+def upload_file(bucket, region, file_object, key):
+
+    config = CosConfig(Region=region, SecretId=settings.TENCENT_COS_ID, SecretKey=settings.TENCENT_COS_KEY)
+    client = CosS3Client(config)
+
+    # 根据文件大小自动选择简单上传或分块上传，分块上传具备断点续传功能。
+    # 上传配置
+    response = client.upload_file_from_buffer(
+        Bucket=bucket,
+        Body=file_object,  # 文件对象
+        Key=key,  # 上传到桶之后的文件名
+        # PartSize=1,
+        # MAXThread=10,
+        # EnableMD5=False
+    )
+
+    # 返回图片路径
+    return "https://{}.cos.{}.myqcloud.com/{}".format(bucket, region, key)
+
 
 
 

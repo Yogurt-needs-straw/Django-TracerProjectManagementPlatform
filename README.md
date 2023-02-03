@@ -767,3 +767,44 @@ region = "ap-nanjing"
 
 **6.5.2 markdown上传图片到cos**
 
+> 思路：获取markdown上传对象标签 `editormd-image-file` ，随机生成对象名，使用文件上传函数，上传到该文件的对象桶中，将对象url返回后台，通过url展示到markdown页面上。
+>
+> 注意点：1.使用 @csrf_exempt 过滤 csrf token认证. 2.markdown编辑器中通过添加`imageUpload`、`imageFormats`、`imageUploadURL` 参数，使markdown编辑器增加本地上传文件功能。
+
+- cos上传文件：本地文件；接收markdown上传的文件再进行上传到cos；
+- markdown
+
+**获取markdown上传对象标签 `editormd-image-file`** 
+
+```python
+image_object = request.FILES.get('editormd-image-file')
+```
+
+**随机生成对象名**
+
+```python
+# 随机函数
+def uid(mobile_phone):
+    ''' 不重复数据 '''
+    data = "{}-{}".format(str(uuid.uuid4()), mobile_phone)
+    # print(data)
+    return md5(data)
+```
+
+```python
+ext = image_object.name.rsplit('.')[-1]
+random_filename = uid(request.tracer.user.mobile_phone)
+key = "{}.{}".format(random_filename, ext)
+```
+
+**文件对象上传到当前项目的桶中**
+
+```python
+image_url = upload_file(
+    request.tracer.project.bucket,
+    request.tracer.project.region,
+    image_object,
+    key
+)
+```
+
