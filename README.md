@@ -835,3 +835,41 @@ image_url = upload_file(
 | 2    |        | xxxx          | 2（文件夹） | null     | 1      | 唯一值 |
 | 3    |        | xxxxx         |             | null     | null   |        |
 
+**7.1.2 数据库models设计**
+
+```python
+class FileRepository():
+    ''' 文件库 '''
+    project = models.ForeignKey(verbose_name='项目', to='project')
+    file_type_choices = (
+        (1, '文件'),
+        (2, '文件夹')
+    )
+    file_type = models.SmallIntegerField(verbose_name='类型', choices=file_type_choices)
+    name = models.CharField(verbose_name='文件夹名称', max_length=32, help_text="文件/文件夹名")
+    key = models.CharField(verbose_name='文件存储在COS中的KEY', max_length=128, null=True, blank=True)
+    file_size = models.IntegerField(verbose_name='文件大小', null=True, blank=True)
+    file_path = models.CharField(verbose_name='文件路径', max_length=255, null=True, blank=True)
+    parent = models.ForeignKey(verbose_name='父级目录', to='self', related_name='child', null=True, blank=True)
+
+    update_user = models.ForeignKey(verbose_name='最近更新者', to='UserInfo')
+    update_datetime = models.DateTimeField(verbose_name='更新时间', auto_now=True)
+
+```
+
+**7.1.3 知识点**
+
+**7.1.3.1 URL 传参/不传参**
+
+```python
+path('file/', manage.file, name='file')
+# /file/
+# /file?folder_id=50
+def file(request.project_id):
+    folder_id = request.GET.get('folder_id')
+```
+
+
+
+
+
