@@ -869,7 +869,28 @@ def file(request.project_id):
     folder_id = request.GET.get('folder_id')
 ```
 
+**7.1.3.2 bootstrap模态框+警告框**
 
+**7.1.3.3 导航条**
+
+```python
+def file(request.project_id):
+    folder_id = request.GET.get('folder_id')
+    # 导航列表
+    url_list = []
+    if not folder_id:
+        pass
+    else:
+        file_object = models.FileRepository.objects.filter(id=folder_id,file_type).first()
+        row_object = file_object
+        # 循环查找上一级文件夹名称
+        while row_object:
+            url_list.insert(0,{"id":row_object.id,"name":row_object.name)
+            row_object = row_object.parent
+            
+    # 获取导航信息
+    print(url_list)
+```
 
 
 
