@@ -869,9 +869,9 @@ def file(request.project_id):
     folder_id = request.GET.get('folder_id')
 ```
 
-**7.1.3.2 bootstrap模态框+警告框**
+##### **7.2 bootstrap模态框+警告框**
 
-**7.1.3.3 导航条**
+##### **7.3 导航条**
 
 ```python
 def file(request.project_id):
@@ -891,6 +891,88 @@ def file(request.project_id):
     # 获取导航信息
     print(url_list)
 ```
+
+##### **7.4 cos上传文件 js实现**
+
+**7.4.1 下载js (前端的sdk)**
+
+​	下载地址：`https://github.com/tencentyun/cos-js-sdk-v5/tree/master/dist`
+
+```html
+<script src="./cos-js-sdk-v5.min.js"></script>
+```
+
+**7.4.2 上传**
+
+```html
+{% load static %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <h1>示例1：直接通过秘钥进行上传文件</h1>
+        <!-- multiple 表示多选 -->
+        <input type="file" name="upload_file" id="uploadFile" multiple/>
+        <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+        <script src="{% static 'js/cos-js-sdk-v5.min.js' %}"></script>
+        <script>
+        var cos;
+        $(function(){
+            initCOS();
+            bindChangeFileInput();
+        });
+            
+        function initCOS(){
+            cos = new COS({
+                SecretID:'',
+                SecretKey:'',
+            });
+        }
+            
+        function bindChangFileInput(){
+            $('#uploadFile').change(function(){
+                // 获取要上传的所有文件对象列表
+                // $(this)[0] = document.getElementById('uploadFile')
+                var files = $(this)[0].files;
+                $.each(files, function(index,fileObject){
+                    var fileName = fileObject.name;
+                    // 上传文件
+                    cos.putobject({
+                        Bucket: 'xxxxx-1231231',
+                        Region: 'ap-nanjing',
+                        Key: fileName,
+                        Body: fileObject, // 上传文件对象
+                        onProgress: function(progressData){
+                            // 进度条
+                            console.log("文件上传进度--->",fileName,JSON.stringify(progressData));
+                        }
+                    }, function(err,data){
+                        // 是否上传成功
+                        console.log(err || data);
+                        // 把上传成功的文件信息提交给django，django写入数据库。
+                    });
+                })
+            })
+        }
+        </script>
+    </body>
+</html>
+```
+
+**7.4.3 跨域问题(浏览器导致)**
+
+1.对象存储返回值时，加上特殊响应头 `allow.origin:*`
+
+2.腾讯对象存储设置 跨域访问CORS设置
+
+| 来源Origin | 操作 Methods             | Allow-Headers | Expose-Headers | 超时 |
+| ---------- | ------------------------ | ------------- | -------------- | ---- |
+| *          | PUT,GET,POST,DELETE,HEAD | *             | -              | 0    |
+
+
 
 
 
