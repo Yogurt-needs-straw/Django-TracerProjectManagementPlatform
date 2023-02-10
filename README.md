@@ -952,7 +952,6 @@ def file(request.project_id):
                     }, function(err,data){
                         // 是否上传成功
                         console.log(err || data);
-                        // 把上传成功的文件信息提交给django，django写入数据库。
                     });
                 })
             })
@@ -972,7 +971,134 @@ def file(request.project_id):
 | ---------- | ------------------------ | ------------- | -------------- | ---- |
 | *          | PUT,GET,POST,DELETE,HEAD | *             | -              | 0    |
 
+**7.4.3 cos上传文件：临时秘钥【推荐】**
 
+1. 路由
 
+```python
+path('demo2/', manage.demo2, name='demo2')
+path('cos/credential/', manage.cos_credential, name='cos_credential')
+```
 
+2. 视图
+
+```python
+def demo2(request):
+    return render(request,'demo2.html')
+
+def cos_credential(request):
+    # 生成一个临时凭证，并给前端返回
+    # 1.安装一个生成临时凭证python模块 pip install -U qcloud-python-sts
+    # 2.写代码
+    from sts.sts import Sts
+    config = {
+        # 临时秘钥有效时长，单位是秒（30分钟=1800秒）
+        'duration_seconds':1800,
+        # 固定秘钥 id
+        'secret_id':"xxxxx",
+        # 固定秘钥 key
+        'secret_key':"xxxx",
+        # 换成你的 bucket
+        'bucket':"xxxxx-123123123",
+        # 换成bucket所在地区
+        'region':"ap-nanjing",
+        # 这里改成允许的路径前缀，可以根据自己网站的用户登录判断允许上传的具体路径
+        # 例子：a.jpg 或者 a/* 或者 *（使用通配符*存在重大安全风险，请谨慎评估使用）
+        'allow_prefix':'*',
+        # 秘钥的权限列表，简单上传和分片需要以下的权限，其他权限列表请看
+        # https://cloud.tencent.com/document/product/436/31923
+        'allow_actions':[
+            'name/cos:PostObject',
+            # "*",
+        ],
+        
+    }
+    
+    sts = Sts(config)
+    result_dict = sts.get_credential()
+    return = JsonResponse(result_dict)
+```
+
+3. html页面
+
+```html
+{% load static %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <h1>示例2：临时凭证上传文件</h1>
+        <!-- multiple 表示多选 -->
+        <input type="file" name="upload_file" id="uploadFile" multiple/>
+        <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+        <script src="{% static 'js/cos-js-sdk-v5.min.js' %}"></script>
+        <script>
+        var cos;
+        $(function(){
+            initCOS();
+            bindChangeFileInput();
+        });
+            
+        function initCOS(){
+            cos = new COS({
+                getAuthorization:function(options, callback){
+                    // 向django后台发送请求，获取临时凭证
+                    $.get('/cos/credential/',{
+                        // 可从options取需要的参数
+                    },function(data){
+                        var credentials = data && data.credential;
+                        if(!data || !credentials) return console.error('credentials invalid');
+                        callback({
+                            TmpSecretId: credentials.tmpSecretId,
+                            TmpSecretKey: credentials.tmpSecretKey,
+                            xCosSecurityToken: credentials.sessionToken,
+                            StartTime: data.startTime,
+                            ExpiredTime: data.expiredTime,
+                        });
+                    });
+                }
+            });
+        }
+            
+        function bindChangFileInput(){
+            $('#uploadFile').change(function(){
+                // 获取要上传的所有文件对象列表
+                // $(this)[0] = document.getElementById('uploadFile')
+                var files = $(this)[0].files;
+                $.each(files, function(index,fileObject){
+                    var fileName = fileObject.name;
+                    // 上传文件
+                    cos.putobject({
+                        Bucket: 'xxxxx-1231231',
+                        Region: 'ap-nanjing',
+                        Key: fileName,
+                        Body: fileObject, // 上传文件对象
+                        onProgress: function(progressData){
+                            // 进度条
+                            console.log("文件上传进度--->",fileName,JSON.stringify(progressData));
+                        }
+                    }, function(err,data){
+                        // 是否上传成功
+                        console.log(err || data);
+                    });
+                })
+            })
+        }
+        </script>
+    </body>
+</html>
+```
+
+4. 浏览器跨域解决
+
+1.对象存储返回值时，加上特殊响应头 `allow.origin:*`
+
+2.腾讯对象存储设置 跨域访问CORS设置
+
+| 来源Origin | 操作 Methods             | Allow-Headers | Expose-Headers | 超时 |
+| ---------- | ------------------------ | ------------- | -------------- | ---- |
+| *          | PUT,GET,POST,DELETE,HEAD | *             | -              | 0    |
 
