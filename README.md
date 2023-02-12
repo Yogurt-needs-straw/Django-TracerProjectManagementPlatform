@@ -1106,3 +1106,88 @@ def cos_credential(request):
 
 - python直接上传
 - js + 临时凭证（跨域问题）
+
+**7.3 cos的功能 & 项目**
+
+1. 创建项目 & 创建存储桶
+
+```python
+# POST 对话框的ajax添加项目
+# 获取新增项目的信息
+form = ProjectModelForm(request, data=request.POST)
+# 校验表单获取的数据
+if form.is_valid():
+    '''创建桶'''
+    # 1.为项目创建一个桶 & 创建跨域规则
+    name = form.cleaned_data['name']
+    bucket = "{}-bucket-{}-1302952368".format( request.tracer.user.mobile_phone, str(int(time.time())))
+    region = "ap-nanjing"
+
+    creat_bucket(bucket, region)
+    # 把桶和区域写到数据库
+
+    # 2.创建项目
+    form.instance.bucket = bucket
+    form.instance.region = region
+    form.instance.creator = request.tracer.user
+    # 创建项目
+    form.save()
+
+    # 返回添加成功
+    return JsonResponse({'status': True})
+
+# 验证失败，返回错误数据
+return JsonResponse({'status': False, 'error': form.errors})
+```
+
+```python
+# -*- coding=utf-8
+from qcloud_cos import CosConfig
+from qcloud_cos import CosS3Client
+import sys
+import os
+import logging
+from django.conf import settings
+
+def creat_bucket(bucket, region = "ap-nanjing"):
+    '''
+    :param bucket: 桶名称
+    :param region: 区域
+    :return:
+    '''
+
+    # 正常情况日志级别使用 INFO，需要定位时可以修改为 DEBUG，此时 SDK 会打印和服务端的通信信息
+    # logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+
+    # region = 'ap-nanjing'      # 替换为用户的 region，已创建桶归属的 region 可以在控制台查看，https://console.cloud.tencent.com/cos5/bucket
+                               # COS 支持的所有 region 列表参见 https://cloud.tencent.com/document/product/436/6224
+    # token = None               # 如果使用永久密钥不需要填入 token，如果使用临时密钥需要填入，临时密钥生成和使用指引参见 https://cloud.tencent.com/document/product/436/14048
+    # scheme = 'https'           # 指定使用 http/https 协议来访问 COS，默认为 https，可不填
+
+
+    config = CosConfig(Region=region, SecretId=settings.TENCENT_COS_ID, SecretKey=settings.TENCENT_COS_KEY)
+    client = CosS3Client(config)
+
+    # 创建桶
+    client.create_bucket(
+        Bucket=bucket,
+        ACL="public-read",  # private / public-read / public-read-write
+    )
+    
+    cors_config = {
+        'CORSRule':[
+            {
+                'AllowedOrigin':'*', # ["https://www.qq.com",]
+                'AllowedMethod':['GET','PUT','HEAD','POST','DELETE'],
+                'AllowedHeader':"*", # ['x-cos-meta-test']
+                'ExposeHeader':"*", # ['x-cos-meta-test1']
+                'MaxAgeSeconds':500
+            }
+        ]
+    }
+    response = client.put_bucket_cors(
+    	Bucket = bucket,
+        CORSConfiguration = cors_config
+    )
+```
+
