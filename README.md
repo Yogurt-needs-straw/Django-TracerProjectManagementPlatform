@@ -1191,3 +1191,4 @@ def creat_bucket(bucket, region = "ap-nanjing"):
     )
 ```
 
+**7.4**
