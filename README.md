@@ -1191,4 +1191,12 @@ def creat_bucket(bucket, region = "ap-nanjing"):
     )
 ```
 
-**7.4**
+**7.5 markdown上传图片【无改动】**
+
+**7.9 js上传文件**
+
+- 临时凭证：当前项目的 桶 & 区域（request.tracer.project...）
+- js上传文件：设置当前的 桶 & 区域
+
+
+
