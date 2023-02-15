@@ -1193,10 +1193,27 @@ def creat_bucket(bucket, region = "ap-nanjing"):
 
 **7.5 markdown上传图片【无改动】**
 
-**7.9 js上传文件**
+**7.6 js上传文件**
 
 - 临时凭证：当前项目的 桶 & 区域（request.tracer.project...）
 - js上传文件：设置当前的 桶 & 区域
 
+**7.7 this 知识点**
 
+```javascript
+var name = "123"
+info = {
+    name:"234",
+    func:function(){
+        console.log(this.name) # info.name > 234
+        function test(){
+            console.log(this.name) # window.name > 123
+        }
+        test()
+    }
+}
+info.func()
+```
+
+总结：每个函数都是一个作用域，在他的内部都会存在this，谁调用的函数，函数里面this就是谁。
 
