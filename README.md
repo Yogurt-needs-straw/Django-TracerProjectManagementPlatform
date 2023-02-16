@@ -1070,7 +1070,7 @@ def cos_credential(request):
                 var files = $(this)[0].files;
                 $.each(files, function(index,fileObject){
                     var fileName = fileObject.name;
-                    // 上传文件
+                    // 上传文件（异步）
                     cos.putobject({
                         Bucket: 'xxxxx-1231231',
                         Region: 'ap-nanjing',
@@ -1216,4 +1216,26 @@ info.func()
 ```
 
 总结：每个函数都是一个作用域，在他的内部都会存在this，谁调用的函数，函数里面this就是谁。
+
+**7.8 闭包**
+
+```javascript
+data_list = [11,22,33];
+for(var i=0;i++;i<data.length){
+    function xx(data){
+        $.ajax({
+            url:".....",
+            data:{value:data_list[data]},
+            success:function(res){
+                // 1分钟之后执行回调函数
+                console.log(data); // 输出：0/1/2
+            }
+        })
+    }
+    xx(i)
+}
+console.log(i) // 输出：2
+```
+
+注意事项：循环内容发送异步请求，异步任务成功之后，通过闭包来解决。
 
