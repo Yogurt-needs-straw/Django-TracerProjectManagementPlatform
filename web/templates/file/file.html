@@ -1,0 +1,86 @@
+{% extends 'layout/manage.html' %}
+
+{% block css %}
+    <style>
+    .panel-default .panel-heading {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .panel-default > .panel-heading a {
+        text-decoration: none;
+    }
+    .panel-default > .panel-heading span{
+        padding: 0 5px;
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+    <div class="panel panel-default" style="margin-top: 20px;">
+      <!-- Default panel contents -->
+      <div class="panel-heading">
+        <div>1</div>
+        <div>
+            <a class="btn btn-success btn-xs" data-toggle="modal" data-target="#addModal">
+                <i class="fa fa-plus-circle" aria-hidden="true"></i> 新建文件夹
+            </a>
+
+        </div>
+      </div>
+
+      <!-- Table -->
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Larry</td>
+            <td>the Bird</td>
+            <td>@twitter</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
