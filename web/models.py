@@ -102,9 +102,9 @@ class Wiki(models.Model):
     def __str__(self):
         return self.title
 
-class FileRepository():
+class FileRepository(models.Model):
     ''' 文件库 '''
-    project = models.ForeignKey(verbose_name='项目', to='project', on_delete=models.CASCADE)
+    project = models.ForeignKey(verbose_name='项目', to='Project', on_delete=models.CASCADE)
     file_type_choices = (
         (1, '文件'),
         (2, '文件夹')
