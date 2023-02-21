@@ -96,7 +96,7 @@
 
 {% block js %}
     <script>
-    var FOLDER_URL = ""
+    var FOLDER_URL = "?folder=" + {{ request.tracer.project.id }}
 
     $(function (){
         initAddModal();
@@ -108,8 +108,11 @@
       var button = $(event.relatedTarget); // Button that triggered the modal
       var recipient = button.data('whatever'); // Extract info from data-* attributes
       var modal = $(this);
-      modal.find('.modal-title').text(recipient)
+      modal.find('.modal-title').text(recipient);
 
+      // 实现表示清空
+      modal.find('.error-msg').empty();
+      {#$('#form')[0].reset();#}
 })
     }
     
