@@ -14,11 +14,21 @@ def file(request, project_id):
     if folder_id.isdecimal():
         parent_object = models.FileRepository.objects.filter(id=int(folder_id), file_type=2,
                                                              project=request.tracer.project).first()
+    # GET 查看页面
     if request.method == "GET":
-        form = FolderModelForm(request, parent_object)
-        return render(request, 'file/file.html', {'form': form})
+        # 当前目录下所有的文件和文件夹获取到
+        queryset = models.FileRepository.objects.filter(project=request.tracer.project)
+        if parent_object:
+            # 进入目录
+            file_object_list = queryset.filter(parent=parent_object).order_by('-file_type')
+        else:
+            # 跟目录
+            file_object_list = queryset.filter(parent__isnull=True).order_by('-file_type')
 
-    # 添加文件夹
+        form = FolderModelForm(request, parent_object)
+        return render(request, 'file/file.html', {'form': form, "file_object_list": file_object_list})
+
+    # POST 添加文件夹
     form = FolderModelForm(request, parent_object, data=request.POST)
     if form.is_valid():
         form.instance.project = request.tracer.project
@@ -27,7 +37,7 @@ def file(request, project_id):
         form.instance.parent = parent_object
         # 往数据库添加文件夹
         form.save()
-        return JsonResponse({'status': True, 'error': form.errors})
+        return JsonResponse({'status': True})
 
 
     return JsonResponse({'status': False, 'error': form.errors})
