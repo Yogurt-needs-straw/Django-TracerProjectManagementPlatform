@@ -16,6 +16,13 @@ def file(request, project_id):
                                                              project=request.tracer.project).first()
     # GET 查看页面
     if request.method == "GET":
+
+        breadcrumb_list = []
+        parent = parent_object
+        while parent:
+            breadcrumb_list.insert(0, {'id': parent.id, 'name': parent.name})
+            parent = parent.parent
+
         # 当前目录下所有的文件和文件夹获取到
         queryset = models.FileRepository.objects.filter(project=request.tracer.project)
         if parent_object:
@@ -26,7 +33,13 @@ def file(request, project_id):
             file_object_list = queryset.filter(parent__isnull=True).order_by('-file_type')
 
         form = FolderModelForm(request, parent_object)
-        return render(request, 'file/file.html', {'form': form, "file_object_list": file_object_list})
+
+        context = {
+            'form': form,
+            "file_object_list": file_object_list,
+            "breadcrumb_list": breadcrumb_list,
+        }
+        return render(request, 'file/file.html', context)
 
     # POST 添加文件夹
     form = FolderModelForm(request, parent_object, data=request.POST)

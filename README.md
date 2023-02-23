@@ -1243,6 +1243,86 @@ console.log(i) // 输出：2
 
 **7.9.1 创建文件管理**
 
+> 思路：通过 GET，POST 判断是展示操作还是新建操作。通过url后面是否带有folder参数，判断展示路径
+>
+> 知识点：
+>
+> 加载后重新刷新页面
+>
+> ```javascript
+> location.href = location.href;
+> ```
+
+```python
+# POST 添加文件夹
+    form = FolderModelForm(request, parent_object, data=request.POST)
+    if form.is_valid():
+        form.instance.project = request.tracer.project
+        form.instance.file_type = 2
+        form.instance.update_user = request.tracer.user
+        form.instance.parent = parent_object
+        # 往数据库添加文件夹
+        form.save()
+        return JsonResponse({'status': True})
+```
+
+前端
+
+```html
+<div class="panel-heading">
+    <div>文件夹</div>
+    <div>
+        <a class="btn btn-success btn-xs" data-toggle="modal" data-target="#addModal" data-whatever="新建文件夹">
+            <i class="fa fa-plus-circle" aria-hidden="true"></i> 新建文件夹
+        </a>
+    </div>
+</div>
+```
+
+```javascript
+var FOLDER_URL = "?folder=" + {{ request.tracer.project.id }}
+
+    $(function (){
+        initAddModal();
+        bindModelSubmit();
+    });
+    
+    function initAddModal() {
+        $('#addModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget); // Button that triggered the modal
+      var recipient = button.data('whatever'); // Extract info from data-* attributes
+      var modal = $(this);
+      modal.find('.modal-title').text(recipient);
+
+      // 实现表示清空
+      modal.find('.error-msg').empty();
+      {#$('#form')[0].reset();#}
+})
+    }
+    
+    function bindModelSubmit() {
+        $('#btnFormSubmit').click(function () {
+            $.ajax({
+                url:location.href,
+                type:"POST",
+                data:$("#form").serialize(), // 获取表单数据
+                dataType:"JSON",
+                success:function (res){
+                    if(res.status){
+                        location.href = location.href;
+                    }else {
+                        $.each(res.error, function (key, value) {
+                            $("#id_" + key).next().text(value[0]);
+                        })
+                    }
+                }
+            })
+        })
+    }
+```
+
+
+
 **7.9.2 文件列表 & 进入文件夹**
 
 **7.9.3 编辑文件夹**
