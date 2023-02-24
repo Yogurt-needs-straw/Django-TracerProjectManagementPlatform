@@ -1327,5 +1327,54 @@ var FOLDER_URL = "?folder=" + {{ request.tracer.project.id }}
 
 **7.9.3 编辑文件夹**
 
+> 思路：通过返回fid判断是否是新建文件夹 还是 修改文件夹名称
+
+```python
+fid = request.POST.get('fid', '')
+    edit_object = None
+    if fid.isdecimal():
+        edit_object = models.FileRepository.objects.filter(id=int(fid), file_type=2, project=request.tracer.project).first()
+
+    if edit_object:
+        # 编辑
+        form = FolderModelForm(request, parent_object, data=request.POST, instance=edit_object)
+    else:
+        # 添加
+        form = FolderModelForm(request, parent_object, data=request.POST)
+
+```
+
+前端添加fid标签
+
+```django
+{% if item.file_type == 2 %}
+<a class="btn btn-default btn-xs" data-toggle="modal"
+   data-target="#addModal"
+   data-whatever="编辑文件夹"
+   data-name="{{ item.name }}"
+   data-fid="{{ item.id }}"
+   >
+    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+    编辑
+</a>
+{% endif %}
+```
+
+```javascript
+if (fid){
+    // 编辑
+    // name
+    modal.find('#id_name').val(name);
+    modal.find('#fid').val(fid);
+}else {
+    // 新建
+    // 实现表示清空
+    modal.find('.error-msg').empty();
+    $('#form')[0].reset();
+}
+```
+
+
+
 **7.9.4 删除文件夹（DB级联删除 & 删除cos文件）**
 

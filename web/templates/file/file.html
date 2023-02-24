@@ -78,7 +78,17 @@
             <td>{{ item.update_user.username }}</td>
             <td>{{ item.update_datetime }}</td>
             <td>
-                <a>编辑</a>
+                {% if item.file_type == 2 %}
+                    <a class="btn btn-default btn-xs" data-toggle="modal"
+                       data-target="#addModal"
+                       data-whatever="编辑文件夹"
+                       data-name="{{ item.name }}"
+                       data-fid="{{ item.id }}"
+                    >
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        编辑
+                    </a>
+                {% endif %}
                 <a>删除</a>
             </td>
           </tr>
@@ -99,6 +109,7 @@
           <div class="modal-body">
             <form id="form">
               {% csrf_token %}
+                <input type="text" name="fid" id="fid" value="" class="hide">
               {% for field in form %}
               <div class="form-group">
                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
@@ -131,12 +142,23 @@
         $('#addModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget); // Button that triggered the modal
       var recipient = button.data('whatever'); // Extract info from data-* attributes
+      var name = button.data('name'); // Extract info from data-* attributes
+      var fid = button.data('fid'); // Extract info from data-* attributes
       var modal = $(this);
       modal.find('.modal-title').text(recipient);
 
-      // 实现表示清空
-      modal.find('.error-msg').empty();
-      {#$('#form')[0].reset();#}
+      if (fid){
+          // 编辑
+          // name
+          modal.find('#id_name').val(name);
+          modal.find('#fid').val(fid);
+      }else {
+        // 新建
+        // 实现表示清空
+          modal.find('.error-msg').empty();
+          $('#form')[0].reset();
+      }
+
 })
     }
     
