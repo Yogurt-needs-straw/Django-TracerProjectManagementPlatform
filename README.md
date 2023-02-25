@@ -1378,3 +1378,23 @@ if (fid){
 
 **7.9.4 删除文件夹（DB级联删除 & 删除cos文件）**
 
+> 思路：通过模态对话框，添加fid属性，使用fid属性进行id传递，从而实现对应文件以及文件夹的删除
+
+```javascript
+// 对删除按钮属性信息进行编辑
+$('#alertModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var fid = button.data('fid'); // Extract info from data-* attributes
+    $('#btnDelete').attr('fid',fid)
+})
+```
+
+```python
+if delete_object.file_type == 1:
+    # 删除文件（数据库文件删除，cos文件删除，项目已使用的空间容量返还）
+    pass
+else:
+    # 删除文件夹（找到文件夹下所有的文件>数据库文件删除，cos文件删除，项目已使用的空间容量返还）
+    pass
+```
+
