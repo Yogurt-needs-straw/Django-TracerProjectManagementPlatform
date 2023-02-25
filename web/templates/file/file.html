@@ -79,7 +79,7 @@
             <td>{{ item.update_datetime }}</td>
             <td>
                 {% if item.file_type == 2 %}
-                    <a class="btn btn-default btn-xs" data-toggle="modal"
+                    <a class="btn btn-primary btn-xs" data-toggle="modal"
                        data-target="#addModal"
                        data-whatever="编辑文件夹"
                        data-name="{{ item.name }}"
@@ -89,7 +89,13 @@
                         编辑
                     </a>
                 {% endif %}
-                <a>删除</a>
+                <a class="btn btn-danger btn-xs" data-toggle="modal"
+                   data-fid = "{{ item.id }}"
+                   data-target="#alertModal"
+                >
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                    删除
+                </a>
             </td>
           </tr>
         {% endfor %}
@@ -98,7 +104,7 @@
     </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal 新增文件夹 编辑文件夹 弹窗 -->
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -127,18 +133,53 @@
       </div>
     </div>
 
+    <!-- Modal 删除 -->
+    <div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="alert alert-danger alert-dismissible fade in" role="alert">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h4>是否要确定删除？</h4>
+          <p style="padding-top: 20px;padding-bottom: 20px; ">
+              文件夹中包含的所有文件都会被删除。
+          </p>
+          <p style="text-align: right;">
+            <a class="btn btn-default btn-sm" data-dismiss="modal" aria-label="Close">取 消</a>
+            <button id="btnDelete" type="button" class="btn btn-danger btn-sm" >确 定</button>
+          </p>
+        </div>
+      </div>
+    </div>
+
 {% endblock %}
 
 {% block js %}
     <script>
     var FOLDER_URL = "?folder=" + {{ request.tracer.project.id }}
+    var FILE_DELETE_URL = "delete/?folder=" + {{ request.tracer.project.id }}
 
     $(function (){
         initAddModal();
         bindModelSubmit();
+        bindDeleteSubmit();
     });
+    function bindDeleteSubmit() {
+        $('#btnDelete').click(function () {
+            // 删除提交
+            $.ajax({
+                url: FILE_DELETE_URL,
+                type: "GET",
+                data:{fid:$(this).attr('fid')},
+                success:function (res) {
+                    if(res.status){
+                        location.href = location.href;
+                    }
+                }
+            })
+        })
+    }
     
     function initAddModal() {
+        // 对编辑按钮属性信息进行编辑
         $('#addModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget); // Button that triggered the modal
       var recipient = button.data('whatever'); // Extract info from data-* attributes
@@ -160,6 +201,13 @@
       }
 
 })
+
+        // 对删除按钮属性信息进行编辑
+        $('#alertModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var fid = button.data('fid'); // Extract info from data-* attributes
+            $('#btnDelete').attr('fid',fid)
+        })
     }
     
     function bindModelSubmit() {
