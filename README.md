@@ -1380,8 +1380,11 @@ if (fid){
 
 > 思路：通过模态对话框，添加fid属性，使用fid属性进行id传递，从而实现对应文件以及文件夹的删除
 
+<<<<<<< HEAD
 - 在数据库中删除
 
+=======
+>>>>>>> master
 ```javascript
 // 对删除按钮属性信息进行编辑
 $('#alertModal').on('show.bs.modal', function (event) {
