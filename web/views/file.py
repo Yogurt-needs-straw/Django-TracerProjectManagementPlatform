@@ -2,6 +2,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 
+from utils.tencent.cos import delete_file, delete_file_list
 from web import models
 from web.forms.file import FolderModelForm
 
@@ -76,12 +77,52 @@ def file_delete(request, project_id):
     # 删除文件 & 文件夹（级联删除）
     delete_object = models.FileRepository.objects.filter(id=fid, project=request.tracer.project).first()
     if delete_object.file_type == 1:
-        # 删除文件（数据库文件删除，cos文件删除，项目已使用的空间容量返还）
-        pass
-    else:
-        # 删除文件夹（找到文件夹下所有的文件>数据库文件删除，cos文件删除，项目已使用的空间容量返还）
-        pass
+        # 字节
+        # 删除文件,将容量还给当前项目的已使用空间
+        request.tracer.project.use_space -= delete_object.file_size
+        request.tracer.project.save()
 
+        # cos中删除文件
+        delete_file(request.tracer.project.bucket, request.tracer.project.region, delete_object.key)
+
+        # 数据库中删除当前文件
+        delete_object.delete()
+
+        return JsonResponse({'status': True})
+
+
+    # 删除文件夹（找到文件夹下所有的文件>数据库文件删除，cos文件删除，项目已使用的空间容量返还）
+    # delete_object
+    # 要返还的文件大小
+    total_size = 0
+    # 要删除文件夹列表
+    folder_list = [delete_object]
+    # cos桶key
+    key_list = []
+    for folder in folder_list:
+        child_list = models.FileRepository.objects.filter(project=request.tracer.project, parent=folder).order_by('-file_type')
+        for child in child_list:
+            if child.file_type == 2:
+                # 为文件夹
+                folder_list.append(child)
+            else:
+                # 文件
+                # 文件大小
+                total_size += child.file_size
+                # 删除文件
+                key_list.append({"key": child.key})
+
+    # cos 批量删除文件
+    if key_list:
+        delete_file_list(request.tracer.project.bucket, request.tracer.project.region, key_list)
+
+    # 归还容量
+    if total_size:
+        request.tracer.project.use_space -= total_size
+        request.tracer.project.save()
+
+    # 数据库中删除当前文件
     delete_object.delete()
+
     return JsonResponse({'status': True})
 
