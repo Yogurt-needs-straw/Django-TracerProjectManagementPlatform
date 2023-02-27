@@ -77,7 +77,6 @@ def file_delete(request, project_id):
     # 删除文件 & 文件夹（级联删除）
     delete_object = models.FileRepository.objects.filter(id=fid, project=request.tracer.project).first()
     if delete_object.file_type == 1:
-<<<<<<< HEAD
         # 字节
         # 删除文件,将容量还给当前项目的已使用空间
         request.tracer.project.use_space -= delete_object.file_size
@@ -125,14 +124,5 @@ def file_delete(request, project_id):
     # 数据库中删除当前文件
     delete_object.delete()
 
-=======
-        # 删除文件（数据库文件删除，cos文件删除，项目已使用的空间容量返还）
-        pass
-    else:
-        # 删除文件夹（找到文件夹下所有的文件>数据库文件删除，cos文件删除，项目已使用的空间容量返还）
-        pass
-
-    delete_object.delete()
->>>>>>> master
     return JsonResponse({'status': True})
 
