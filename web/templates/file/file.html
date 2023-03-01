@@ -13,6 +13,18 @@
     .panel-default > .panel-heading span{
         padding: 0 5px;
     }
+    .panel-default > .panel-heading .function .upload {
+        overflow: hidden;
+    }
+    .panel-default > .panel-heading .function .upload input {
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 76px;
+        left: -2px;
+        overflow: hidden;
+    }
     </style>
 {% endblock %}
 
@@ -33,8 +45,11 @@
                 </a>
             {% endfor %}
         </div>
-        <div>
-            <input type="file" multiple/>
+        <div class="function">
+            <div class="btn btn-primary btn-xs upload" style="position: relative">
+                <div><i class="fa fa-upload" aria-hidden="true"></i> 上传文件</div>
+                <input type="file" multiple name="uploadFile" id="uploadFile">
+            </div>
             <a class="btn btn-success btn-xs" data-toggle="modal" data-target="#addModal" data-whatever="新建文件夹">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i> 新建文件夹
             </a>
@@ -162,7 +177,20 @@
         initAddModal();
         bindModelSubmit();
         bindDeleteSubmit();
+        bindUploadFile();
     });
+
+    function bindUploadFile() {
+        // 获取临时凭证
+        $('#uploadFile').change(function () {
+            var fileList = $(this)[0].files;
+            $.each(fileList, function (index, fileObject) {
+                console.log(fileObject.name);
+                // 上传文件
+            })
+        });
+    }
+    
     function bindDeleteSubmit() {
         $('#btnDelete').click(function () {
             // 删除提交
