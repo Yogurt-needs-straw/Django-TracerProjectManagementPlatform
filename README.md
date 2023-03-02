@@ -1452,7 +1452,12 @@ client.delete_object(
 <input type="file" multiple/>
 ```
 
+- 临时凭证 + 上传
 
+- 处理进度条
+  - 创建一个div
+  - onProgress对进度条的完成的百分比进行更新
+- 每上传一个文件就向后台发送一个成功的任务 ajax请求
 
 **7.9.5.2 获取临时凭证 & 上传文件**
 
