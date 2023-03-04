@@ -43,6 +43,7 @@ urlpatterns = [
         # file 路径
         path('file/', file.file, name='file'),
         path('file/delete/', file.file_delete, name='file_delete'),
+        path('cos/credential/', file.credential, name='cos_credential'),
 
         path('setting/', manage.project_setting, name='setting'),
     ], None)),

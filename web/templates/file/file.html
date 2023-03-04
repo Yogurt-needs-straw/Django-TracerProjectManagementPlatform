@@ -1,4 +1,5 @@
 {% extends 'layout/manage.html' %}
+{% load static %}
 
 {% block css %}
     <style>
@@ -169,9 +170,30 @@
 {% endblock %}
 
 {% block js %}
+    <script src="{% static 'js/cos-js-sdk-v5.min.js' %}"></script>
     <script>
     var FOLDER_URL = "?folder=" + {{ request.tracer.project.id }}
     var FILE_DELETE_URL = "delete/?folder=" + {{ request.tracer.project.id }}
+    var COS_CREDENTIAL =
+
+    var COS_OBJECT = new COS({
+        getAuthorization:function(options, callback){
+            // 向django后台发送请求，获取临时凭证
+            $.get(COS_CREDENTIAL,{
+                // 可从options取需要的参数
+            },function(data){
+                var credentials = data && data.credential;
+                if(!data || !credentials) return console.error('credentials invalid');
+                callback({
+                    TmpSecretId: credentials.tmpSecretId,
+                    TmpSecretKey: credentials.tmpSecretKey,
+                    xCosSecurityToken: credentials.sessionToken,
+                    StartTime: data.startTime,
+                    ExpiredTime: data.expiredTime,
+                });
+            });
+        }
+    });
 
     $(function (){
         initAddModal();
@@ -187,6 +209,7 @@
             $.each(fileList, function (index, fileObject) {
                 console.log(fileObject.name);
                 // 上传文件
+
             })
         });
     }

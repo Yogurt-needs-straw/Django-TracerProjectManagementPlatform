@@ -1452,18 +1452,30 @@ client.delete_object(
 <input type="file" multiple/>
 ```
 
-- 临时凭证 + 上传
 
-- 处理进度条
-  - 创建一个div
-  - onProgress对进度条的完成的百分比进行更新
-- 每上传一个文件就向后台发送一个成功的任务 ajax请求
 
 **7.9.5.2 获取临时凭证 & 上传文件**
 
+> 引用包：
+>
+> 1. [cos-js-sdk-v5.js](https://github.com/tencentyun/cos-js-sdk-v5)
+>
+> 2. 生成临时凭证python模块 pip install -U qcloud-python-sts
+>
+> 下载源码包 ： https://[pypi](https://so.csdn.net/so/search?q=pypi&spm=1001.2101.3001.7020).org/project/qcloud-python-sts/#files
+>
+> 对下载后的文件夹中 setup.py 文件中 第四行增加或者修改encoding为utf-8 编码。
+>
+> [腾讯云对象存储临时密钥qcloud-python-sts库安装失败解决办法](https://blog.csdn.net/kobe_okok/article/details/124834918)
+
 **7.9.5.3 右下角展示进度条**
 
+- 创建一个div
+- onProgress对进度条的完成的百分比进行更新
+
 **7.9.5.4 上传文件保存到数据库**
+
+- 每上传一个文件就向后台发送一个成功的任务 ajax请求
 
 **7.9.5.5 容量的限制**
 
