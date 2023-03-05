@@ -77,7 +77,7 @@ def delete_file_list(bucket, region, key_list):
         Delete=objects,
     )
 
-def credential(request):
+def credential(bucket, region,):
     ''' 获取cos上传的临时凭证 '''
     # 生成一个临时凭证，并给前端返回
     # 1.安装一个生成临时凭证python模块 pip install -U qcloud-python-sts
@@ -87,13 +87,13 @@ def credential(request):
         # 临时秘钥有效时长，单位是秒（30分钟=1800秒）
         'duration_seconds': 1800,
         # 固定秘钥 id
-        'secret_id': "xxxxx",
+        'secret_id': settings.TENCENT_COS_ID,
         # 固定秘钥 key
-        'secret_key': "xxxx",
+        'secret_key': settings.TENCENT_COS_KEY,
         # 换成你的 bucket
-        'bucket': "xxxxx-123123123",
+        'bucket': bucket,
         # 换成bucket所在地区
-        'region': "ap-nanjing",
+        'region': region,
         # 这里改成允许的路径前缀，可以根据自己网站的用户登录判断允许上传的具体路径
         # 例子：a.jpg 或者 a/* 或者 *（使用通配符*存在重大安全风险，请谨慎评估使用）
         'allow_prefix': '*',
