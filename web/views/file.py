@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 
-from utils.tencent.cos import delete_file, delete_file_list
+from utils.tencent.cos import delete_file, delete_file_list, credential
 from web import models
 from web.forms.file import FolderModelForm
 
@@ -127,32 +127,11 @@ def file_delete(request, project_id):
     return JsonResponse({'status': True})
 
 
-def credential(request, project_id):
+def cos_credential(request, project_id):
     ''' 获取cos上传的临时凭证 '''
-    # 生成一个临时凭证，并给前端返回
-    # 1.安装一个生成临时凭证python模块 pip install -U qcloud-python-sts
-    # 2.写代码
-    from sts.sts import Sts
-    config = {
-        # 临时秘钥有效时长，单位是秒（30分钟=1800秒）
-        'duration_seconds': 1800,
-        # 固定秘钥 id
-        'secret_id': "xxxxx",
-        # 固定秘钥 key
-        'secret_key': "xxxx",
-        # 换成你的 bucket
-        'bucket': "xxxxx-123123123",
-        # 换成bucket所在地区
-        'region': "ap-nanjing",
-        # 这里改成允许的路径前缀，可以根据自己网站的用户登录判断允许上传的具体路径
-        # 例子：a.jpg 或者 a/* 或者 *（使用通配符*存在重大安全风险，请谨慎评估使用）
-        'allow_prefix': '*',
-        # 秘钥的权限列表，简单上传和分片需要以下的权限，其他权限列表请看
-        # https://cloud.tencent.com/document/product/436/31923
-        'allow_actions': [
-            'name/cos:PostObject',
-            # "*",
-        ],
 
-    }
-    return None
+    data_dict = credential(request.tracer.project.bucket, request.tracer.project.region)
+    print(data_dict)
+    return JsonResponse(data_dict)
+
+

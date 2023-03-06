@@ -32,6 +32,23 @@ def creat_bucket(bucket, region = "ap-nanjing"):
         ACL="public-read",  # private / public-read / public-read-write
     )
 
+    # 跨域设置
+    cors_config = {
+        'CORSRule': [
+            {
+                'AllowedOrigin': '*',  # ["https://www.qq.com",]
+                'AllowedMethod': ['GET', 'PUT', 'HEAD', 'POST', 'DELETE'],
+                'AllowedHeader': "*",  # ['x-cos-meta-test']
+                'ExposeHeader': "*",  # ['x-cos-meta-test1']
+                'MaxAgeSeconds': 500
+            }
+        ]
+    }
+    client.put_bucket_cors(
+        Bucket=bucket,
+        CORSConfiguration=cors_config
+    )
+
 def upload_file(bucket, region, file_object, key):
 
     config = CosConfig(Region=region, SecretId=settings.TENCENT_COS_ID, SecretKey=settings.TENCENT_COS_KEY)
@@ -100,13 +117,13 @@ def credential(bucket, region,):
         # 秘钥的权限列表，简单上传和分片需要以下的权限，其他权限列表请看
         # https://cloud.tencent.com/document/product/436/31923
         'allow_actions': [
-            'name/cos:PostObject',
-            # "*",
+            # 'name/cos:PostObject',
+            "*",
         ],
 
     }
 
     sts = Sts(config)
     result_dict = sts.get_credential()
-    return JsonResponse(result_dict)
+    return result_dict
 

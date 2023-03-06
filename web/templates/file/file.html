@@ -174,20 +174,23 @@
     <script>
     var FOLDER_URL = "?folder=" + {{ request.tracer.project.id }}
     var FILE_DELETE_URL = "delete/?folder=" + {{ request.tracer.project.id }}
-    var COS_CREDENTIAL =
+    var COS_CREDENTIAL = "/manage/" + {{ request.tracer.project.id }} + "/cos/credential/?folder="+ {{ request.tracer.project.id }}
 
     var COS_OBJECT = new COS({
         getAuthorization:function(options, callback){
             // 向django后台发送请求，获取临时凭证
+
             $.get(COS_CREDENTIAL,{
                 // 可从options取需要的参数
             },function(data){
-                var credentials = data && data.credential;
+                {#console.log(COS_CREDENTIAL)#}
+                console.log(data)
+                var credentials = data && data.credentials;
                 if(!data || !credentials) return console.error('credentials invalid');
                 callback({
                     TmpSecretId: credentials.tmpSecretId,
                     TmpSecretKey: credentials.tmpSecretKey,
-                    xCosSecurityToken: credentials.sessionToken,
+                    SecurityToken: credentials.sessionToken,
                     StartTime: data.startTime,
                     ExpiredTime: data.expiredTime,
                 });
@@ -207,9 +210,24 @@
         $('#uploadFile').change(function () {
             var fileList = $(this)[0].files;
             $.each(fileList, function (index, fileObject) {
-                console.log(fileObject.name);
+                {#console.log(fileObject.name);#}
                 // 上传文件
-
+                // COS_OBJECT.上传
+                var fileName = fileObject.name;
+                // 上传文件 (异步)
+                COS_OBJECT.putObject({
+                        Bucket: '{{ request.tracer.project.bucket }}',
+                        Region: '{{ request.tracer.project.region }}',
+                        Key: fileName,
+                        Body: fileObject, // 上传文件对象
+                        onProgress: function(progressData){
+                            // 进度条
+                            console.log("文件上传进度--->",fileName,JSON.stringify(progressData));
+                        }
+                    }, function(err,data){
+                        // 是否上传成功
+                        console.log(err || data);
+                });
             })
         });
     }
