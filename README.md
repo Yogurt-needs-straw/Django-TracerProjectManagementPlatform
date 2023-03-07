@@ -1467,6 +1467,17 @@ client.delete_object(
 > 对下载后的文件夹中 setup.py 文件中 第四行增加或者修改encoding为utf-8 编码。
 >
 > [腾讯云对象存储临时密钥qcloud-python-sts库安装失败解决办法](https://blog.csdn.net/kobe_okok/article/details/124834918)
+>
+> 要点：跨越添加
+>
+> 上传文件前：临时凭证
+>
+> - 全局：默认超时之后，自动再次去获取（官方推荐）
+> - 局部：每次上传文件之前，进行临时凭证的获取。
+>
+> 
+
+
 
 **7.9.5.3 右下角展示进度条**
 
