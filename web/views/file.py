@@ -130,6 +130,8 @@ def file_delete(request, project_id):
 def cos_credential(request, project_id):
     ''' 获取cos上传的临时凭证 '''
 
+    # 做容量限制：单文件 & 总容量
+
     data_dict = credential(request.tracer.project.bucket, request.tracer.project.region)
     print(data_dict)
     return JsonResponse(data_dict)
