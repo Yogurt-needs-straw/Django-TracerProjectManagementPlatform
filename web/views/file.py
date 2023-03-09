@@ -1,3 +1,4 @@
+import json
 
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -5,6 +6,8 @@ from django.http import JsonResponse
 from utils.tencent.cos import delete_file, delete_file_list, credential
 from web import models
 from web.forms.file import FolderModelForm
+
+from django.views.decorators.csrf import csrf_exempt
 
 def file(request, project_id):
     ''' 文件列表 & 添加文件夹 '''
@@ -126,14 +129,18 @@ def file_delete(request, project_id):
 
     return JsonResponse({'status': True})
 
-
+# 免除csrf认证
+@csrf_exempt
 def cos_credential(request, project_id):
     ''' 获取cos上传的临时凭证 '''
 
-    # 做容量限制：单文件 & 总容量
+    file_list = json.loads(request.body.decode('utf-8'))
+    print(file_list)
+    # 获取要上传的每个文件 & 文件大小
 
+    # 做容量限制：单文件 & 总容量
     data_dict = credential(request.tracer.project.bucket, request.tracer.project.region)
-    print(data_dict)
+    # print(data_dict)
     return JsonResponse(data_dict)
 
 

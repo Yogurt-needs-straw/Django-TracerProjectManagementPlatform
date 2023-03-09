@@ -1490,6 +1490,33 @@ client.delete_object(
 
 **7.9.5.5 容量的限制**
 
+> 扩展：ajax 向后台发送消息 
+
+```
+前端：
+	$.ajax({
+		···
+		data:{name:11,age:122,xx:[11,22,33]}
+	})
+django后台：
+	request.POST
+	request.POST.get('name')
+```
+
+```
+# 使用JSON.stringfy序列化
+前端：
+	$.ajax({
+		···
+		data:JSON.stringfy{name:{k1:1,k2:666},xx:[11,22,[11,22]]}
+	})
+django后台：
+	request.body 接收
+	json.loads(request.body.decode('utf-8'))
+```
+
+
+
 - 单文件限制
 - 总容量限制
 

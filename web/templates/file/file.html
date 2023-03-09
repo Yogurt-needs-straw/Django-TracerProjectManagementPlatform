@@ -176,27 +176,6 @@
     var FILE_DELETE_URL = "delete/?folder=" + {{ request.tracer.project.id }}
     var COS_CREDENTIAL = "/manage/" + {{ request.tracer.project.id }} + "/cos/credential/?folder="+ {{ request.tracer.project.id }}
 
-    var COS_OBJECT = new COS({
-        getAuthorization:function(options, callback){
-            // 向django后台发送请求，获取临时凭证
-
-            $.get(COS_CREDENTIAL,{
-                // 可从options取需要的参数
-            },function(data){
-                {#console.log(COS_CREDENTIAL)#}
-                console.log(data)
-                var credentials = data && data.credentials;
-                if(!data || !credentials) return console.error('credentials invalid');
-                callback({
-                    TmpSecretId: credentials.tmpSecretId,
-                    TmpSecretKey: credentials.tmpSecretKey,
-                    SecurityToken: credentials.sessionToken,
-                    StartTime: data.startTime,
-                    ExpiredTime: data.expiredTime,
-                });
-            });
-        }
-    });
 
     $(function (){
         initAddModal();
@@ -209,13 +188,40 @@
         // 获取临时凭证
         $('#uploadFile').change(function () {
             var fileList = $(this)[0].files;
+
+            // 获取本次要上传的每个文件名称与大小
+            var checkFileList = [];
+
+            // 循环文件
             $.each(fileList, function (index, fileObject) {
-                {#console.log(fileObject.name);#}
-                // 上传文件
-                // COS_OBJECT.上传
+                // 拿到所有的文件名 以及 文件大小
+                checkFileList.push({'name':fileObject.name, 'size':fileObject.size})
+            })
+
+            // 把数据发送到后台:Django后台进行容量的校验，如果没有问题则返回临时凭证；否则返回错误信息。
+            var cos_credential = new COS({
+                getAuthorization:function(options, callback){
+                    // 向django后台发送请求，获取临时凭证
+                    $.post(COS_CREDENTIAL,JSON.stringify(checkFileList),function(data){
+                        console.log(data)
+                        var credentials = data && data.credentials;
+                        if(!data || !credentials) return console.error('credentials invalid');
+                        callback({
+                            TmpSecretId: credentials.tmpSecretId,
+                            TmpSecretKey: credentials.tmpSecretKey,
+                            SecurityToken: credentials.sessionToken,
+                            StartTime: data.startTime,
+                            ExpiredTime: data.expiredTime,
+                        });
+                    });
+                }
+            });
+
+            // 上传文件 上传之前先获取临时凭证
+            $.each(fileList, function (index, fileObject) {
                 var fileName = fileObject.name;
                 // 上传文件 (异步)
-                COS_OBJECT.putObject({
+                cos_credential.putObject({
                         Bucket: '{{ request.tracer.project.bucket }}',
                         Region: '{{ request.tracer.project.region }}',
                         Key: fileName,
@@ -229,6 +235,8 @@
                         console.log(err || data);
                 });
             })
+
+
         });
     }
     
