@@ -202,17 +202,22 @@
             var cos_credential = new COS({
                 getAuthorization:function(options, callback){
                     // 向django后台发送请求，获取临时凭证
-                    $.post(COS_CREDENTIAL,JSON.stringify(checkFileList),function(data){
-                        console.log(data)
-                        var credentials = data && data.credentials;
-                        if(!data || !credentials) return console.error('credentials invalid');
-                        callback({
-                            TmpSecretId: credentials.tmpSecretId,
-                            TmpSecretKey: credentials.tmpSecretKey,
-                            SecurityToken: credentials.sessionToken,
-                            StartTime: data.startTime,
-                            ExpiredTime: data.expiredTime,
-                        });
+                    $.post(COS_CREDENTIAL,JSON.stringify(checkFileList),function(res){
+
+                        if(res.status){
+                            var credentials = res.data && res.data.credentials;
+                            {#if(!res.data || !credentials) return console.error('credentials invalid');#}
+                            callback({
+                                TmpSecretId: credentials.tmpSecretId,
+                                TmpSecretKey: credentials.tmpSecretKey,
+                                SecurityToken: credentials.sessionToken,
+                                StartTime: res.data.startTime,
+                                ExpiredTime: res.data.expiredTime,
+                            });
+                        }else {
+                            alert(res.error);
+                        }
+
                     });
                 }
             });
