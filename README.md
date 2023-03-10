@@ -1498,6 +1498,7 @@ client.delete_object(
 		···
 		data:{name:11,age:122,xx:[11,22,33]}
 	})
+	$.post(url,data,callback)
 django后台：
 	request.POST
 	request.POST.get('name')
@@ -1510,6 +1511,7 @@ django后台：
 		···
 		data:JSON.stringfy{name:{k1:1,k2:666},xx:[11,22,[11,22]]}
 	})
+	$.post(url,data,callback)
 django后台：
 	request.body 接收
 	json.loads(request.body.decode('utf-8'))

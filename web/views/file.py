@@ -133,14 +133,35 @@ def file_delete(request, project_id):
 @csrf_exempt
 def cos_credential(request, project_id):
     ''' 获取cos上传的临时凭证 '''
+    # 用户单容量范围
+    per_file_limit = request.tracer.price_policy.per_file_size * 1024 * 1024
+
+    total_size = 0
 
     file_list = json.loads(request.body.decode('utf-8'))
-    print(file_list)
+    # print(file_list)
     # 获取要上传的每个文件 & 文件大小
+    for item in file_list:
+        # 文件的字节大小 item['size'] = B
+        # 单文件限制的大小 M
+        # 超出限制
+        if item['size'] > per_file_limit:
+            msg = "单文件超出限制（最大{}M），文件：{}".format(request.tracer.price_policy.per_file_size,item['name'])
+            return JsonResponse({'status': False, 'error': msg})
+        total_size += item['size']
+
+    # 总容量限制
+    # 项目的允许的空间
+    # project_space = request.tracer.price_policy.project_space
+    # 项目已使用的空间
+    project_use_space = request.tracer.project.use_space
+
+    if project_use_space + total_size > per_file_limit:
+        return JsonResponse({'status': False, 'error': '容量超过限制，请升级套餐。'})
 
     # 做容量限制：单文件 & 总容量
     data_dict = credential(request.tracer.project.bucket, request.tracer.project.region)
     # print(data_dict)
-    return JsonResponse(data_dict)
+    return JsonResponse({'status': True, 'data': data_dict})
 
 
