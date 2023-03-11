@@ -135,8 +135,11 @@ def cos_credential(request, project_id):
     ''' 获取cos上传的临时凭证 '''
     # 用户单容量范围
     per_file_limit = request.tracer.price_policy.per_file_size * 1024 * 1024
+<<<<<<< HEAD
     # 当项目空间
     total_file_limit = request.tracer.price_policy.project_space * 1024 * 1024 *1024
+=======
+>>>>>>> master
 
     total_size = 0
 
@@ -158,7 +161,11 @@ def cos_credential(request, project_id):
     # 项目已使用的空间
     project_use_space = request.tracer.project.use_space
 
+<<<<<<< HEAD
     if project_use_space + total_size > total_file_limit:
+=======
+    if project_use_space + total_size > per_file_limit:
+>>>>>>> master
         return JsonResponse({'status': False, 'error': '容量超过限制，请升级套餐。'})
 
     # 做容量限制：单文件 & 总容量
