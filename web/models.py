@@ -25,8 +25,8 @@ class PricePolicy(models.Model):
 
     project_num = models.PositiveIntegerField(verbose_name='项目数')
     project_member = models.PositiveIntegerField(verbose_name='项目成员数')
-    project_space = models.PositiveIntegerField(verbose_name='单项目空间')
-    per_file_size = models.PositiveIntegerField(verbose_name='单文件大小(M)')
+    project_space = models.PositiveIntegerField(verbose_name='单项目空间', help_text="G")
+    per_file_size = models.PositiveIntegerField(verbose_name='单文件大小(M)', help_text="M")
 
     creat_datetime = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)  # auto_now_add 自动添加时间
 
