@@ -1484,9 +1484,7 @@ client.delete_object(
 
   注意：不合法，错误提示；合法 继续上传。
 
-合法继续上传
-
-
+- 合法继续上传
 
 > 扩展：ajax 向后台发送消息 
 
@@ -1515,14 +1513,50 @@ django后台：
 	json.loads(request.body.decode('utf-8'))
 ```
 
-
-
-- 
-
 **7.9.5.3 右下角展示进度条**
 
 - 创建一个div
 - onProgress对进度条的完成的百分比进行更新
+
+```javascript
+// 克隆进度条模板
+var tr = $('#progressTemplate').find('tr').clone();
+tr.find('.name').text(fileName);
+$('#progressList').append(tr);
+```
+
+```html
+<!-- 进度条 -->
+    <div id="uploadProgress" class="upload-progress hide">
+        <div class="panel panel-primary">
+        <div class="panel-heading"><i class="fa fa-cloud-upload" aria-hidden="true"></i> 上传进度</div>
+        <table class="table">
+            <tbody id="progressList">
+
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+    <div class="hide">
+    <table id="progressTemplate">
+        <tr>
+            <td>
+                <div class="name"></div>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-success progress-bar-striped"
+                    role="progressbar" aria-valuenow="0"
+                    aria-valuemin="0"
+                    aria-valuemax="100" style="width: 0;">
+                        0%
+                    </div>
+                </div>
+                <div class="progress-error"></div>
+            </td>
+        </tr>
+    </table>
+    </div>
+```
 
 **7.9.5.4 上传文件保存到数据库**
 

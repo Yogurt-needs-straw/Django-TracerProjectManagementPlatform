@@ -214,7 +214,8 @@
     var FOLDER_URL = "?folder=" + {{ request.tracer.project.id }}
     var FILE_DELETE_URL = "delete/?folder=" + {{ request.tracer.project.id }}
     var COS_CREDENTIAL = "/manage/" + {{ request.tracer.project.id }} + "/cos/credential/?folder="+ {{ request.tracer.project.id }}
-
+    var FILE_POST = "/manage/" + {{ request.tracer.project.id }} + "/file/post/"
+    var CURRENT_FOLOER_ID = "{{ folder_object.id }}"
 
     $(function (){
         initAddModal();
@@ -270,6 +271,8 @@
             // 上传文件 上传之前先获取临时凭证
             $.each(fileList, function (index, fileObject) {
                 var fileName = fileObject.name;
+                var fileSize = fileObject.size;
+                var key = (new Date()).getTime() + "_" + fileName;
 
                 // 克隆进度条模板
                 var tr = $('#progressTemplate').find('tr').clone();
@@ -280,7 +283,7 @@
                 cos_credential.putObject({
                         Bucket: '{{ request.tracer.project.bucket }}',
                         Region: '{{ request.tracer.project.region }}',
-                        Key: fileName,
+                        Key: key,
                         Body: fileObject, // 上传文件对象
                         onProgress: function(progressData){
                             // 进度条
@@ -292,6 +295,22 @@
                     }, function(err,data){
                         // 是否上传成功
                         console.log(err || data);
+                        if(data && data.statusCode === 200){
+                            // 上传成功，将本次上传的文件提交到后台并写入数据库
+                            // 当前文件上传成功
+                            $.post(FILE_POST,{
+                                name:fileName,
+                                key:key ,
+                                size:fileSize,
+                                parent: CURRENT_FOLOER_ID,
+                                etag: data.ETag,
+                                file_path:data.Location,
+                            },function (res) {
+                                console.log(res);
+                            })
+                        }else {
+                            tr.find('.progress-error').text('上传失败');
+                        }
                 });
             })
 

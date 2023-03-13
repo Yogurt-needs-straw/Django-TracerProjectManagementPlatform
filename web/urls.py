@@ -44,6 +44,7 @@ urlpatterns = [
         path('file/', file.file, name='file'),
         path('file/delete/', file.file_delete, name='file_delete'),
         path('cos/credential/', file.cos_credential, name='cos_credential'),
+        path('file/post/', file.file_post, name='file_post'),
 
         path('setting/', manage.project_setting, name='setting'),
     ], None)),

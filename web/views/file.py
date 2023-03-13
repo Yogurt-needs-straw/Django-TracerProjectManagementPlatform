@@ -42,6 +42,7 @@ def file(request, project_id):
             'form': form,
             "file_object_list": file_object_list,
             "breadcrumb_list": breadcrumb_list,
+            'folder_object': parent_object,
         }
         return render(request, 'file/file.html', context)
 
@@ -166,4 +167,25 @@ def cos_credential(request, project_id):
     # print(data_dict)
     return JsonResponse({'status': True, 'data': data_dict})
 
+# 免除csrf认证
+@csrf_exempt
+def file_post(request, project_id):
+    ''' 已上传成功的文件写入到数据 '''
+    '''
+    name:fileName,
+    key:key ,
+    size:fileSize,
+    parent: CURRENT_FOLOER_ID,
+    etag: data.ETag,
+    file_path:data.Location,
+    '''
+    # print(request.POST)
+
+    # 根据key再去cos获取文件ETag和前端传过来的ETag校验
+
+    # 把获取到的数据写入数据库即可
+
+
+
+    return JsonResponse({})
 
