@@ -5,7 +5,7 @@ from django.http import JsonResponse
 
 from utils.tencent.cos import delete_file, delete_file_list, credential
 from web import models
-from web.forms.file import FolderModelForm
+from web.forms.file import FolderModelForm, FileModelForm
 
 from django.views.decorators.csrf import csrf_exempt
 
@@ -184,6 +184,13 @@ def file_post(request, project_id):
     # 根据key再去cos获取文件ETag和前端传过来的ETag校验
 
     # 把获取到的数据写入数据库即可
+    form = FileModelForm(request, data=request.POST)
+    if form.is_valid():
+        ''' 校验成功 '''
+        pass
+    else:
+        ''' 校验失败 '''
+
 
 
 
