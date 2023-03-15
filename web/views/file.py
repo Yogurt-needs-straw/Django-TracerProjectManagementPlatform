@@ -186,13 +186,29 @@ def file_post(request, project_id):
     # 把获取到的数据写入数据库即可
     form = FileModelForm(request, data=request.POST)
     if form.is_valid():
-        ''' 校验成功 '''
-        pass
-    else:
-        ''' 校验失败 '''
+        # 校验成功 将数据写入数据库
 
+        # 通过modelForm.save 存储到数据库中的数据数据返回的instance对象，无法通过get_xx_display获取chioce的中文
+        # form.instance.file_type = 1
+        # form.update_user = request.tracer.user
+        # instance = form.save()
 
+        # 选择该方式添加数据库数据
+        data_dict = form.cleaned_data
+        data_dict.pop('etag')
+        data_dict.update({
+            'project': request.tracer.project,
+            'file_type': 1,
+            'update_user': request.tracer.user,
+        })
+        instance = models.FileRepository.objects.create(**data_dict)
+        # 添加成功之后，获取到添加的那个对象
+        result = {
+            'name': instance.name,
+            'file_type': instance.get_file_type_display()
+        }
 
+        return JsonResponse({'status': True, 'data': result})
 
-    return JsonResponse({})
+    return JsonResponse({'status': False, 'data': "文件错误"})
 
