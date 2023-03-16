@@ -78,7 +78,7 @@
             <th>操作</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="rowList">
         {% for item in file_object_list %}
           <tr>
             <td>
@@ -206,6 +206,25 @@
         </tr>
     </table>
     </div>
+
+    <div class="hide">
+    <table id="rowTpl">
+        <tr>
+            <td><i class="fa fa-file" aria-hidden="true"></i> <span class="name"></span></td>
+            <td class="file_size"></td>
+            <td class="update_user_username"></td>
+            <td class="update_datetime"></td>
+            <td>
+                <a class="btn btn-default btn-xs download">
+                    <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                </a>
+                <a class="btn btn-danger btn-xs delete" data-toggle="modal" data-target="#alertModal">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </a>
+            </td>
+        </tr>
+    </table>
+    </div>
 {% endblock %}
 
 {% block js %}
@@ -306,7 +325,11 @@
                                 etag: data.ETag,
                                 file_path:data.Location,
                             },function (res) {
-                                console.log(res);
+                                // 在数据库中写入成功，将已添加的数据在页面上动态展示
+                                var newTr = $('#rowTpl').find('tr').clone();
+                                newTr.find('.name').text(res.data.name);
+                                $('#rowList').append(newTr);
+
                             })
                         }else {
                             tr.find('.progress-error').text('上传失败');

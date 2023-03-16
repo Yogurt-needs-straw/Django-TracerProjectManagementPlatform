@@ -204,7 +204,11 @@ def file_post(request, project_id):
         instance = models.FileRepository.objects.create(**data_dict)
         # 添加成功之后，获取到添加的那个对象
         result = {
+            'id': instance.id,
             'name': instance.name,
+            'file_size': instance.file_size,
+            'username': instance.update_user.username,
+            'datetime': instance.update_datetime,
             'file_type': instance.get_file_type_display()
         }
 

@@ -50,7 +50,9 @@ class FileModelForm(forms.ModelForm):
     def clean_file_path(self):
         return "https://{}".format(self.cleaned_data['file_path'])
 
+
     ''' 前端向后台上传文件校验 '''
+    '''
     def clean(self):
         key = self.cleaned_data['key']
         etag = self.cleaned_data['etag']
@@ -83,5 +85,6 @@ class FileModelForm(forms.ModelForm):
             self.add_error('size', '文件大小错误')
 
         return self.cleaned_data
+        '''
 
 
