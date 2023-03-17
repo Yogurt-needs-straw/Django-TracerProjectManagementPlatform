@@ -79,6 +79,17 @@ def delete_file(bucket, region, key):
         Key=key,
     )
 
+def check_file(bucket, region, key):
+    config = CosConfig(Region=region, SecretId=settings.TENCENT_COS_ID, SecretKey=settings.TENCENT_COS_KEY)
+    client = CosS3Client(config)
+
+    #
+    data = client.head_object(
+        Bucket=bucket,
+        Key=key,
+    )
+    return data
+
 def delete_file_list(bucket, region, key_list):
 
     config = CosConfig(Region=region, SecretId=settings.TENCENT_COS_ID, SecretKey=settings.TENCENT_COS_KEY)

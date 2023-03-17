@@ -202,14 +202,19 @@ def file_post(request, project_id):
             'update_user': request.tracer.user,
         })
         instance = models.FileRepository.objects.create(**data_dict)
+
+        # 项目的已使用空间:更新 (data_dict['file_size'])
+        request.tracer.project.use_space += data_dict['file_size']
+        request.tracer.project.save()
+
         # 添加成功之后，获取到添加的那个对象
         result = {
             'id': instance.id,
             'name': instance.name,
             'file_size': instance.file_size,
             'username': instance.update_user.username,
-            'datetime': instance.update_datetime,
-            'file_type': instance.get_file_type_display()
+            'datetime': instance.update_datetime.strftime("%Y年%m月%d日 %H:%M"),
+            # 'file_type': instance.get_file_type_display()
         }
 
         return JsonResponse({'status': True, 'data': result})
