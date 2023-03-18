@@ -1561,4 +1561,47 @@ $('#progressList').append(tr);
 **7.9.5.4 上传文件保存到数据库**
 
 - 每上传一个文件就向后台发送一个成功的任务 ajax请求
+- 数据校验
+- 存入数据库
 
+通过指针存入数据库
+
+```python
+instance = models.FileRepository.objects.create(**data_dict)
+```
+
+
+
+更新项目已使用空间
+
+```python
+ # 项目的已使用空间:更新 (data_dict['file_size'])
+    request.tracer.project.use_space += data_dict['file_size']
+    request.tracer.project.save()
+```
+
+添加成功后返回数据给前端
+
+```python
+ # 添加成功之后，获取到添加的那个对象
+    result = {
+        'id': instance.id,
+        'name': instance.name,
+        'file_size': instance.file_size,
+        'username': instance.update_user.username,
+        'datetime': instance.update_datetime.strftime("%Y年%m月%d日 %H:%M"),
+        # 'file_type': instance.get_file_type_display()
+    }
+```
+
+
+
+**7.9.5.5 点击下载**
+
+
+
+**7.9.5.6 删除项目**
+
+- 数据库项目删除
+
+- COS中桶删除（碎片文件）
