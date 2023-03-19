@@ -1605,3 +1605,16 @@ instance = models.FileRepository.objects.create(**data_dict)
 - 数据库项目删除
 
 - COS中桶删除（碎片文件）
+
+
+
+#### 8 问题管理
+
+##### 8.1 表结构设计
+
+##### 8.2 新建问题展示列表
+
+- 分页处理
+
+
+
