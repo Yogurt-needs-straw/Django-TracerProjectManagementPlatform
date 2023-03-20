@@ -1598,6 +1598,27 @@ instance = models.FileRepository.objects.create(**data_dict)
 
 **7.9.5.5 点击下载**
 
+```
+浏览器          django
+请求            HttpResponse(...) 文本：响应头
+请求            render(...)       文本：响应头
+请求			  ...				文件内容：响应头
+```
+
+
+
+```python
+def download(request):
+    # 打开文件，获取文件的内容
+    with open('xxx.png', mode="rb") as f:
+        data = f.read()
+        
+    response = HttpResponse(data)
+    # 设置响应头
+    response['Content-Disposition'] = "attachment; filename = xxx.png"
+    return response
+```
+
 
 
 **7.9.5.6 删除项目**
