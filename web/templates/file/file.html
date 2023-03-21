@@ -114,6 +114,11 @@
                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                         编辑
                     </a>
+                {% else %}
+                    <a class="btn btn-default btn-xs" href="/manage/{{ request.tracer.project.id }}/file/download/{{ item.id }}">
+                        <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                        下载
+                    </a>
                 {% endif %}
                 <a class="btn btn-danger btn-xs" data-toggle="modal"
                    data-fid = "{{ item.id }}"
@@ -215,11 +220,10 @@
             <td class="username"></td>
             <td class="datetime"></td>
             <td>
-                <!--
                 <a class="btn btn-default btn-xs download">
                     <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                    下载
                 </a>
-                -->
                 <a class="btn btn-danger btn-xs delete" data-toggle="modal" data-target="#alertModal">
                     <i class="fa fa-trash" aria-hidden="true"></i>
                 </a>
@@ -335,6 +339,7 @@
                                 newTr.find('.username').text(res.data.username);
                                 newTr.find('.datetime').text(res.data.datetime);
                                 newTr.find('.delete').attr('data-fid',res.data.id);
+                                newTr.find('.download').attr('href',res.data.download_url);
                                 $('#rowList').append(newTr);
 
                                 // 文件加载完 删除进度条

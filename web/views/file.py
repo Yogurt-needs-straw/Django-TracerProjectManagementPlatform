@@ -2,6 +2,7 @@ import json
 
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.urls import reverse
 
 from utils.tencent.cos import delete_file, delete_file_list, credential
 from web import models
@@ -214,10 +215,19 @@ def file_post(request, project_id):
             'file_size': instance.file_size,
             'username': instance.update_user.username,
             'datetime': instance.update_datetime.strftime("%Y年%m月%d日 %H:%M"),
+            'download_url': reverse('web:file_download', kwargs={"project_id": project_id, 'file_id': instance.id}),
             # 'file_type': instance.get_file_type_display()
         }
 
         return JsonResponse({'status': True, 'data': result})
 
     return JsonResponse({'status': False, 'data': "文件错误"})
+
+
+def file_download(request, project_id, file_id):
+    ''' 下载文件 '''
+
+    print(file_id)
+
+    return JsonResponse({})
 
