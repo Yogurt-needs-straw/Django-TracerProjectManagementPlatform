@@ -1,7 +1,8 @@
 import json
 
+import requests
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 
 from utils.tencent.cos import delete_file, delete_file_list, credential
@@ -227,7 +228,19 @@ def file_post(request, project_id):
 def file_download(request, project_id, file_id):
     ''' 下载文件 '''
 
-    print(file_id)
+    # 文件内容
+    # 响应头
+    # 打开文件，获取文件的内容
 
-    return JsonResponse({})
+    # 数据库查询该文件访问url
+    file_object = models.FileRepository.objects.filter(id=file_id, project_id=project_id).first()
+
+    res = requests.get(file_object.file_path)
+    data = res.content
+
+    response = HttpResponse(data)
+    # 设置响应头
+    response['Content-Disposition'] = "attachment; filename={}".format(file_object.name)
+
+    return response
 
