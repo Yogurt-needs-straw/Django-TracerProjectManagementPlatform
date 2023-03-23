@@ -20,7 +20,3 @@ def project_statistics(request, project_id):
 #
 #     return render(request, 'manage/file.html')
 
-
-def project_setting(request, project_id):
-
-    return render(request, 'manage/setting.html')

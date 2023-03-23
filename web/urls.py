@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, re_path, include
 
-from web.views import account, home, project, manage, wiki, file
+from web.views import account, home, project, manage, wiki, file, setting
 
 app_name = 'web'
 
@@ -47,7 +47,8 @@ urlpatterns = [
         path('file/post/', file.file_post, name='file_post'),
         path('file/download/<int:file_id>/', file.file_download, name='file_download'),
 
-        path('setting/', manage.project_setting, name='setting'),
+        path('setting/', setting.setting, name='setting'),
+        path('setting/delete', setting.delete, name='setting_delete'),
     ], None)),
 
 ]
