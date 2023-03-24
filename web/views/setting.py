@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect
 
+from utils.tencent.cos import delete_bucket
+from web import models
+
 
 def setting(request, project_id):
 
@@ -13,7 +16,7 @@ def delete(request, project_id):
 
     project_name = request.POST.get('project_name')
 
-    if not project_name or project_name != request.tracer.name:
+    if not project_name or project_name != request.tracer.project.name:
         return render(request, 'setting/delete.html', {'error': "项目名错误"})
 
     # 项目名写对了则删除(只有项目创建者可以删除)
@@ -26,6 +29,12 @@ def delete(request, project_id):
     # -删除桶
 
     # 2.删除项目
+
+    # 删除项目桶文件
+    delete_bucket(request.tracer.project.bucket, request.tracer.project.region)
+
+    # 删除数据库项目
+    models.Project.objects.filter(id=request.tracer.project.id).delete()
 
     # 3.返回项目列表页
     return redirect("web:project_list")
