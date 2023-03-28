@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, re_path, include
 
-from web.views import account, home, project, manage, wiki, file, setting
+from web.views import account, home, project, manage, wiki, file, setting, issues
 
 app_name = 'web'
 
@@ -29,7 +29,6 @@ urlpatterns = [
     # 使用路由分发
     path('manage/<int:project_id>/', include([
         path('dashboard/', manage.project_dashboard, name='dashboard'),
-        path('issues/', manage.project_issues, name='issues'),
         path('statistics/', manage.project_statistics, name='statistics'),
 
         # wiki路径
@@ -49,6 +48,8 @@ urlpatterns = [
 
         path('setting/', setting.setting, name='setting'),
         path('setting/delete', setting.delete, name='setting_delete'),
+
+        path('issues/', issues.issues, name='issues'),
     ], None)),
 
 ]
