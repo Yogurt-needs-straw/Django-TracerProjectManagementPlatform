@@ -1,6 +1,7 @@
 {% extends 'layout/manage.html' %}
-
+{% load static %}
 {% block css %}
+    <link rel="stylesheet" href="{% static 'plugin/editor-md/css/editormd.min.css' %}">
     <style>
      .issues-list .number {
         width: 100px;
@@ -149,7 +150,70 @@
           </div>
             <!-- 中间表单信息 -->
           <div class="modal-body" style="padding-right: 40px;">
+            <form id="addForm" class="form-horizontal">
 
+              {% csrf_token %}
+                <div class="form-group">
+                    <label for="{{ form.issues_type.id_for_label }}"
+                           class="col-md-2 control-label">{{ form.issues_type.label }}</label>
+                    <div class="col-md-10">
+                        <div>
+                            <div>
+                                {{ form.issues_type }}
+                            </div>
+                            <div class="error-msg"></div>
+                        </div>
+                        <div class="error-msg"></div>
+                    </div>
+                </div>
+                <!-- 主题 -->
+                <div class="form-group">
+                    <label for="{{ form.subject.id_for_label }}"
+                           class="col-md-2 control-label">{{ form.subject.label }}</label>
+                    <div class="col-md-10">
+                        <div>
+                            <div>
+                                {{ form.subject }}
+                            </div>
+                            <div class="error-msg"></div>
+                        </div>
+                        <div class="error-msg"></div>
+                    </div>
+                </div>
+
+                <!-- 模块 -->
+                <div class="form-group">
+                    <label for="{{ form.module.id_for_label }}"
+                           class="col-md-2 control-label">{{ form.module.label }}</label>
+                    <div class="col-md-10">
+                        <div>
+                            <div>
+                                {{ form.module }}
+                            </div>
+                            <div class="error-msg"></div>
+                        </div>
+                        <div class="error-msg"></div>
+                    </div>
+                </div>
+
+                <!-- markdown -->
+                <div class="form-group">
+                    <label for="{{ form.desc.id_for_label }}"
+                           class="col-md-2 control-label">{{ form.desc.label }}</label>
+                    <div class="col-md-10">
+                        <div>
+                            <div id="editor">
+                                {{ form.desc }}
+                            </div>
+
+                            <div class="error-msg"></div>
+                        </div>
+                        <div class="error-msg"></div>
+                    </div>
+                </div>
+
+
+            </form>
           </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
@@ -158,6 +222,40 @@
         </div>
       </div>
     </div>
+{% endblock %}
+
+{% block js %}
+    <script src={% static 'plugin/editor-md/editormd.min.js' %}></script>
+    <script>
+
+    var WIKI_UPLOAD_URL = "/manage/"+ {{ request.tracer.project.id }} + "/wiki/upload/"
+
+
+    $(function () {
+        bindBootStrapShownEvent();
+    });
+
+    function bindBootStrapShownEvent(){
+        $('#addModal').on('shown.bs.modal', function (event) {
+            // 模态对话框弹出，内容触发
+            initEdtorMd();
+        })
+    }
+
+    /*
+    初始化markdown编辑器(textare转换为编辑器)
+     */
+    function initEdtorMd() {
+        editormd("editor",{
+            placeholder: "请输入内容",
+            height: 300,
+            path: "{% static 'plugin/editor-md/lib/' %}",
+            imageUpload: true, // 上传本地文件
+            imageFormats:["jpg","jpeg","png","gif"],
+            imageUploadURL:WIKI_UPLOAD_URL,
+        })
+    }
+    </script>
 {% endblock %}
 
 
