@@ -1731,6 +1731,18 @@ class IssuesType(models.Model):
 - 显示对话框
 - 显示用户要填写的数据（表单）
 
+前端插件：
+
+- [bootstrap-datepicker]([bootstrap-datepicker — bootstrap-datepicker documentation](https://bootstrap-datepicker.readthedocs.io/en/latest/))
+
+```javascript
+<link rel="stylesheet" href="{% static 'plugin/bootstrap-datepicker-1.9.0-dist/css/bootstrap-datepicker.min.css' %}">
+
+<script src={% static 'plugin/bootstrap-datepicker-1.9.0-dist/js/bootstrap-datepicker.min.js' %}></script>
+<script src={% static 'plugin/bootstrap-datepicker-1.9.0-dist/locales/bootstrap-datepicker.zh-CN.min.js' %}></script>
+    
+```
+
 
 
 ##### 9.3 问题列表
