@@ -11,6 +11,8 @@ class UserInfo(models.Model):
     # 添加价格，登录成功后，访问后台管理时，可不用通过排序，可提升业务查询效率。
     # price_policy = models.ForeignKey(verbose_name='价格策略', to='PricePolicy', null=True, blank=True)
 
+    def __str__(self):
+        return self.username
 
 class PricePolicy(models.Model):
     ''' 价格策略 '''

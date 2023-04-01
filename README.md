@@ -1731,7 +1731,7 @@ class IssuesType(models.Model):
 - 显示对话框
 - 显示用户要填写的数据（表单）
 
-前端插件：
+日期选择插件：
 
 - [bootstrap-datepicker]([bootstrap-datepicker — bootstrap-datepicker documentation](https://bootstrap-datepicker.readthedocs.io/en/latest/))
 
@@ -1740,6 +1740,21 @@ class IssuesType(models.Model):
 
 <script src={% static 'plugin/bootstrap-datepicker-1.9.0-dist/js/bootstrap-datepicker.min.js' %}></script>
 <script src={% static 'plugin/bootstrap-datepicker-1.9.0-dist/locales/bootstrap-datepicker.zh-CN.min.js' %}></script>
+    
+```
+
+选择框插件
+
+- [bootstrap-select]([Bootstrap Select中文网](https://www.bootstrapselect.cn/))
+
+> 需要在modelForm中添加属性
+
+```html
+<link rel="stylesheet" href="{% static 'plugin/bootstrap-select-1.13.9/dist/css/bootstrap-select.min.css' %}">
+
+
+<script src={% static 'plugin/bootstrap-select-1.13.9/dist/js/bootstrap-select.min.js' %}></script>
+<script src={% static 'plugin/bootstrap-select-1.13.9/dist/js/i18n/defaults-zh_CN.min.js' %}></script>
     
 ```
 
