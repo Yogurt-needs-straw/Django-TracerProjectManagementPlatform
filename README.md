@@ -1758,9 +1758,9 @@ class IssuesType(models.Model):
     
 ```
 
-
-
 ##### 9.3 问题列表
+
+ajax + 添加 + 页面刷新
 
 
 
