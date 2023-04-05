@@ -16,3 +16,13 @@ class IssuesModelForm(BootStrapForm, forms.ModelForm):
             "attention": forms.SelectMultiple(attrs={'class': "selectpicker", "data-live-search": "true", "data-actions-box": "true"}),
         }
 
+    def __init__(self, request, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # 处理数据初始化
+
+        # 获取当前项目的所有问题类型
+        self.fields['issues_type'].choices = models.IssuesType.objects.filter(
+            project=request.tracer.project).values_list('id', 'title')
+
+        # 获取当前项目的所有模块
