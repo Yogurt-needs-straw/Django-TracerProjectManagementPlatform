@@ -186,8 +186,11 @@ class Module(models.Model):
 
 class IssuesType(models.Model):
     ''' 问题类型 例如：任务、功能、Bug '''
+
+    PROJECT_INIT_LIST = ["任务", "功能", "Bug"]
+
     title = models.CharField(verbose_name='类型名称', max_length=32)
-    color = models.SmallIntegerField(verbose_name='颜色')
+    # color = models.SmallIntegerField(verbose_name='颜色')
     project = models.ForeignKey(verbose_name='项目', to='Project', on_delete=models.CASCADE)
 
     def __str__(self):

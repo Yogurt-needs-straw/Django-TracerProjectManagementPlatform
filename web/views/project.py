@@ -63,15 +63,24 @@ def project_list(request):
 
         creat_bucket(bucket, region)
         # 把桶和区域写到数据库
+        # 验证通过: 项目名、颜色、项目描述、创建者(当前用户)
 
         form.instance.bucket = bucket
         form.instance.region = region
-
-        # 验证通过: 项目名、颜色、项目描述、创建者(当前用户)
         # 创建者(当前用户)
         form.instance.creator = request.tracer.user
+
         # 创建项目
-        form.save()
+        instance = form.save()
+
+        # 项目初始化问题类型
+        issues_type_object_list = []
+        # ["任务", "功能", "Bug"]
+        for item in models.IssuesType.PROJECT_INIT_LIST:
+            issues_type_object_list.append(models.IssuesType(project=instance, title=item))
+        # print(issues_type_object_list)
+        # 创建项目时添加IssuesType默认参数 project 和 title
+        models.IssuesType.objects.bulk_create(issues_type_object_list)
 
         # 返回添加成功
         return JsonResponse({'status': True})
