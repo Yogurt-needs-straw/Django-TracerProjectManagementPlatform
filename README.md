@@ -483,23 +483,23 @@ function initCatalog() {
 
 ```html
 <div class="panel-body">
-          <div class="col-sm-3 title-list">
-              <div>目录</div>
-          </div>
-          <div class="col-sm-9 content">
-              <form method="post">
-              {% csrf_token %}
-              {% for field in form %}
-              <div class="form-group">
+    <div class="col-sm-3 title-list">
+        <div>目录</div>
+    </div>
+    <div class="col-sm-9 content">
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                 {{ field }}
                 <span class="error-msg">{{ field.errors.0 }}</span>
-              </div>
-              {% endfor %}
-              <button type="submit" class="btn btn-primary">提 交</button>
-              </form>
-          </div>
-      </div>
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">提 交</button>
+        </form>
+    </div>
+</div>
 ```
 
 forms/wiki
@@ -1761,6 +1761,8 @@ class IssuesType(models.Model):
 ##### 9.2.2 添加问题
 
 **数据初始化 和 合法性**
+
+
 
 
 
