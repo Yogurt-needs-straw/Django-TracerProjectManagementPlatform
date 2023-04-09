@@ -32,6 +32,10 @@
         background-color: #dddddd;
     }
 
+    .editormd{
+        margin-bottom: 0;
+    }
+
     .pd-0{
         padding: 0 !important;
     }
@@ -225,7 +229,9 @@
                         <label for="{{ form.status.id_for_label }}"
                            class="col-md-4 control-label">{{ form.status.label }}</label>
                         <div class="col-md-8 clearfix">
-                            {{ form.status }}
+                            <div>
+                                {{ form.status }}
+                            </div>
                             <div class="error-msg"></div>
                         </div>
                     </div>
@@ -233,7 +239,9 @@
                         <label for="{{ form.priority.id_for_label }}"
                            class="col-md-4 control-label">{{ form.priority.label }}</label>
                         <div class="col-md-8 clearfix">
-                            {{ form.priority }}
+                            <div>
+                                {{ form.priority }}
+                            </div>
                             <div class="error-msg"></div>
                         </div>
                     </div>
@@ -307,9 +315,9 @@
                     <div class="col-md-6 pd-0">
                         <label for="inputPassword3" class="col-md-4 control-label"> 父问题</label>
                         <div class="col-md-8">
-
-                            {{ form.parent }}
-
+                            <div>
+                                {{ form.parent }}
+                            </div>
                             <div class="error-msg"></div>
                         </div>
                     </div>
@@ -319,7 +327,7 @@
           </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
-              <button id="btnAdd" type="button" class="btn btn-primary" >添 加</button>
+              <button id="btnAddSubmit" type="button" class="btn btn-primary" >添 加</button>
           </div>
         </div>
       </div>
@@ -335,11 +343,13 @@
     <script>
 
     var WIKI_UPLOAD_URL = "/manage/"+ {{ request.tracer.project.id }} + "/wiki/upload/"
+    var POST_ISSUES = "/manage/"+ {{ request.tracer.project.id }} + "/issues/"
 
 
     $(function () {
         bindBootStrapShownEvent();
-        initDatePicker()
+        initDatePicker();
+        btnAddSubmit();
     });
 
     /*
@@ -373,6 +383,35 @@
             imageFormats:["jpg","jpeg","png","gif"],
             imageUploadURL:WIKI_UPLOAD_URL,
         })
+    }
+
+    /**
+     * 添加
+     */
+    function btnAddSubmit() {
+        $('#btnAddSubmit').click(function () {
+            // 清空错误信息
+            $("#addForm").find('.error-msg').empty();
+
+            // 发起ajax请求
+            $.ajax({
+                url:POST_ISSUES,
+                type:"POST",
+                data:$('#addForm').serialize(),
+                dataType:"JSON",
+                success:function (res) {
+                    {#console.log(res);#}
+                    if(res.status){
+                        location.href = location.href;
+                    }else {
+                        // 展示错误信息
+                        $.each(res.error, function (k,y) {
+                            $('#id_'+ k ).parent().next('.error-msg').text(y[0]);
+                        })
+                    }
+                }
+            })
+        });
     }
     </script>
 {% endblock %}
