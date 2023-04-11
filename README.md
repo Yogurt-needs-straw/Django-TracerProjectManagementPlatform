@@ -1776,6 +1776,19 @@ class IssuesType(models.Model):
 
 ajax + 添加 + 页面刷新
 
+> 知识点: 通过 str.rjust补充项目标签
+>
+> rjust(长度，“补充元素”)
+
+```python
+@register.simple_tag()
+def string_just(num):
+    if num < 100:
+        num = str(num).rjust(3, "0")
+
+    return "#{}".format(num)
+```
+
 
 
 ##### 9.4 自定义分页

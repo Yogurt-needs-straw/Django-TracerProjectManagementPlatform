@@ -1,5 +1,6 @@
 {% extends 'layout/manage.html' %}
 {% load static %}
+{% load issues %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'plugin/editor-md/css/editormd.min.css' %}">
     <link rel="stylesheet" href="{% static 'plugin/bootstrap-datepicker-1.9.0-dist/css/bootstrap-datepicker.min.css' %}">
@@ -80,13 +81,17 @@
                         <tr>
                             <td class="number">
                                 <i class="fa fa-circle text-{{ item.priority }}"></i>
-{#                                <a target="_blank"#}
-{#                                   href="{% url 'issues_detail' project_id=request.tracer.project.id issues_id=item.id %}">{% string_just item.id %}</a>#}
+                                <a target="_blank"
+                                   href="">
+                                    {% string_just item.id %}
+                                </a>
                             </td>
                             <td class="issue">
                                 <div>
-{#                                    <a target="_blank"#}
-{#                                       href="{% url 'issues_detail' project_id=request.tracer.project.id issues_id=item.id %}">{{ item.subject }}</a>#}
+                                    <a target="_blank"
+                                       href="">
+                                        {{ item.subject }}
+                                    </a>
                                 </div>
                                 <div class="tags">
                                     <span class="type">
@@ -96,6 +101,8 @@
                                         <i class="fa fa-refresh" aria-hidden="true"></i>
                                         {{ item.get_status_display }}
                                     </span>
+
+                                    <!-- 指派者 -->
                                     {% if item.assign %}
                                         <span>
                                         <i class="fa fa-hand-o-right" aria-hidden="true"></i>
@@ -103,16 +110,23 @@
                                     </span>
                                     {% endif %}
 
+                                    <!-- 作者 -->
                                     <span>
                                         <i class="fa fa-user-o" aria-hidden="true"></i>
                                         {{ item.creator.username }}
                                     </span>
+
+                                    <!-- 截至时间 -->
                                     {% if item.end_date %}
                                         <span><i class="fa fa-calendar"
-                                                 aria-hidden="true"></i> {{ item.end_date }} 截止</span>
+                                                 aria-hidden="true"></i> {{ item.end_date }} 截止
+                                        </span>
                                     {% endif %}
-                                    <span><i class="fa fa-clock-o"
-                                             aria-hidden="true"></i> {{ item.latest_update_datetime }} 更新</span>
+
+                                    <!-- 最后更新时间 -->
+                                    <span><i class="fa fa-clock-o" aria-hidden="true"></i>
+                                        {{ item.latest_update_datetime }} 更新
+                                    </span>
                                 </div>
                             </td>
                         </tr>
