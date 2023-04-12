@@ -1789,9 +1789,48 @@ def string_just(num):
     return "#{}".format(num)
 ```
 
-
-
 ##### 9.4 自定义分页
+
+> http://127.0.0.1:8000/manage/9/issues/?page=1
+
+- 数据库获取数据
+  - models.user.objects.all()[0:10]
+  - ...
+
+> 分页组件应用
+
+- 显示页码
+  - 点击当前访问的默认显示
+  - 显示11个页面
+
+```python
+分页组件应用：
+1. 在视图函数中
+    queryset = models.Issues.objects.filter(project_id=project_id)
+    page_object = Pagination(
+        current_page=request.GET.get('page'),
+        all_count=queryset.count(),
+        base_url=request.path_info,
+        query_params=request.GET
+    )
+    issues_object_list = queryset[page_object.start:page_object.end]
+
+    context = {
+        'issues_object_list': issues_object_list,
+        'page_html': page_object.page_html()
+    }
+    return render(request, 'issues.html', context)
+2. 前端
+    {% for item in issues_object_list %}
+        {{item.xxx}}
+    {% endfor %}
+
+     <nav aria-label="...">
+        <ul class="pagination" style="margin-top: 0;">
+            {{ page_html|safe }}
+        </ul>
+    </nav>
+```
 
 
 
