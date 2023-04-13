@@ -44,3 +44,9 @@ def issues(request, project_id):
 
     return JsonResponse({'status': False, 'error': form.errors})
 
+
+def issues_detail(request, project_id, issues_id):
+    ''' 编辑问题 '''
+    form = IssuesModelForm(request)
+    return render(request, 'issues/issues_detail.html', {'form': form})
+
