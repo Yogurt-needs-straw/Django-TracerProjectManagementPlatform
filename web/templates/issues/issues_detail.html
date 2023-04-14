@@ -288,8 +288,25 @@
             imageUpload: true, // 上传本地文件
             imageFormats:["jpg","jpeg","png","gif"],
             imageUploadURL:WIKI_UPLOAD_URL,
+            toolbarAutoFixed: false,
+            // 编辑栏功能项
+            //toolbarIcons:function () {
+              // return ["bold"]
+            //},
+
+            // 自定义按钮 方法触发
+            //toolbarCustomIcons:{
+            //  save:"<input type='button' value='保存' class='btn btn-success btn-sm' onclick='saveDesc();' />"
+            //},
+
+            // 默认为浏览模式
+            onload:function () {
+                this.previewing();
+            }
         })
     }
+
+
 
     </script>
 

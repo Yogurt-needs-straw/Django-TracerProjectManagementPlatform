@@ -47,6 +47,11 @@ def issues(request, project_id):
 
 def issues_detail(request, project_id, issues_id):
     ''' 编辑问题 '''
-    form = IssuesModelForm(request)
+
+    # 表单默认信息填充
+    issues_object = models.Issues.objects.filter(id=issues_id, project_id=project_id).first()
+
+    form = IssuesModelForm(request, instance=issues_object)
     return render(request, 'issues/issues_detail.html', {'form': form})
+
 

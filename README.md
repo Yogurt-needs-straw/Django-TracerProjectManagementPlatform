@@ -1836,6 +1836,12 @@ def string_just(num):
 
 ##### 9.5 编辑问题
 
+> 知识点：target="_blank" 打开新的页面
+>
+> ```
+> <a target="_blank">
+> ```
+
 - 回复
 
 

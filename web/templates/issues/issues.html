@@ -82,14 +82,14 @@
                             <td class="number">
                                 <i class="fa fa-circle text-{{ item.priority }}"></i>
                                 <a target="_blank"
-                                   href="">
+                                   href="/manage/{{ request.tracer.project.id }}/issues/detail/{{ item.id }}/">
                                     {% string_just item.id %}
                                 </a>
                             </td>
                             <td class="issue">
                                 <div>
                                     <a target="_blank"
-                                       href="">
+                                       href="/manage/{{ request.tracer.project.id }}/issues/detail/{{ item.id }}/">
                                         {{ item.subject }}
                                     </a>
                                 </div>
