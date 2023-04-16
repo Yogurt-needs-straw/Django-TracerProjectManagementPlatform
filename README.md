@@ -1846,6 +1846,35 @@ def string_just(num):
 
 ##### 9.5.2 问题讨论（回复嵌套）
 
+表结构
+
+| ID   | 内容 | 类型     | 评论者 | 时间 | FK自己 | FK问题 |
+| ---- | ---- | -------- | ------ | ---- | ------ | ------ |
+|      |      | 回复     |        |      |        |        |
+|      |      | 修改记录 |        |      |        |        |
+|      |      |          |        |      |        |        |
+
+```python
+class IssuesReply(models.Model):
+    """ 问题回复"""
+
+    reply_type_choices = (
+        (1, '修改记录'),
+        (2, '回复')
+    )
+    reply_type = models.IntegerField(verbose_name='类型', choices=reply_type_choices)
+
+    issues = models.ForeignKey(verbose_name='问题', to='Issues', on_delete=models.CASCADE)
+    content = models.TextField(verbose_name='描述')
+    creator = models.ForeignKey(verbose_name='创建者', to='UserInfo', related_name='create_reply', on_delete=models.CASCADE)
+    create_datetime = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+
+    reply = models.ForeignKey(verbose_name='回复', to='self', null=True, blank=True, on_delete=models.CASCADE)
+
+```
+
+
+
 ajax 请求获取所有评论
 
 - 获取评论
