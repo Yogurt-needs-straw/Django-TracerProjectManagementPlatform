@@ -258,11 +258,12 @@
     <script>
 
     var WIKI_UPLOAD_URL = "/manage/"+ {{ request.tracer.project.id }} + "/wiki/upload/"
-
+    var ISSUES_RECORD_API = "/manage/"+ {{ request.tracer.project.id }} + "/issues/record/{{ issues_object.id }}"
 
     $(function () {
         initDatePicker();
         initEdtorMd();
+        initIssuesRecord();
     });
 
     /*
@@ -306,6 +307,24 @@
         })
     }
 
+    /**
+     * 问题评论的初始化
+     */
+    function initIssuesRecord() {
+        $.ajax({
+            url: ISSUES_RECORD_API,
+            type: "GET",
+            dataType: 'JSON',
+            success: function (res) {
+                if(res.status){
+                    // res.data [{}]
+
+                }else {
+
+                }
+            }
+        })
+    }
 
 
     </script>
