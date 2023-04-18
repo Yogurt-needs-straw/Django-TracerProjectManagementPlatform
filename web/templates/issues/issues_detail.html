@@ -5,7 +5,56 @@
     <link rel="stylesheet" href="{% static 'plugin/editor-md/css/editormd.min.css' %}">
     <link rel="stylesheet" href="{% static 'plugin/bootstrap-datepicker-1.9.0-dist/css/bootstrap-datepicker.min.css' %}">
     <link rel="stylesheet" href="{% static 'plugin/bootstrap-select-1.13.9/dist/css/bootstrap-select.min.css' %}">
+    <style>
+    .comment-area .item {
+        margin-top: 20px;
+    }
 
+    .comment-area .left-avatar {
+        float: left;
+        margin-right: 10px;
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        background-color: #304659;
+        color: white;
+        text-align: center;
+        line-height: 30px;
+        border-radius: 50%;
+    }
+
+    .comment-area .right-info {
+        padding-left: 35px;
+    }
+
+    .comment-area .right-info .desc .msg {
+        display: inline-block;
+        padding-right: 20px;
+        color: #8c8c8c;
+    }
+
+    .comment-area .child {
+        padding-left: 55px;
+    }
+
+    .comment-area .error-msg {
+        color: red;
+    }
+
+    .comment-area .reply-user {
+        display: inline-block;
+        background-color: #ddd;
+        color: black;
+        padding: 6px 8px;
+        margin-left: 20px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .editormd-fullscreen {
+        z-index: 1001;
+    }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -318,7 +367,9 @@
             success: function (res) {
                 if(res.status){
                     // res.data [{}]
-
+                    $.each(res.data, function (index, item) {
+                        createRecordNode(item);
+                    })
                 }else {
 
                 }
@@ -326,6 +377,29 @@
         })
     }
 
+    /**
+     * 创建操作记录节点
+     */
+    function createRecordNode(nodeDict){
+        var $item = $("#recordTemplate").find('.item').clone();
+        $item.find('.left-avatar').html(nodeDict.creator[0].toUpperCase());
+        $item.find('pre').html(nodeDict.content);
+        $item.find('.user').html(nodeDict.creator);
+        $item.find('.type').html(nodeDict.reply_type_text);
+        $item.find('.date').html(nodeDict.datetime);
+
+        // 给标签添加两个属性 id 和 创建者
+        $item.attr({id: nodeDict.id, username: nodeDict.creator});
+
+        // 判断是否有父节点
+        if (nodeDict.parent_id) {
+            // 挂在谁下
+            $('#' + nodeDict.parent_id).children('.child').append($item);
+        } else {
+            // 根下
+            $('.comment-list').append($item);
+        }
+    }
 
     </script>
 

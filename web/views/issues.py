@@ -52,11 +52,12 @@ def issues_detail(request, project_id, issues_id):
     issues_object = models.Issues.objects.filter(id=issues_id, project_id=project_id).first()
 
     form = IssuesModelForm(request, instance=issues_object)
-    return render(request, 'issues/issues_detail.html', {'form': form})
+    return render(request, 'issues/issues_detail.html', {'form': form, "issues_object": issues_object})
 
 
 def issues_record(request, project_id, issues_id):
     ''' 初始化操作记录 '''
+    print(issues_id)
     reply_list = models.IssuesReply.objects.filter(issues_id=issues_id, issues__project=request.tracer.project)
 
     # 将queryset转换为json格式
