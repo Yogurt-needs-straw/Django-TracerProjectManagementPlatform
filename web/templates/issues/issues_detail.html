@@ -313,6 +313,8 @@
         initDatePicker();
         initEdtorMd();
         initIssuesRecord();
+        bindReply();
+        bindCancelReplyUser();
     });
 
     /*
@@ -399,6 +401,28 @@
             // 根下
             $('.comment-list').append($item);
         }
+    }
+
+    /*
+    回复问题
+     */
+    function bindReply() {
+        $('.comment-list').on('click', '.reply', function () {
+            var $item = $(this).parent().parent().parent();
+            var id = $item.attr('id');
+            var username = $item.attr('username');
+            $('#replyUser').removeClass('hide').attr('parent-id', id).children('span').text(username);
+        })
+    }
+
+    /*
+    取消回复
+     */
+    function bindCancelReplyUser() {
+
+        $('#replyUser').click(function () {
+            $(this).addClass('hide').removeAttr('parent-id').children('span').text("");
+        })
     }
 
     </script>

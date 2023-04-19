@@ -57,7 +57,7 @@ def issues_detail(request, project_id, issues_id):
 
 def issues_record(request, project_id, issues_id):
     ''' 初始化操作记录 '''
-    print(issues_id)
+    # print(issues_id)
     reply_list = models.IssuesReply.objects.filter(issues_id=issues_id, issues__project=request.tracer.project)
 
     # 将queryset转换为json格式
