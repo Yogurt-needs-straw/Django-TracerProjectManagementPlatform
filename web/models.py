@@ -1,5 +1,7 @@
 from django.db import models
 
+from web import forms
+
 
 class UserInfo(models.Model):
     # db_index 索引
@@ -211,5 +213,3 @@ class IssuesReply(models.Model):
     create_datetime = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
 
     reply = models.ForeignKey(verbose_name='回复', to='self', null=True, blank=True, on_delete=models.CASCADE)
-
-

@@ -307,7 +307,7 @@
     <script>
 
     var WIKI_UPLOAD_URL = "/manage/"+ {{ request.tracer.project.id }} + "/wiki/upload/"
-    var ISSUES_RECORD_API = "/manage/"+ {{ request.tracer.project.id }} + "/issues/record/{{ issues_object.id }}"
+    var ISSUES_RECORD_API = "/manage/"+ {{ request.tracer.project.id }} + "/issues/record/{{ issues_object.id }}/"
 
     $(function () {
         initDatePicker();
@@ -315,6 +315,7 @@
         initIssuesRecord();
         bindReply();
         bindCancelReplyUser();
+        bindSubmit();
     });
 
     /*
@@ -423,6 +424,38 @@
         $('#replyUser').click(function () {
             $(this).addClass('hide').removeAttr('parent-id').children('span').text("");
         })
+    }
+
+    /*
+    点击评论
+     */
+    function bindSubmit() {
+        $('#btnSubmit').click(function () {
+            $("#commentText .error-msg").text("");
+            $.ajax({
+                url: ISSUES_RECORD_API,
+                type:"POST",
+                data:{
+                    content:$('#content').val(),
+                    reply:$("#replyUser").attr('parent-id'),
+                },
+                dataType: "JSON",
+                success: function (res) {
+                    if(res.status){
+                        // 添加节点
+                        createRecordNode(res.data);
+                        // 输入框的内容清空
+                        $('#content').val('');
+                        $('#replyUser').addClass('hide').removeAttr('parent-id').children('span').text("");
+                    }else {
+                        $.each(res.error, function (k, v) {
+                            $('#content').next('.error-msg').text(v[0]);
+                        })
+                    }
+                }
+            })
+        })
+
     }
 
     </script>

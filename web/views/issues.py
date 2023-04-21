@@ -1,9 +1,10 @@
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 
 from utils.pagination import Pagination
 from web import models
-from web.forms.issues import IssuesModelForm
+from web.forms.issues import IssuesModelForm, IssuesReplyModelForm
 
 
 def issues(request, project_id):
@@ -54,24 +55,49 @@ def issues_detail(request, project_id, issues_id):
     form = IssuesModelForm(request, instance=issues_object)
     return render(request, 'issues/issues_detail.html', {'form': form, "issues_object": issues_object})
 
-
+@csrf_exempt
 def issues_record(request, project_id, issues_id):
     ''' 初始化操作记录 '''
-    # print(issues_id)
-    reply_list = models.IssuesReply.objects.filter(issues_id=issues_id, issues__project=request.tracer.project)
 
-    # 将queryset转换为json格式
-    data_list = []
-    for row in reply_list:
-        data = {
-            'id': row.id,
-            'reply_type_text': row.get_reply_type_display(),
-            'content': row.content,
-            'creator': row.creator.username,
-            'datetime': row.create_datetime.strftime("%Y-%m-%d %H:%M"),
-            'parent_id': row.reply_id,
+    # 判断是否可以评论和是否可以操作这个问题
+
+
+    if request.method == "GET":
+        # print(issues_id)
+        reply_list = models.IssuesReply.objects.filter(issues_id=issues_id, issues__project=request.tracer.project)
+
+        # 将queryset转换为json格式
+        data_list = []
+        for row in reply_list:
+            data = {
+                'id': row.id,
+                'reply_type_text': row.get_reply_type_display(),
+                'content': row.content,
+                'creator': row.creator.username,
+                'datetime': row.create_datetime.strftime("%Y-%m-%d %H:%M"),
+                'parent_id': row.reply_id,
+            }
+            data_list.append(data)
+
+        return JsonResponse({'status': True, 'data': data_list})
+
+    form = IssuesReplyModelForm(data=request.POST)
+    if form.is_valid():
+        form.instance.issues_id = issues_id
+        form.instance.reply_type = 2
+        form.instance.creator = request.tracer.user
+        instance = form.save()
+        info = {
+            'id': instance.id,
+            'reply_type_text': instance.get_reply_type_display(),
+            'content': instance.content,
+            'creator': instance.creator.username,
+            'datetime': instance.create_datetime.strftime("%Y-%m-%d %H:%M"),
+            'parent_id': instance.reply_id,
         }
-        data_list.append(data)
 
-    return JsonResponse({'status': True, 'data': data_list})
+        return JsonResponse({'status': True, 'data': info})
+
+    return JsonResponse({'status': False, 'error': form.errors})
+
 
