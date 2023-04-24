@@ -1882,6 +1882,45 @@ ajax 请求获取所有评论
 
 **9.5.2 评论&回复**
 
+> 反射
+>
+> ```python
+> print(xxx_object.name)
+> pring(getattr(xxx_object,"name"))
+> 
+> 示例1：
+> 	request.POST
+>     getattr(request,'POST')
+> 示例2：
+> 	row = models.User.objects.filter(id=1).first()
+>     row.name
+>     row.email
+>     getattr(row,'name')
+>     
+> xxx_object.name = "xxx"
+> setattr(xxx_object,"name","xxx")
+> 
+> 示例1：
+> 	row = models.User.object.filer(id=1).first()
+>     row.email = "xxx@xxx.com"
+>     setattr(row,'email',"xxx@xxx.com")
+>     row.save()
+> ```
+>
+> 用法案例：
+>
+> 通过ajax发送一个数据`{'v1':"email,'v2':"123@qq.com",}`或`{'v1':"name",'v2':"wer"}`，获取到这个字典后，对数据库中的用户表进行更新操作。
+>
+> ```python
+> def index(request):
+>     data_dict = json.loads(request.body.decode('utf-8'))
+>     user_object = models.User.objects.filter(id=1).first()
+>     setattr(user_object,data_dict["v1"],data_dict["v2"])
+>     user_object.save()
+>     
+>     return JsonResponse({"status":"成功"})
+> ```
+
 - 回复
 
 
