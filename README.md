@@ -1921,6 +1921,21 @@ ajax 请求获取所有评论
 >     return JsonResponse({"status":"成功"})
 > ```
 
+**orm 字段**
+
+需求：前端发送字段`{'key':"email"}`，后端接收到数据之后，去ORM类User中校验是否允许为空。
+
+```python
+def index(request):
+    data_dict = json.loads(request.body.decode('utf-8'))
+    field_object = models.UserInfo.__meta.get_field(data_dict["key"])
+    
+    # 通过对象获取到对象属性值
+    print(field_object.verbose_name)
+```
+
+
+
 - 回复
 
 
