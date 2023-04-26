@@ -1934,6 +1934,42 @@ def index(request):
     print(field_object.verbose_name)
 ```
 
+**可迭代对象**
+
+类中定义了`__iter__`方法，且它返回一个迭代器，那么我们根据类创建的对象，为可迭代对象。
+
+可迭代对象支持for循环。
+
+```python
+class Bar:
+    def __iter__(self):
+        yield 1
+        yield 2
+        
+# 可迭代对象
+obj3 = Bar()
+obj4 = Bar()
+
+for item in obj3:
+    print(item) # 1、2、3
+    
+# 应用实例
+def index(request):
+    obj = Bar()
+    return render(request,'index.html',{'data_list':obj})
+```
+
+```html
+<html>
+  ···
+  <ul>
+  	{% for data in data_list %}
+       <li>{{ data }}</li>
+    {% endfor %}
+  </ul>
+</html>
+```
+
 
 
 - 回复
