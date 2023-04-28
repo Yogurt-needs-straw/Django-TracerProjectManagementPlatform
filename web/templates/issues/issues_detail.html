@@ -308,6 +308,7 @@
 
     var WIKI_UPLOAD_URL = "/manage/"+ {{ request.tracer.project.id }} + "/wiki/upload/"
     var ISSUES_RECORD_API = "/manage/"+ {{ request.tracer.project.id }} + "/issues/record/{{ issues_object.id }}/"
+    var EDITOR;
 
     $(function () {
         initDatePicker();
@@ -316,6 +317,7 @@
         bindReply();
         bindCancelReplyUser();
         bindSubmit();
+        bindChangeIssues();
     });
 
     /*
@@ -334,7 +336,7 @@
     初始化markdown编辑器(textare转换为编辑器)
      */
     function initEdtorMd() {
-        editormd("editor",{
+        EDITOR = editormd("editor",{
             placeholder: "请输入内容",
             height: 300,
             path: "{% static 'plugin/editor-md/lib/' %}",
@@ -343,14 +345,14 @@
             imageUploadURL:WIKI_UPLOAD_URL,
             toolbarAutoFixed: false,
             // 编辑栏功能项
-            //toolbarIcons:function () {
-              // return ["bold"]
-            //},
+            toolbarIcons: function () {
+                return ["bold","h1","h2","h3","h4","h5", "hr", "del", "italic", "quote", "|", "image", "preview", "watch", "fullscreen", "||", "save"]
+            },
 
             // 自定义按钮 方法触发
-            //toolbarCustomIcons:{
-            //  save:"<input type='button' value='保存' class='btn btn-success btn-sm' onclick='saveDesc();' />"
-            //},
+            toolbarCustomIcons: {
+                save: "<input type='button' value='保存' class='btn btn-success btn-sm' onclick='saveDesc();' />"
+            },
 
             // 默认为浏览模式
             onload:function () {
@@ -458,6 +460,19 @@
 
     }
 
+    function bindChangeIssues() {
+        $('#editForm').find('.form-control').change(function () {
+           // 内容变更
+            var postDict = {name:$(this).attr('name'), value:$(this).val()};
+            console.log(postDict)
+        });
+    }
+
+    function saveDesc() {
+        var postDict = {name:'desc', value:EDITOR.getValue()};
+        console.log(postDict);
+
+    }
     </script>
 
 {% endblock %}
