@@ -308,6 +308,7 @@
 
     var WIKI_UPLOAD_URL = "/manage/"+ {{ request.tracer.project.id }} + "/wiki/upload/"
     var ISSUES_RECORD_API = "/manage/"+ {{ request.tracer.project.id }} + "/issues/record/{{ issues_object.id }}/"
+    var ISSUES_CHANGE_API = "/manage/"+ {{ request.tracer.project.id }} + "/issues/change/{{ issues_object.id }}/"
     var EDITOR;
 
     $(function () {
@@ -464,14 +465,32 @@
         $('#editForm').find('.form-control').change(function () {
            // 内容变更
             var postDict = {name:$(this).attr('name'), value:$(this).val()};
-            console.log(postDict)
+            // 接受数据后发送
+            postAjaxData(postDict);
         });
     }
 
     function saveDesc() {
         var postDict = {name:'desc', value:EDITOR.getValue()};
-        console.log(postDict);
+        // 接受数据后发送
+        postAjaxData(postDict);
 
+    }
+    
+    function postAjaxData(postDict) {
+        // 发送ajax请求
+        $.ajax({
+            url:ISSUES_CHANGE_API,
+            type:"POST",
+            header:{
+              "Content-Type":"application/json;charset=utf-8",
+            },
+            data: JSON.stringify(postDict),
+            dataType:"JSON",
+            success:function (res) {
+                console.log(res);
+            }
+        })
     }
     </script>
 

@@ -1,3 +1,5 @@
+import json
+
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -100,4 +102,17 @@ def issues_record(request, project_id, issues_id):
 
     return JsonResponse({'status': False, 'error': form.errors})
 
+@csrf_exempt
+def issues_change(request, project_id, issues_id):
+    post_dict = json.loads(request.body.decode('utf-8'))
+    ''' {'name': 'issues_type', 'value': '2'} 
+        {'name': 'desc', 'value': '问题1123123'}
+        {'name': 'status', 'value': '4'}
+    '''
+    print(post_dict)
 
+    # 1. 数据库字段更新
+
+    # 2. 生成操作记录
+
+    return JsonResponse({})
