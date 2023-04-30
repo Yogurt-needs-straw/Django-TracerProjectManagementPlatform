@@ -104,14 +104,56 @@ def issues_record(request, project_id, issues_id):
 
 @csrf_exempt
 def issues_change(request, project_id, issues_id):
+
+    # 获取当前操作的对象
+    issues_object = models.Issues.objects.filter(id=issues_id,project_id=project_id).first()
+
     post_dict = json.loads(request.body.decode('utf-8'))
     ''' {'name': 'issues_type', 'value': '2'} 
         {'name': 'desc', 'value': '问题1123123'}
         {'name': 'status', 'value': '4'}
     '''
-    print(post_dict)
+    name = post_dict.get('name')
+    value = post_dict.get('value')
+    # print(post_dict)
+    field_object = models.Issues._meta.get_field(name)
 
     # 1. 数据库字段更新
+    # 1.1 文本
+    if name in ["subject", "desc", "start_date", "end_date"]:
+        if not value:
+            if not field_object.null:
+                return JsonResponse({'status': False, 'error': "您选择的值不能为空"})
+            setattr(issues_object, name, None)
+            issues_object.save()
+            # 记录：xxx更新为了空 field_object.verbose_name
+            change_record = "{}更新为空".format(field_object.verbose_name)
+        else:
+            # 提交数据库保存
+            setattr(issues_object, name, value)
+            issues_object.save()
+            # 记录：xxx更新为value
+            change_record = "{}更新为{}".format(field_object.verbose_name, value)
+
+        new_object = models.IssuesReply.objects.create(
+            reply_type=1,
+            issues=issues_object,
+            content=change_record,
+            creator=request.tracer.user,
+        )
+        new_reply_dict = {
+            'id': new_object.id,
+            'reply_type_text': new_object.get_reply_type_display(),
+            'content': new_object.content,
+            'creator': new_object.creator.username,
+            'datetime': new_object.create_datetime.strftime("%Y-%m-%d %H:%M"),
+            'parent_id': new_object.reply_id,
+        }
+        return JsonResponse({'status': True, 'data': new_reply_dict})
+    # 1.2 FK字段
+    # 1.3 choices字段
+    # 1.4 M2M字段
+
 
     # 2. 生成操作记录
 

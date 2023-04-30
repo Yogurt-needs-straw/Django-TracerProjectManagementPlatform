@@ -478,6 +478,9 @@
     }
     
     function postAjaxData(postDict) {
+        // 清空错误信息
+        $('#id_' + postDict.name).parent().next('.error-msg').text("");
+
         // 发送ajax请求
         $.ajax({
             url:ISSUES_CHANGE_API,
@@ -488,7 +491,11 @@
             data: JSON.stringify(postDict),
             dataType:"JSON",
             success:function (res) {
-                console.log(res);
+                if (res.status){
+                    createRecordNode(res.data);
+                }else {
+                    $('#id_' + postDict.name).parent().next('.error-msg').text(res.error);
+                }
             }
         })
     }
