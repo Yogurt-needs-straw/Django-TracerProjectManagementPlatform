@@ -118,6 +118,23 @@ def issues_change(request, project_id, issues_id):
     # print(post_dict)
     field_object = models.Issues._meta.get_field(name)
 
+    def create_reply_record(content):
+        new_object = models.IssuesReply.objects.create(
+            reply_type=1,
+            issues=issues_object,
+            content=change_record,
+            creator=request.tracer.user,
+        )
+        new_reply_dict = {
+            'id': new_object.id,
+            'reply_type_text': new_object.get_reply_type_display(),
+            'content': new_object.content,
+            'creator': new_object.creator.username,
+            'datetime': new_object.create_datetime.strftime("%Y-%m-%d %H:%M"),
+            'parent_id': new_object.reply_id,
+        }
+        return new_reply_dict
+
     # 1. 数据库字段更新
     # 1.1 文本
     if name in ["subject", "desc", "start_date", "end_date"]:
@@ -135,22 +152,35 @@ def issues_change(request, project_id, issues_id):
             # 记录：xxx更新为value
             change_record = "{}更新为{}".format(field_object.verbose_name, value)
 
-        new_object = models.IssuesReply.objects.create(
-            reply_type=1,
-            issues=issues_object,
-            content=change_record,
-            creator=request.tracer.user,
-        )
-        new_reply_dict = {
-            'id': new_object.id,
-            'reply_type_text': new_object.get_reply_type_display(),
-            'content': new_object.content,
-            'creator': new_object.creator.username,
-            'datetime': new_object.create_datetime.strftime("%Y-%m-%d %H:%M"),
-            'parent_id': new_object.reply_id,
-        }
-        return JsonResponse({'status': True, 'data': new_reply_dict})
+
+        return JsonResponse({'status': True, 'data': create_reply_record(change_record)})
+
     # 1.2 FK字段
+    if name in ['issues_type', 'module', 'parent', 'assign']:
+        # 用户选择为空
+        if not value:
+            # 不允许为空
+            if not field_object.null:
+                return JsonResponse({'status': False, 'error': "您选择的值不能为空"})
+            # 允许为空
+            setattr(issues_object, name, None)
+            issues_object.save()
+            change_record = "{}更新为空".format(field_object.verbose_name)
+
+        # 用户输入不为空
+        else:
+            # 条件判断：用户输入的值，是自己的值。
+            instance = field_object.remote_field.model.objects.filter(id=value, project_id=project_id).first()
+            if not instance:
+                return JsonResponse({'status': False, 'error': "您选择的值不存在"})
+
+            setattr(issues_object, name, instance)
+            issues_object.save()
+            change_record = "{}更新为{}".format(field_object.verbose_name, str(instance))
+
+
+        return JsonResponse({'status': True, 'data': create_reply_record(change_record)})
+
     # 1.3 choices字段
     # 1.4 M2M字段
 
