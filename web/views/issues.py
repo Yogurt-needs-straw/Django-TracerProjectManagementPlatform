@@ -106,7 +106,7 @@ def issues_record(request, project_id, issues_id):
 def issues_change(request, project_id, issues_id):
 
     # 获取当前操作的对象
-    issues_object = models.Issues.objects.filter(id=issues_id,project_id=project_id).first()
+    issues_object = models.Issues.objects.filter(id=issues_id, project_id=project_id).first()
 
     post_dict = json.loads(request.body.decode('utf-8'))
     ''' {'name': 'issues_type', 'value': '2'} 
@@ -155,7 +155,7 @@ def issues_change(request, project_id, issues_id):
 
         return JsonResponse({'status': True, 'data': create_reply_record(change_record)})
 
-    # 1.2 FK字段
+    # 1.2 FK字段（指派的话要判断是否创建者或者参与者）
     if name in ['issues_type', 'module', 'parent', 'assign']:
         # 用户选择为空
         if not value:
@@ -169,14 +169,35 @@ def issues_change(request, project_id, issues_id):
 
         # 用户输入不为空
         else:
-            # 条件判断：用户输入的值，是自己的值。
-            instance = field_object.remote_field.model.objects.filter(id=value, project_id=project_id).first()
-            if not instance:
-                return JsonResponse({'status': False, 'error': "您选择的值不存在"})
+            if name == 'assign':
+                # 是否是项目创建者
+                if value == str(request.tracer.project.creator_id):
+                    instance = request.tracer.project.creator
+                else:
+                # 是否是项目参与者
+                    project_user_object = models.ProjectUser.objects.filter(project_id=project_id, user_id=value).first()
+                    if project_user_object:
+                        instance = project_user_object.user
+                    else:
+                        instance = None
 
-            setattr(issues_object, name, instance)
-            issues_object.save()
-            change_record = "{}更新为{}".format(field_object.verbose_name, str(instance))
+                if not instance:
+                    return JsonResponse({'status': False, 'error': "您选择的值不存在"})
+
+                # 更新数据库
+                setattr(issues_object, name, instance)
+                issues_object.save()
+                change_record = "{}更新为{}".format(field_object.verbose_name, str(instance))
+
+            else:
+                # 条件判断：用户输入的值，是自己的值。
+                instance = field_object.remote_field.model.objects.filter(id=value, project_id=project_id).first()
+                if not instance:
+                    return JsonResponse({'status': False, 'error': "您选择的值不存在"})
+
+                setattr(issues_object, name, instance)
+                issues_object.save()
+                change_record = "{}更新为{}".format(field_object.verbose_name, str(instance))
 
 
         return JsonResponse({'status': True, 'data': create_reply_record(change_record)})

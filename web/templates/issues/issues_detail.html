@@ -463,10 +463,13 @@
 
     function bindChangeIssues() {
         $('#editForm').find('.form-control').change(function () {
-           // 内容变更
-            var postDict = {name:$(this).attr('name'), value:$(this).val()};
-            // 接受数据后发送
-            postAjaxData(postDict);
+            if ($(this).attr('name')){
+                // 内容变更
+                var postDict = {name:$(this).attr('name'), value:$(this).val()};
+                // 接受数据后发送
+                postAjaxData(postDict);
+            }
+
         });
     }
 
