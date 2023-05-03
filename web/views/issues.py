@@ -203,6 +203,21 @@ def issues_change(request, project_id, issues_id):
         return JsonResponse({'status': True, 'data': create_reply_record(change_record)})
 
     # 1.3 choices字段
+    if name in ['priority', 'status', 'mode']:
+        selected_text = None
+
+        for key, text in field_object.choices:
+            if str(key) == value:
+                selected_text = text
+        if not selected_text:
+            return JsonResponse({'status': False, 'error': "您选择的值不存在"})
+
+        setattr(issues_object, name, value)
+        issues_object.save()
+        change_record = "{}更新为{}".format(field_object.verbose_name, selected_text)
+
+        return JsonResponse({'status': True, 'data': create_reply_record(change_record)})
+
     # 1.4 M2M字段
 
 
