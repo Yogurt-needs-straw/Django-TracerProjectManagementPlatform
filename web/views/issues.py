@@ -11,8 +11,24 @@ from web.forms.issues import IssuesModelForm, IssuesReplyModelForm
 
 def issues(request, project_id):
     if request.method == "GET":
-        # 分页获取数据
-        queryset = models.Issues.objects.filter(project_id=project_id)
+        # 筛选条件（根据用户GET传参）
+        # ?status=1&issues_type=1
+        allow_filter_name = ['issues_type', 'status', 'priority']
+        condition = {}
+        for name in allow_filter_name:
+            value_list = request.GET.getlist(name)  # 获取匹配到的值 [1,2]
+            if not value_list:
+                continue
+            condition["{}__in".format(name)] = value_list
+        '''
+        condition = {
+            "status__in":[1,2],
+            "issues_type":[1],
+        }
+        '''
+
+        # 分页获取数据  .filter(**condition)添加搜索条件
+        queryset = models.Issues.objects.filter(project_id=project_id).filter(**condition)
 
         page_object = Pagination(
             # 获取请求页码
@@ -23,6 +39,8 @@ def issues(request, project_id):
             base_url=request.path_info,
             # url
             query_params=request.GET,
+            # 数据展示条数
+            per_page=50,
         )
 
         issues_object_list = queryset[page_object.start:page_object.end]

@@ -1978,18 +1978,37 @@ def index(request):
 
 1. 给其他标签绑定change事件,发送评论 + 页面增加
 
+   通过获取当前操作的对象
+
 2. 触发事件发送ajax
+
 3. 后台接收数据 & 数据库更新
+
 4. 生成更新记录并返回
+
+   通过setattr方式
+
+   ```python
+   setattr(issues_object, name, instance)
+   issues_object.save()
+   ```
 
 - markdown插件 -> 点击确定修改
 
 
 - 问题的更新 + 操作记录
 
-
+```python
+# 筛选条件（根据用户GET传参）
+# ?status=1&issues_type=1
+allow_filter_name = ['issues_type', 'status', 'priority']
+```
 
 
 - 问题列表筛选
+
+
+
+
 - 邀请成员
 
