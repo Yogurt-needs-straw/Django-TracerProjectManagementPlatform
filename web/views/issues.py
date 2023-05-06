@@ -2,11 +2,31 @@ import json
 
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.utils.safestring import mark_safe
 from django.views.decorators.csrf import csrf_exempt
 
 from utils.pagination import Pagination
 from web import models
 from web.forms.issues import IssuesModelForm, IssuesReplyModelForm
+
+class CheckFilter(object):
+    def __init__(self, name, data_list, request):
+        self.name = name
+        self.data_list = data_list
+        self.request = request
+
+    def __iter__(self):
+        for item in self.data_list:
+            key = str(item[0])
+            text = item[1]
+            ck = ""
+            # 如果当前用户请求的URL中status和当前循环key相等
+            value_list = self.request.GET.getlist(self.name)
+            if key in value_list:
+                ck = 'checked'
+
+            html = "<a class=\"cell\" href=\"\"><input type=\"checkbox\" {ck}/><label>{text}</label></a>".format(ck=ck, text=text)
+            yield mark_safe(html)
 
 
 def issues(request, project_id):
@@ -48,7 +68,9 @@ def issues(request, project_id):
         context = {
             'form': form,
             'issues_object_list': issues_object_list,
-            'page_html': page_object.page_html()
+            'page_html': page_object.page_html(),
+            'status_filter': CheckFilter("status", models.Issues.status_choices, request),
+            'priority_filter': CheckFilter("priority", models.Issues.priority_choices, request),
         }
         return render(request, 'issues/issues.html', context)
 

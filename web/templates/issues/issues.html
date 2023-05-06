@@ -40,6 +40,35 @@
     .pd-0{
         padding: 0 !important;
     }
+
+    /* 筛选 */
+    .filter-area .item {
+        margin-bottom: 15px;
+    }
+
+    .filter-area .item .title {
+        padding: 5px 0;
+    }
+
+    .filter-area .item .check-list a {
+        text-decoration: none;
+        display: inline-block;
+        min-width: 65px;
+    }
+
+    .filter-area .item .check-list label {
+        font-weight: 200;
+        font-size: 13px;
+        margin-left: 3px;
+    }
+
+    .filter-area .item .check-list a:hover {
+        font-weight: 300;
+    }
+
+    .filter-area .item .check-list .cell {
+        margin-right: 10px;
+    }
     </style>
 {% endblock %}
 
@@ -62,7 +91,23 @@
 {#                    </div>#}
 {#                </div>#}
 {#            {% endfor %}#}
-        </div>
+            <div class="item">
+                <div class="title">状态</div>
+                <div class="check-list">
+                    {% for item in status_filter %}
+                        {{ item }}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="item">
+                    <div class="title">优先级</div>
+                    <div class="check-list">
+                        {% for item in priority_filter %}
+                            {{ item }}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-sm-9">
