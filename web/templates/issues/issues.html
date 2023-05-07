@@ -395,7 +395,17 @@
         bindBootStrapShownEvent();
         initDatePicker();
         btnAddSubmit();
+        bindClickCheckFilter();
     });
+
+    /**
+     * 点击筛选的checkbox
+     * */
+    function bindClickCheckFilter(){
+        $('.filter-area').find(':checkbox').click(function () {
+           location.href = $(this).parent().attr('href');
+        });
+    }
 
     /*
     * 添加对话框：初始化时间选择

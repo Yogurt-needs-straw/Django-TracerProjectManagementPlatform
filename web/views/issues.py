@@ -24,8 +24,20 @@ class CheckFilter(object):
             value_list = self.request.GET.getlist(self.name)
             if key in value_list:
                 ck = 'checked'
+                value_list.remove(key)
+            else:
+                value_list.append(key)
 
-            html = "<a class=\"cell\" href=\"\"><input type=\"checkbox\" {ck}/><label>{text}</label></a>".format(ck=ck, text=text)
+            # 为自己生成url
+            # 在当前url的基础上增加一项
+            query_dict = self.request.GET.copy()
+            query_dict.mutable = True
+            query_dict.setlist(self.name, value_list)
+            # status=1&status=2
+            url = "{}?{}".format(self.request.path_info, query_dict.urlencode())
+
+            tpl = "<a class=\"cell\" href=\"{url}\"><input type=\"checkbox\" {ck}/><label>{text}</label></a>"
+            html = tpl.format(url=url, ck=ck, text=text)
             yield mark_safe(html)
 
 
