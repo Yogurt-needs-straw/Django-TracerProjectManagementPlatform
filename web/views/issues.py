@@ -33,8 +33,18 @@ class CheckFilter(object):
             query_dict = self.request.GET.copy()
             query_dict.mutable = True
             query_dict.setlist(self.name, value_list)
-            # status=1&status=2
-            url = "{}?{}".format(self.request.path_info, query_dict.urlencode())
+
+            # 剔除分页信息
+            if 'page' in query_dict:
+                query_dict.pop('page')
+
+            param_url = query_dict.urlencode()
+            if param_url:
+                # status=1&status=2
+                url = "{}?{}".format(self.request.path_info, query_dict.urlencode())
+            else:
+                # 去除多余?号
+                url = self.request.path_info
 
             tpl = "<a class=\"cell\" href=\"{url}\"><input type=\"checkbox\" {ck}/><label>{text}</label></a>"
             html = tpl.format(url=url, ck=ck, text=text)
