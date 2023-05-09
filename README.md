@@ -1978,7 +1978,48 @@ def index(request):
 
 1. 给其他标签绑定change事件,发送评论 + 页面增加
 
-   通过获取当前操作的对象
+   ```python
+   class CheckFilter(object):
+       def __init__(self, name, data_list, request):
+           self.name = name
+           self.data_list = data_list
+           self.request = request
+   
+       def __iter__(self):
+           for item in self.data_list:
+               key = str(item[0])
+               text = item[1]
+               ck = ""
+               # 如果当前用户请求的URL中status和当前循环key相等
+               value_list = self.request.GET.getlist(self.name)
+               if key in value_list:
+                   ck = 'checked'
+                   value_list.remove(key)
+               else:
+                   value_list.append(key)
+   
+               # 为自己生成url
+               # 在当前url的基础上增加一项
+               query_dict = self.request.GET.copy()
+               query_dict.mutable = True
+               query_dict.setlist(self.name, value_list)
+   
+               # 剔除分页信息
+               if 'page' in query_dict:
+                   query_dict.pop('page')
+   
+               param_url = query_dict.urlencode()
+               if param_url:
+                   # status=1&status=2
+                   url = "{}?{}".format(self.request.path_info, query_dict.urlencode())
+               else:
+                   # 去除多余?号
+                   url = self.request.path_info
+   
+               tpl = "<a class=\"cell\" href=\"{url}\"><input type=\"checkbox\" {ck}/><label>{text}</label></a>"
+               html = tpl.format(url=url, ck=ck, text=text)
+               yield mark_safe(html)
+   ```
 
 2. 触发事件发送ajax
 
@@ -2007,7 +2048,9 @@ allow_filter_name = ['issues_type', 'status', 'priority']
 
 - 问题列表筛选
 
+```python
 
+```
 
 
 - 邀请成员
