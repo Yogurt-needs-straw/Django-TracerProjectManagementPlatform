@@ -1,6 +1,6 @@
 # Django-TracerProjectManagementPlatform
 
-这是一个项目管理平台
+这是一个项目bug管理平台
 
 ##### 1.完成用户管理
 
