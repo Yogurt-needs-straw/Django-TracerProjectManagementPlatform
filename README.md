@@ -2021,6 +2021,8 @@ def index(request):
                yield mark_safe(html)
    ```
 
+   
+
 2. 触发事件发送ajax
 
 3. 后台接收数据 & 数据库更新
@@ -2047,6 +2049,8 @@ allow_filter_name = ['issues_type', 'status', 'priority']
 
 
 - 问题列表筛选
+
+select 筛选
 
 ```python
 
