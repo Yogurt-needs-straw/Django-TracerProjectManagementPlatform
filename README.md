@@ -2050,7 +2050,7 @@ allow_filter_name = ['issues_type', 'status', 'priority']
 
 - 问题列表筛选
 
-select 筛选
+select2 筛选
 
 ```python
 
@@ -2060,3 +2060,9 @@ select 筛选
 - 邀请成员
 
 123
+
+- 概览
+
+
+
+- 支付宝沙箱环境 + "沙箱版支付宝"
