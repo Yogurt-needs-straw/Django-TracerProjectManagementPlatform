@@ -87,12 +87,17 @@ def issues(request, project_id):
 
         issues_object_list = queryset[page_object.start:page_object.end]
         form = IssuesModelForm(request)
+        project_issues_type = models.IssuesType.objects.filter(project_id=project_id).values_list('id', 'title')
         context = {
             'form': form,
             'issues_object_list': issues_object_list,
             'page_html': page_object.page_html(),
-            'status_filter': CheckFilter("status", models.Issues.status_choices, request),
-            'priority_filter': CheckFilter("priority", models.Issues.priority_choices, request),
+            'filter_list': [
+                {'title': "问题类型", 'filter': CheckFilter("issues_type", project_issues_type, request)},
+                {'title': "状态", 'filter': CheckFilter("status", models.Issues.status_choices, request)},
+                {'title': "优先级", 'filter': CheckFilter("priority", models.Issues.priority_choices, request)},
+
+            ],
         }
         return render(request, 'issues/issues.html', context)
 
