@@ -50,12 +50,19 @@ class CheckFilter(object):
             html = tpl.format(url=url, ck=ck, text=text)
             yield mark_safe(html)
 
+class SelectFilter(object):
+    def __init__(self, name, data_list, request):
+        self.name = name
+        self.data_list = data_list
+        self.request = request
+
+
 
 def issues(request, project_id):
     if request.method == "GET":
         # 筛选条件（根据用户GET传参）
         # ?status=1&issues_type=1
-        allow_filter_name = ['issues_type', 'status', 'priority']
+        allow_filter_name = ['issues_type', 'status', 'priority', 'assign']
         condition = {}
         for name in allow_filter_name:
             value_list = request.GET.getlist(name)  # 获取匹配到的值 [1,2]
@@ -88,6 +95,12 @@ def issues(request, project_id):
         issues_object_list = queryset[page_object.start:page_object.end]
         form = IssuesModelForm(request)
         project_issues_type = models.IssuesType.objects.filter(project_id=project_id).values_list('id', 'title')
+
+        # 项目的创建者
+        project_totlal_user = [(request.tracer.project.creator_id, request.tracer.project.creator.username,)]
+        # 项目的参与者
+        project_join_user = models.ProjectUser.objects.filter(project_id=project_id).values_list('user_id')
+
         context = {
             'form': form,
             'issues_object_list': issues_object_list,
@@ -96,6 +109,7 @@ def issues(request, project_id):
                 {'title': "问题类型", 'filter': CheckFilter("issues_type", project_issues_type, request)},
                 {'title': "状态", 'filter': CheckFilter("status", models.Issues.status_choices, request)},
                 {'title': "优先级", 'filter': CheckFilter("priority", models.Issues.priority_choices, request)},
+                {'title': "指派者", 'filter': CheckFilter("assign", models.Issues.priority_choices, request)},
 
             ],
         }
