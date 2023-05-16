@@ -56,7 +56,22 @@ class SelectFilter(object):
         self.data_list = data_list
         self.request = request
 
+    def __iter__(self):
+        yield mark_safe("<select class='cl' multiple='multiple' style='width:100%;'>")
+        for item in self.data_list:
+            key = str(item[0])
+            text = item[1]
 
+            selected = ""
+            # 判断选择id
+            value_list = self.request.GET.getlist(self.name)
+            if key in value_list:
+                selected = 'selected'
+
+            html = "<option {selected}>{text}</option>".format(selected=selected, text=text)
+            yield mark_safe(html)
+
+        yield mark_safe("</select>")
 
 def issues(request, project_id):
     if request.method == "GET":
@@ -99,7 +114,8 @@ def issues(request, project_id):
         # 项目的创建者
         project_totlal_user = [(request.tracer.project.creator_id, request.tracer.project.creator.username,)]
         # 项目的参与者
-        project_join_user = models.ProjectUser.objects.filter(project_id=project_id).values_list('user_id')
+        join_user = models.ProjectUser.objects.filter(project_id=project_id).values_list('user_id', 'user__username')
+        project_totlal_user.extend(join_user)
 
         context = {
             'form': form,
@@ -109,7 +125,7 @@ def issues(request, project_id):
                 {'title': "问题类型", 'filter': CheckFilter("issues_type", project_issues_type, request)},
                 {'title': "状态", 'filter': CheckFilter("status", models.Issues.status_choices, request)},
                 {'title': "优先级", 'filter': CheckFilter("priority", models.Issues.priority_choices, request)},
-                {'title': "指派者", 'filter': CheckFilter("assign", models.Issues.priority_choices, request)},
+                {'title': "指派者", 'filter': SelectFilter("assign", project_totlal_user, request)},
 
             ],
         }

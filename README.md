@@ -2050,10 +2050,23 @@ allow_filter_name = ['issues_type', 'status', 'priority']
 
 - 问题列表筛选
 
+> [select2]([Getting Started | Select2 - The jQuery replacement for select boxes](https://select2.org/))
+
 select2 筛选
 
-```python
+```html
+<select class="js-example-basic-single" name="state">
+  <option value="AL">Alabama</option>
+    ...
+  <option value="WY">Wyoming</option>
+</select>
+```
 
+```javascript
+// In your Javascript (external .js resource or <script> tag)
+$(document).ready(function() {
+    $('.js-example-basic-single').select2();
+});
 ```
 
 
