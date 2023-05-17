@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="{% static 'plugin/editor-md/css/editormd.min.css' %}">
     <link rel="stylesheet" href="{% static 'plugin/bootstrap-datepicker-1.9.0-dist/css/bootstrap-datepicker.min.css' %}">
     <link rel="stylesheet" href="{% static 'plugin/bootstrap-select-1.13.9/dist/css/bootstrap-select.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugin/select2/css/select2.min.css' %}">
     <style>
      .issues-list .number {
         width: 100px;
@@ -370,6 +371,8 @@
     <script src={% static 'plugin/bootstrap-datepicker-1.9.0-dist/locales/bootstrap-datepicker.zh-CN.min.js' %}></script>
     <script src={% static 'plugin/bootstrap-select-1.13.9/dist/js/bootstrap-select.min.js' %}></script>
     <script src={% static 'plugin/bootstrap-select-1.13.9/dist/js/i18n/defaults-zh_CN.min.js' %}></script>
+    <script src={% static 'plugin/select2/js/select2.min.js' %}></script>
+    <script src={% static 'plugin/select2/js/i18n/zh-CN.js' %}></script>
     <script>
 
     var WIKI_UPLOAD_URL = "/manage/"+ {{ request.tracer.project.id }} + "/wiki/upload/"
@@ -381,7 +384,15 @@
         initDatePicker();
         btnAddSubmit();
         bindClickCheckFilter();
+        initSelect2();
     });
+
+    /**
+     * 使用select2插件
+     * */
+    function initSelect2() {
+        $('.select2').select2();
+    }
 
     /**
      * 点击筛选的checkbox

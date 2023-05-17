@@ -57,7 +57,7 @@ class SelectFilter(object):
         self.request = request
 
     def __iter__(self):
-        yield mark_safe("<select class='cl' multiple='multiple' style='width:100%;'>")
+        yield mark_safe("<select class='select2' multiple='multiple' style='width:100%;'>")
         for item in self.data_list:
             key = str(item[0])
             text = item[1]
