@@ -67,8 +67,29 @@ class SelectFilter(object):
             value_list = self.request.GET.getlist(self.name)
             if key in value_list:
                 selected = 'selected'
+                value_list.remove(key)
+            else:
+                value_list.append(key)
 
-            html = "<option {selected}>{text}</option>".format(selected=selected, text=text)
+            # 为自己生成url
+            # 在当前url的基础上增加一项
+            query_dict = self.request.GET.copy()
+            query_dict.mutable = True
+            query_dict.setlist(self.name, value_list)
+
+            # 剔除分页信息
+            if 'page' in query_dict:
+                query_dict.pop('page')
+
+            param_url = query_dict.urlencode()
+            if param_url:
+                # status=1&status=2
+                url = "{}?{}".format(self.request.path_info, query_dict.urlencode())
+            else:
+                # 去除多余?号
+                url = self.request.path_info
+
+            html = "<option value='{url}' {selected}>{text}</option>".format(url=url, selected=selected, text=text)
             yield mark_safe(html)
 
         yield mark_safe("</select>")
