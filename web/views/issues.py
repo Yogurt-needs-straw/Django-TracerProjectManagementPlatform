@@ -98,7 +98,7 @@ def issues(request, project_id):
     if request.method == "GET":
         # 筛选条件（根据用户GET传参）
         # ?status=1&issues_type=1
-        allow_filter_name = ['issues_type', 'status', 'priority', 'assign']
+        allow_filter_name = ['issues_type', 'status', 'priority', 'assign', 'attention']
         condition = {}
         for name in allow_filter_name:
             value_list = request.GET.getlist(name)  # 获取匹配到的值 [1,2]
@@ -147,6 +147,7 @@ def issues(request, project_id):
                 {'title': "状态", 'filter': CheckFilter("status", models.Issues.status_choices, request)},
                 {'title': "优先级", 'filter': CheckFilter("priority", models.Issues.priority_choices, request)},
                 {'title': "指派者", 'filter': SelectFilter("assign", project_totlal_user, request)},
+                {'title': "关注者", 'filter': SelectFilter("attention", project_totlal_user, request)},
 
             ],
         }
