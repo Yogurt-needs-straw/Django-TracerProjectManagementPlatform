@@ -103,7 +103,7 @@
             </div>
             <div class="panel-body">
                 <a class="btn btn-success btn-sm" data-toggle="modal" data-target="#addModal">新建问题</a>
-                <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#inviteModel">邀请成员</a>
+                <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#inviteModal">邀请成员</a>
             </div>
             <!-- Table -->
             <table class="table">
@@ -363,6 +363,48 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade in" id="inviteModal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">邀请成员</h4>
+                </div>
+                <div class="modal-body" style="padding-right: 40px;">
+                    <form id="inviteForm">
+                        {% csrf_token %}
+                        {% for item in invite_form %}
+                            <div class="form-group">
+                                <label for="{{ item.id_for_label }}">{{ item.label }}</label>
+                                <span>{% if  item.help_text %}（{{ item.help_text }}）{% endif %}</span>
+                                {{ item }}
+                                <span class="error-msg"></span>
+                            </div>
+                        {% endfor %}
+                        <button type="button" class="btn btn-success" id="btnGenInviteCode">生成邀请码</button>
+                    </form>
+                    <div id="inviteArea" class="hide">
+                        <hr/>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <input type="button" value="邀请链接" class="btn btn-default">
+                                </div>
+                                <input type="text" class="form-control" id="inviteUrl">
+                                <div class="input-group-btn">
+                                    <input type="button" value="复制链接" class="btn btn-primary" id="btnCopyUrl">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block js %}
@@ -377,15 +419,56 @@
 
     var WIKI_UPLOAD_URL = "/manage/"+ {{ request.tracer.project.id }} + "/wiki/upload/"
     var POST_ISSUES = "/manage/"+ {{ request.tracer.project.id }} + "/issues/"
-
+    var INVITE_URL = "/manage/"+ {{ request.tracer.project.id }} + "/issues/invite/url/"
 
     $(function () {
         bindBootStrapShownEvent();
         initDatePicker();
         btnAddSubmit();
         bindClickCheckFilter();
+
         initSelect2();
+
+        bindCreateInviteCode();
+        bindCopyUrl();
     });
+
+    /*
+    点击拷贝邀请码
+    */
+    function bindCopyUrl() {
+        $('#btnCopyUrl').click(function () {
+            var textInput = $('#inviteUrl')[0]; // document.getElementById('inviteUrl')
+            textInput.select();
+
+            document.execCommand("Copy");
+            alert('复制成功');
+        })
+    }
+
+    /*
+    点击生成要请链接
+     */
+    function bindCreateInviteCode() {
+        $('#btnGenInviteCode').click(function () {
+            $('.error-msg').empty();
+            $.ajax({
+                url: INVITE_URL,
+                type: "POST",
+                data: $('#inviteForm').serialize(),
+                dataType: "JSON",
+                success: function (res) {
+                    if (res.status) {
+                        $('#inviteArea').removeClass('hide').find('#inviteUrl').val(res.data);
+                    } else {
+                        $.each(res.error, function (k, v) {
+                            $('#id_' + k).next('.error-msg').text(v[0]);
+                        })
+                    }
+                }
+            })
+        })
+    }
 
     /**
      * 使用select2插件

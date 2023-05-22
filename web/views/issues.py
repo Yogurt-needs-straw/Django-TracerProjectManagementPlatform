@@ -2,12 +2,15 @@ import json
 
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.views.decorators.csrf import csrf_exempt
 
+from utils.encrypt import uid
 from utils.pagination import Pagination
 from web import models
-from web.forms.issues import IssuesModelForm, IssuesReplyModelForm
+from web.forms.issues import IssuesModelForm, IssuesReplyModelForm, InviteModelForm
+
 
 class CheckFilter(object):
     def __init__(self, name, data_list, request):
@@ -138,8 +141,11 @@ def issues(request, project_id):
         join_user = models.ProjectUser.objects.filter(project_id=project_id).values_list('user_id', 'user__username')
         project_totlal_user.extend(join_user)
 
+        invite_form = InviteModelForm()
+
         context = {
             'form': form,
+            'invite_form': invite_form,
             'issues_object_list': issues_object_list,
             'page_html': page_object.page_html(),
             'filter_list': [
@@ -372,3 +378,35 @@ def issues_change(request, project_id, issues_id):
     # 2. 生成操作记录
 
     return JsonResponse({'status': False, 'error': "非法用户"})
+
+
+def invite_url(request, project_id):
+    """ 生成邀请码 """
+
+    form = InviteModelForm(data=request.POST)
+    if form.is_valid():
+        """
+        1. 创建随机的邀请码
+        2. 验证码保存到数据库
+        3. 限制：只有创建者才能邀请
+        """
+        if request.tracer.user != request.tracer.project.creator:
+            form.add_error('period', "无权创建邀请码")
+            return JsonResponse({'status': False, 'error': form.errors})
+
+        random_invite_code = uid(request.tracer.user.mobile_phone)
+        form.instance.project = request.tracer.project
+        form.instance.code = random_invite_code
+        form.instance.creator = request.tracer.user
+        form.save()
+
+        # 将验邀请码返回给前端，前端页面上展示出来。
+        url = "{scheme}://{host}{path}".format(
+            scheme=request.scheme,
+            host=request.get_host(),
+            path=reverse('invite_join', kwargs={'code': random_invite_code})
+        )
+
+        return JsonResponse({'status': True, 'data': url})
+
+    return JsonResponse({'status': False, 'error': form.errors})

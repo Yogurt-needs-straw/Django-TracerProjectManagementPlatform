@@ -53,6 +53,9 @@ urlpatterns = [
         path('issues/detail/<int:issues_id>/', issues.issues_detail, name='issues_detail'),
         path('issues/record/<int:issues_id>/', issues.issues_record, name='issues_record'),
         path('issues/change/<int:issues_id>/', issues.issues_change, name='issues_change'),
+
+        path('issues/invite/url/', issues.invite_url, name='invite_url'),
+
     ], None)),
 
 ]
