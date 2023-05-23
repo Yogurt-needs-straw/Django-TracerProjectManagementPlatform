@@ -404,9 +404,16 @@ def invite_url(request, project_id):
         url = "{scheme}://{host}{path}".format(
             scheme=request.scheme,
             host=request.get_host(),
-            path=reverse('invite_join', kwargs={'code': random_invite_code})
+            path=reverse('web:invite_join', kwargs={'code': random_invite_code})
         )
 
         return JsonResponse({'status': True, 'data': url})
 
     return JsonResponse({'status': False, 'error': form.errors})
+
+
+def invite_join(request, code):
+    ''' 访问邀请码 '''
+
+
+    return None

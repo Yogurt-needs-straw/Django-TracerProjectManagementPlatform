@@ -58,4 +58,6 @@ urlpatterns = [
 
     ], None)),
 
+    path('invite/join/<str:code>/', issues.invite_join, name='invite_join'),
+
 ]
