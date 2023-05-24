@@ -415,5 +415,12 @@ def invite_url(request, project_id):
 def invite_join(request, code):
     ''' 访问邀请码 '''
 
+    invite_object = models.ProjectInvite.objects.filter(code=code).first()
+    if not invite_object:
+        return render(request, 'invite_join.html', {'error': '邀请码不存在'})
+
+    if invite_object.project.creator == request.tracer.user:
+        return render(request, 'invite_join.html', {'error': '创建者无需再加入项目'})
+
 
     return None
