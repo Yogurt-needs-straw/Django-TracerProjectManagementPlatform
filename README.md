@@ -2113,6 +2113,4 @@ class ProjectInvite(models.Model):
 
 - 支付宝沙箱环境 + "沙箱版支付宝"
 
-132
 
-123
