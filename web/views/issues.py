@@ -1,5 +1,7 @@
+import datetime
 import json
 
+import pytz
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
@@ -404,7 +406,7 @@ def invite_url(request, project_id):
         url = "{scheme}://{host}{path}".format(
             scheme=request.scheme,
             host=request.get_host(),
-            path=reverse('web:invite_join', kwargs={'code': random_invite_code})
+            path=reverse('web:invite', kwargs={'code': random_invite_code})
         )
 
         return JsonResponse({'status': True, 'data': url})
@@ -417,10 +419,46 @@ def invite_join(request, code):
 
     invite_object = models.ProjectInvite.objects.filter(code=code).first()
     if not invite_object:
-        return render(request, 'invite_join.html', {'error': '邀请码不存在'})
+        return render(request, 'invite/invite_join.html', {'error': '邀请码不存在'})
 
     if invite_object.project.creator == request.tracer.user:
-        return render(request, 'invite_join.html', {'error': '创建者无需再加入项目'})
+        return render(request, 'invite/invite_join.html', {'error': '创建者无需再加入项目'})
 
+    exists = models.ProjectUser.objects.filter(project=invite_object.project, user=request.tracer.user).exists()
+    if exists:
+        return render(request, 'invite/invite_join.html', {'error': '已加入项目无需再加入'})
 
-    return None
+    # 最多允许的成员
+    max_member = request.tracer.price_policy.project_member
+
+    # 目前所有成员(创建者&参与者)
+    current_member = models.ProjectUser.objects.filter(project=invite_object.project).count()
+    current_member = current_member + 1
+
+    # 项目最多参与者比较
+    if current_member >= max_member:
+        return render(request, 'invite/invite_join.html', {'error': '人员已超限，请升级套餐'})
+
+    # 邀请码是否过期判断
+    # 当前时间
+    current_datetime = (datetime.datetime.now()).replace(tzinfo=pytz.timezone('Asia/Shanghai'))
+    # 截至时间
+    limit_datetime = invite_object.create_datetime + datetime.timedelta(minutes=invite_object.period)
+
+    if current_datetime > limit_datetime:
+        return render(request, 'invite/invite_join.html', {'error': '邀请码已过期'})
+
+    # 数量限制
+    if invite_object.count:
+        # 已使用的数量
+        if invite_object.use_count >= invite_object.count:
+         return  render(request, 'invite/invite_join.html', {'error': '邀请码数量已使用完'})
+
+        # 通过邀请码并将数量+1
+        invite_object.use_count += 1
+        invite_object.save()
+
+    # 无数量限制
+    models.ProjectUser.objects.create(user=request.tracer.user, project=invite_object.project)
+    return render(request, 'invite/invite_join.html', {'project': invite_object.project})
+
