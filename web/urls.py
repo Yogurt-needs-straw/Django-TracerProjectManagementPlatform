@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, re_path, include
 
-from web.views import account, home, project, manage, wiki, file, setting, issues
+from web.views import account, home, project, manage, wiki, file, setting, issues, dashboard
 
 app_name = 'web'
 
@@ -28,7 +28,7 @@ urlpatterns = [
     # 进入项目管理
     # 使用路由分发
     path('manage/<int:project_id>/', include([
-        path('dashboard/', manage.project_dashboard, name='dashboard'),
+        # path('dashboard/', manage.project_dashboard, name='dashboard'),
         path('statistics/', manage.project_statistics, name='statistics'),
 
         # wiki路径
@@ -53,11 +53,12 @@ urlpatterns = [
         path('issues/detail/<int:issues_id>/', issues.issues_detail, name='issues_detail'),
         path('issues/record/<int:issues_id>/', issues.issues_record, name='issues_record'),
         path('issues/change/<int:issues_id>/', issues.issues_change, name='issues_change'),
-
         path('issues/invite/url/', issues.invite_url, name='invite_url'),
+
+        path('dashboard/', dashboard.dashboard, name='dashboard'),
 
     ], None)),
 
-    path('invite/join/<str:code>/', issues.invite_join, name='invite'),
+    path('invite/join/<str:code>/', issues.invite_join, name='invite_join'),
 
 ]
