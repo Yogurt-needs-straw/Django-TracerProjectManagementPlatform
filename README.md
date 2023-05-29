@@ -2125,6 +2125,25 @@ class ProjectInvite(models.Model):
 
 ##### 11.1 详细
 
+项目文件大小计算
+
+```python
+@register.simple_tag()
+def user_space(size):
+
+    if size >= (1024 * 1024 * 1024):
+       return "%.2f GB" % (size / (1024 * 1024 * 1024),)
+
+    elif size >= (1024 * 1024):
+       return "%.2f MB" % (size / (1024 * 1024),)
+
+    elif size >= 1024:
+       return "%.2f KB" % (size / 1024,)
+
+    else:
+        return "%.2f B" % size
+```
+
 ##### 11.2 问题
 
 ##### 11.3 成员

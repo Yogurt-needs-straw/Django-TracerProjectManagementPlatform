@@ -1,4 +1,5 @@
 {% extends 'layout/manage.html' %}
+{% load dashboard %}
 
 {% block css %}
     <style>
@@ -107,7 +108,28 @@
                     详细
                 </div>
                 <div class="panel-body">
-
+                    <table class="table table-right">
+                        <tbody>
+                        <tr>
+                            <td class="label-left">项目名称 ：</td>
+                            <td>{{ request.tracer.project.name }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label-left">项目描述 ：</td>
+                            <td>{{ request.tracer.project.desc }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label-left">创建时间 ：</td>
+                            <td>{{ request.tracer.project.create_datetime }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label-left">项目空间 ：</td>
+                            <td>  {% user_space request.tracer.project.use_space %}
+                                / {{ request.tracer.price_policy.project_space }} GB
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
