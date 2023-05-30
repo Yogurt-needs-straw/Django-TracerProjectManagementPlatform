@@ -2097,8 +2097,6 @@ class ProjectInvite(models.Model):
     creator = models.ForeignKey(verbose_name='创建者', to='UserInfo', related_name='create_invite')
 ```
 
-
-
 ##### 10.2 开发
 
 **10.2.1 对话框**
@@ -2145,6 +2143,21 @@ def user_space(size):
 ```
 
 ##### 11.2 问题
+
+> 使用有序字典
+>
+> status_dict = collections.OrderedDict()
+
+```python
+for item in issues_data:
+    status_dict[item['status']]['count'] = item['ct']
+
+context = {
+    'status_dict': status_dict
+}
+
+return render(request, 'dashboard/dashboard.html', context)
+```
 
 ##### 11.3 成员
 
