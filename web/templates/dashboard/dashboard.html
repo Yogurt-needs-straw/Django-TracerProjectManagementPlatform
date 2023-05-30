@@ -83,7 +83,14 @@
                             问题
                         </div>
                         <div class="panel-body">
-
+                            {% for key,item in status_dict.items %}
+                                <div class="col-sm-4 status-count">
+                                    <a href="/manage/{{ request.tracer.project.id }}/issues/?status={{ key }}">
+                                        <div class="count">{{ item.count }}</div>
+                                        <div>{{ item.text }}</div>
+                                    </a>
+                                </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
