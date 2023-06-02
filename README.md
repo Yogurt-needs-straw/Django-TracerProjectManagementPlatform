@@ -2161,6 +2161,39 @@ return render(request, 'dashboard/dashboard.html', context)
 
 ##### 11.3 成员
 
+> avatar:头标展示 
+> request.tracer.project.creator.username.0|upper : 项目创建者 第一个字符 | 大写
+
+```html
+
+<div class="avatar">{{ request.tracer.project.creator.username.0|upper }}</div>
+```
+
+```html
+<div class="panel-heading">
+    <i class="fa fa-user" aria-hidden="true"></i>
+    项目成员
+</div>
+<div class="panel-body user-item">
+    <div class="col-sm-12 title">创建者</div>
+    <div class="clearfix" style="margin-bottom: 30px;">
+        <div class="col-sm-4">
+            <div class="avatar">{{ request.tracer.project.creator.username.0|upper }}</div>
+            <div class="text">{{ request.tracer.project.creator.username }}</div>
+        </div>
+    </div>
+    <div class="col-sm-12 title">参与者</div>
+    <div>
+        {% for item in user_list %}
+            <div class="col-sm-4">
+                <div class="avatar">{{ item.user__username.0|upper }}</div>
+                <div class="text">{{ item.user__username }}</div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+```
+
 ##### 11.4 动态
 
 ##### 11.5 问题趋势
