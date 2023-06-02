@@ -101,7 +101,22 @@
                             项目成员
                         </div>
                         <div class="panel-body user-item">
-
+                            <div class="col-sm-12 title">创建者</div>
+                            <div class="clearfix" style="margin-bottom: 30px;">
+                                <div class="col-sm-4">
+                                    <div class="avatar">{{ request.tracer.project.creator.username.0|upper }}</div>
+                                    <div class="text">{{ request.tracer.project.creator.username }}</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 title">参与者</div>
+                            <div>
+                                {% for item in user_list %}
+                                    <div class="col-sm-4">
+                                        <div class="avatar">{{ item.user__username.0|upper }}</div>
+                                        <div class="text">{{ item.user__username }}</div>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>
