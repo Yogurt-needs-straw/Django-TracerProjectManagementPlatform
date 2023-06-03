@@ -23,10 +23,13 @@ def dashboard(request, project_id):
     # 项目成员
     user_list = models.ProjectUser.objects.filter(project_id=project_id).values('user_id', 'user__username')
 
+    # 最近的10个问题
+    top_ten = models.Issues.objects.filter(project_id=project_id, assign__isnull=False).order_by('-id')[0:10]
 
     context = {
         'status_dict': status_dict,
         'user_list': user_list,
+        'top_ten': top_ten,
     }
 
     return render(request, 'dashboard/dashboard.html', context)

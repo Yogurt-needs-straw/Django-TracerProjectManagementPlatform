@@ -1,6 +1,6 @@
 {% extends 'layout/manage.html' %}
 {% load dashboard %}
-
+{% load issues %}
 {% block css %}
     <style>
         .table-right > tbody > tr > td.label-left {
@@ -161,7 +161,28 @@
                     动态
                 </div>
                 <div class="panel-body top-10">
+                    <table class="table">
+                        <tbody>
+                        {% for item in top_ten %}
+                            <tr>
+                                <td style="width: 46px;">
+                                    <div class="avatar">{{ item.creator.username.0|upper }}</div>
+                                </td>
+                                <td>
+                                    <div>{{ item.creator.username }}</div>
+                                    <div>指派
+                                        <a href="/manage/{{ request.tracer.project.id }}/issues/detail/{{  item.id }}">{% string_just item.id %}</a>
+                                        给 {{ item.assign.username }}
+                                    </div>
+                                </td>
+                                <td style="width: 156px;">
+                                    {{ item.create_datetime }}
+                                </td>
+                            </tr>
 
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
