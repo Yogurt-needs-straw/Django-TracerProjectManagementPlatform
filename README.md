@@ -2197,3 +2197,10 @@ return render(request, 'dashboard/dashboard.html', context)
 ##### 11.4 动态
 
 ##### 11.5 问题趋势
+
+- highcharts，专门用于画图的js库。
+- daterangepicker，专门用于选择时间区间的插件
+- 支付宝支付的沙箱环境（安卓系统）
+
+
+
