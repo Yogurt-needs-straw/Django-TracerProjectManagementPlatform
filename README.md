@@ -2196,6 +2196,28 @@ return render(request, 'dashboard/dashboard.html', context)
 
 ##### 11.4 动态
 
+
+
+> 时区：
+>
+> setting.py
+>
+> TIME_ZONE = 'UTC'
+>
+> datetime.datetime.now() 、datetime.datetime.utcnow()使用的是 TIME_ZONE时间
+>
+> TIME_ZONE = 'Asia/Shanghai' 东八区时间
+>
+> 
+>
+> USE_TZ = TRUE
+>
+> 控制django中，自动生成数据库时间字段
+>
+> （TRUE 使用UTC时间）（FALSE 根据TIME_ZONE设置的时区进行创建时间）
+
+
+
 ##### 11.5 问题趋势
 
 - highcharts，专门用于画图的js库。
