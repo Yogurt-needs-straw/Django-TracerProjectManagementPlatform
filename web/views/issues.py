@@ -174,7 +174,6 @@ def issues(request, project_id):
 
     return JsonResponse({'status': False, 'error': form.errors})
 
-
 def issues_detail(request, project_id, issues_id):
     ''' 编辑问题 '''
 
@@ -417,6 +416,9 @@ def invite_url(request, project_id):
 def invite_join(request, code):
     ''' 访问邀请码 '''
 
+    # 当前时间
+    current_datetime = (datetime.datetime.now()).replace(tzinfo=pytz.timezone('Asia/Shanghai'))
+
     invite_object = models.ProjectInvite.objects.filter(code=code).first()
     if not invite_object:
         return render(request, 'invite/invite_join.html', {'error': '邀请码不存在'})
@@ -428,8 +430,21 @@ def invite_join(request, code):
     if exists:
         return render(request, 'invite/invite_join.html', {'error': '已加入项目无需再加入'})
 
-    # 最多允许的成员
-    max_member = request.tracer.price_policy.project_member
+    # 最多允许的成员（要进入项目创建者的限制）
+    # max_member = request.tracer.price_policy.project_member # 当前登录用户他的限制
+    # 项目创建者
+
+    # 是否已经过期，如果已过期则使用免费额度
+    max_transaction = models.Transaction.objects.filter(user=invite_object.project.creator).order_by('-id').first()
+    if max_transaction.price_policy.category == 1:
+        max_member = max_transaction.price_policy.project_member
+    else:
+        if max_transaction.end_datetime < current_datetime:
+            # 使用免费额度
+            free_object = models.PricePolicy.objects.filter(category=1).first()
+            max_member = free_object.project_member
+        else:
+            max_member = max_transaction.price_policy.project_member
 
     # 目前所有成员(创建者&参与者)
     current_member = models.ProjectUser.objects.filter(project=invite_object.project).count()
@@ -440,8 +455,7 @@ def invite_join(request, code):
         return render(request, 'invite/invite_join.html', {'error': '人员已超限，请升级套餐'})
 
     # 邀请码是否过期判断
-    # 当前时间
-    current_datetime = (datetime.datetime.now()).replace(tzinfo=pytz.timezone('Asia/Shanghai'))
+
     # 截至时间
     limit_datetime = invite_object.create_datetime + datetime.timedelta(minutes=invite_object.period)
 
@@ -460,5 +474,10 @@ def invite_join(request, code):
 
     # 无数量限制
     models.ProjectUser.objects.create(user=request.tracer.user, project=invite_object.project)
+
+    # 参与人数更新
+    invite_object.project.join_count += 1
+    invite_object.project.save()
+
     return render(request, 'invite/invite_join.html', {'project': invite_object.project})
 
