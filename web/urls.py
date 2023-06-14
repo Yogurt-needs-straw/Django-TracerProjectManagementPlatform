@@ -56,6 +56,7 @@ urlpatterns = [
         path('issues/invite/url/', issues.invite_url, name='invite_url'),
 
         path('dashboard/', dashboard.dashboard, name='dashboard'),
+        path('dashboard/issues/chart/', dashboard.issues_chart, name='issues_chart'),
 
     ], None)),
 

@@ -196,6 +196,14 @@
 {% block js %}
     <script src="{% static 'plugin/highcharts/highcharts.js' %}"></script>
     <script>
+    var INIT_CHART = "issues/chart/"
+
+    Highcharts.setOptions({
+        global: {
+          useUTC: false
+        }
+    });
+
     $(function () {
         initChart();
     });
@@ -248,9 +256,11 @@
 
         
         $.ajax({
-            url: "",
+            url: INIT_CHART,
+            type: "GET",
+            dataType: "JSON",
             success: function (res) {
-                config.series = res.data;
+                config.series[0].data = res.data;
                 var chart = Highcharts.chart('chart', config);
             }
         });
