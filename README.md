@@ -2225,6 +2225,16 @@ return render(request, 'dashboard/dashboard.html', context)
 > highcharts，专门用于画图的js库。
 >
 > [下载中心 | Highcharts](https://www.hcharts.cn/download)
+>
+> highcharts 取消使用UTC时间
+>
+> ```javascript
+> Highcharts.setOptions({
+>     global: {
+>       useUTC: false
+>     }
+> });
+> ```
 
 应用
 
