@@ -2309,9 +2309,17 @@ var chart = Highcharts.chart('container', {
 - 提供js文件
 - 不提供js文件
 
-123
+##### 12.统计
 
 - daterangepicker，专门用于选择时间区间的插件
+- [Date Range Picker 中文网 — JavaScript Date组件 & Time 选择组件](https://www.daterangepicker.cn/)
+
+
+
+###### 12.1 饼图
+
+###### 12.2 柱状图
+
 - 支付宝支付的沙箱环境（安卓系统）
 
 - 
