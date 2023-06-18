@@ -1,11 +1,61 @@
 {% extends 'layout/manage.html' %}
-
+{% load static %}
 {% block css %}
-
+    <link rel="stylesheet" href="{% static 'plugin/daterangepicker/daterangepicker.css' %}">
 {% endblock %}
 
 {% block content %}
     <div class="container-fluid" style="margin-top: 20px;">
-    <div></div>
+    <div>
+        <div class="input-group" style="width: 300px;">
+            <span class="input-group-addon">日期范围</span>
+            <input id="rangePicker" type="text" class="form-control">
+        </div>
+    </div>
     </div>
 {% endblock %}
+
+{% block js %}
+    <script src="{% static 'plugin/daterangepicker/moment.min.js' %}"></script>
+    <script src="{% static 'plugin/daterangepicker/daterangepicker.js' %}"></script>
+    <script>
+        $(function () {
+           initDateRangePicker();
+        });
+
+        function initDateRangePicker() {
+            var options = {
+                maxDate: moment(),
+                alwaysShowCalendars: true,
+                showWeekNumbers: true,
+                ranges: {
+                    '今天': [moment(), moment()],
+                    '昨天': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    '最近7天': [moment().subtract(6, 'days'), moment()],
+                    '最近30天': [moment().subtract(29, 'days'), moment()],
+                    '本月': [moment().startOf('month'), moment().endOf('month')]
+                },
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    separator: ' 至 ',
+                    applyLabel: '确定',
+                    cancelLabel: '取消',
+                    fromLabel: '开始',
+                    toLabel: '结束',
+                    customRangeLabel: '自定义',
+                    weekLabel: 'W',
+                    daysOfWeek: ['一', '二', '三', '四', '五', '六', '日'],
+                    monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                    firstDay: 1
+                }
+            };
+            $('#rangePicker').daterangepicker(options, function (start,end,label) {
+                // 选择了时间之后,函数自动触发.
+                priority(start.format('YYYY-MM-DD'), end.add(1, 'days').format('YYYY-MM-DD'));
+                projectUser(start.format('YYYY-MM-DD'), end.add(1, 'days').format('YYYY-MM-DD'));
+            });
+        }
+    </script>
+{% endblock %}
+
+
