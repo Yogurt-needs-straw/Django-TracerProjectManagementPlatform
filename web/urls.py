@@ -57,6 +57,7 @@ urlpatterns = [
         path('dashboard/issues/chart/', dashboard.issues_chart, name='issues_chart'),
 
         path('statistics/', statistics.statistics, name='statistics'),
+        path('statistics/priority/', statistics.statistics_priority, name='statistics_priority'),
 
     ], None)),
 

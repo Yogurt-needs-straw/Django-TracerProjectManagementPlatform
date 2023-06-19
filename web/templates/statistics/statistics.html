@@ -12,15 +12,45 @@
             <input id="rangePicker" type="text" class="form-control">
         </div>
     </div>
+
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                <i class="fa fa-bar-chart" aria-hidden="true"></i> 人员工作进展
+                </div>
+                <div class="panel-body">
+                <div id="projectUser" style="height: 300px;"></div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                <i class="fa fa-pie-chart" aria-hidden="true"></i> 优先级统计
+                </div>
+                <div class="panel-body">
+                <div id="priority" style="height: 300px;"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
     </div>
 {% endblock %}
 
 {% block js %}
     <script src="{% static 'plugin/daterangepicker/moment.min.js' %}"></script>
     <script src="{% static 'plugin/daterangepicker/daterangepicker.js' %}"></script>
+    <script src="{% static 'plugin/highcharts/highcharts.js' %}"></script>
     <script>
+        var PORIORITY_API = 'priority/'
+
         $(function () {
            initDateRangePicker();
+
+           priority(moment().format('YYYY-MM-DD'), moment().add(1, 'days').format('YYYY-MM-DD'));
         });
 
         function initDateRangePicker() {
@@ -52,9 +82,55 @@
             $('#rangePicker').daterangepicker(options, function (start,end,label) {
                 // 选择了时间之后,函数自动触发.
                 priority(start.format('YYYY-MM-DD'), end.add(1, 'days').format('YYYY-MM-DD'));
-                projectUser(start.format('YYYY-MM-DD'), end.add(1, 'days').format('YYYY-MM-DD'));
+                {#projectUser(start.format('YYYY-MM-DD'), end.add(1, 'days').format('YYYY-MM-DD'));#}
+
             });
         }
+        
+        function priority(start, end) {
+            var config = {
+                chart: {
+                    type: 'pie'
+                },
+                title: {
+                    text: null
+                },
+                credits: {
+                    enabled: false // 关闭版权信息
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.y}</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    name: '优先级',
+                    colorByPoint: true,
+                    data: []
+                }]
+            };
+
+            $.ajax({
+                url: PORIORITY_API,
+                type: "GET",
+                dataType: "JSON",
+                data: {start:start, end:end},
+                success:function (res) {
+                    config.series[0].data = res.data;
+                    Highcharts.chart('priority', config);
+                }
+            })
+
+        }
+        
     </script>
 {% endblock %}
 
