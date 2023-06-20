@@ -46,11 +46,14 @@
     <script src="{% static 'plugin/highcharts/highcharts.js' %}"></script>
     <script>
         var PORIORITY_API = 'priority/'
+        var PROJECT_USER_API = 'statistics_project_user/'
 
         $(function () {
            initDateRangePicker();
 
            priority(moment().format('YYYY-MM-DD'), moment().add(1, 'days').format('YYYY-MM-DD'));
+
+           projectUser(moment().format('YYYY-MM-DD'), moment().add(1, 'days').format('YYYY-MM-DD'));
         });
 
         function initDateRangePicker() {
@@ -129,6 +132,74 @@
                 }
             })
 
+        }
+        
+        function projectUser(start, end) {
+            var config = {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: null
+                },
+                credits: {
+                    enabled: false // 关闭版权信息
+                },
+                xAxis: {
+                    categories: []
+                },
+
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: '问题数量'
+                    },
+                    stackLabels: {  // 堆叠数据标签
+                        enabled: true,
+                        style: {
+                            fontWeight: 'bold',
+                            color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                        }
+                    }
+                },
+                legend: {
+                    align: 'center',
+                    verticalAlign: 'top'
+
+                },
+                tooltip: {
+                    formatter: function () {
+                        return '<b>' + this.x + '</b><br/>' +
+                            this.series.name + ': ' + this.y + '<br/>' +
+                            '总量: ' + this.point.stackTotal;
+                    }
+                },
+                plotOptions: {
+                    column: {
+                        stacking: 'normal',
+                        dataLabels: {
+                            enabled: false
+                        }
+                    }
+                },
+                series: [{
+                    name: '',
+                    data: []
+                }]
+            };
+            {#Highcharts.chart('projectUser', config);#}
+            $.ajax({
+                url: PROJECT_USER_API,
+                type: "GET",
+                data: {start: start, end: end},
+                dataType: "JSON",
+                success: function (res) {
+                    config.xAxis.categories = res.data.categories;
+                    config.series = res.data.series;
+                    Highcharts.chart('projectUser', config);
+
+                }
+            })
         }
         
     </script>

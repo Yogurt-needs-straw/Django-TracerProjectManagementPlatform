@@ -34,3 +34,8 @@ def statistics_priority(request, project_id):
 
     return JsonResponse({'status': True, 'data': list(data_dict.values())})
 
+
+def statistics_project_user(request):
+    ''' 项目成员每个人被分配的任务数量（问题类型的配比） '''
+
+    return None
