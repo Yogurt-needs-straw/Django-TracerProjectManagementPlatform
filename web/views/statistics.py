@@ -38,4 +38,21 @@ def statistics_priority(request, project_id):
 def statistics_project_user(request):
     ''' 项目成员每个人被分配的任务数量（问题类型的配比） '''
 
-    return None
+    # 1.找到所有的问题并且需要根据指派的用户，分组。
+    all_user_dict = {
+
+    }
+
+    context = {
+        'status': True,
+        'data': {
+            'categories': ['1','2'],
+            'series': [{
+                'name': '新建',
+                'data': [1,2,3]
+            }]
+        }
+    }
+
+    return JsonResponse(context)
+
