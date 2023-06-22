@@ -46,7 +46,7 @@
     <script src="{% static 'plugin/highcharts/highcharts.js' %}"></script>
     <script>
         var PORIORITY_API = 'priority/'
-        var PROJECT_USER_API = 'statistics_project_user/'
+        var PROJECT_USER_API = 'project/user/'
 
         $(function () {
            initDateRangePicker();
@@ -85,7 +85,7 @@
             $('#rangePicker').daterangepicker(options, function (start,end,label) {
                 // 选择了时间之后,函数自动触发.
                 priority(start.format('YYYY-MM-DD'), end.add(1, 'days').format('YYYY-MM-DD'));
-                {#projectUser(start.format('YYYY-MM-DD'), end.add(1, 'days').format('YYYY-MM-DD'));#}
+                projectUser(start.format('YYYY-MM-DD'), end.add(1, 'days').format('YYYY-MM-DD'));
 
             });
         }

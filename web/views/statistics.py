@@ -35,22 +35,61 @@ def statistics_priority(request, project_id):
     return JsonResponse({'status': True, 'data': list(data_dict.values())})
 
 
-def statistics_project_user(request):
+def statistics_project_user(request, project_id):
     ''' 项目成员每个人被分配的任务数量（问题类型的配比） '''
 
+    start = request.GET.get('start')
+    end = request.GET.get('end')
+
     # 1.找到所有的问题并且需要根据指派的用户，分组。
-    all_user_dict = {
+    # 所有项目成员 及 未指派
+    # 有序字典
+    all_user_dict = collections.OrderedDict()
+    all_user_dict[request.tracer.project.creator.id] = {
+        'name': request.tracer.project.creator.username,
+        'status': {item[0]: 0 for item in models.Issues.status_choices}
+    }
+
+    all_user_dict[None] = {
+        'name': '未指派',
+        'status': {item[0]: 0 for item in models.Issues.status_choices}
 
     }
+
+    user_list = models.ProjectUser.objects.filter(project_id=project_id)
+    for item in user_list:
+        all_user_dict[item.user_id] = {
+            'name': item.user.username,
+            'status': {item[0]: 0 for item in models.Issues.status_choices}
+        }
+
+    # 2. 数据库获取相关的所有问题
+    issues = models.Issues.objects.filter(project_id=project_id, create_datetime__gte=start, create_datetime__lt=end)
+    for item in issues:
+        if not item.assign:
+            all_user_dict[None]['status'][item.status] += 1
+        else:
+            all_user_dict[item.assign_id]['status'][item.status] += 1
+
+    # 3.获取所有的成员
+    categories = [data['name'] for data in all_user_dict.values()]
+
+    # 4.构造字典
+    data_result_dict = collections.OrderedDict()
+    for item in models.Issues.status_choices:
+        data_result_dict[item[0]] = {'name': item[1], 'data': []}
+
+    for key,text in models.Issues.status_choices:
+        # key=0, text='新建'
+        for row in all_user_dict.values():
+            count = row['status'][key]
+            data_result_dict[key]['data'].append(count)
 
     context = {
         'status': True,
         'data': {
-            'categories': ['1','2'],
-            'series': [{
-                'name': '新建',
-                'data': [1,2,3]
-            }]
+            'categories': categories,
+            'series': list(data_result_dict.values())
         }
     }
 
