@@ -2220,19 +2220,24 @@ return render(request, 'dashboard/dashboard.html', context)
 
 ##### 11.5 问题趋势
 
-###### 11.5.1
+###### 11.5.1 highcharts
 
 > highcharts，专门用于画图的js库。
 >
 > [下载中心 | Highcharts](https://www.hcharts.cn/download)
 >
+> 【重点难点】
+>
+> - 前端的配置，找配置&试
+> - 数据处理，前端所需格式的数据。
+>
 > highcharts 取消使用UTC时间
 >
 > ```javascript
 > Highcharts.setOptions({
->     global: {
->       useUTC: false
->     }
+>  global: {
+>    useUTC: false
+>  }
 > });
 > ```
 
@@ -2314,11 +2319,178 @@ var chart = Highcharts.chart('container', {
 - daterangepicker，专门用于选择时间区间的插件
 - [Date Range Picker 中文网 — JavaScript Date组件 & Time 选择组件](https://www.daterangepicker.cn/)
 
-
-
 ###### 12.1 饼图
 
+```html
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8"><link rel="icon" href="https://jscdn.com.cn/highcharts/images/favicon.ico">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            /* css 代码  */
+        </style>
+        <script src="https://code.hcharts.cn/highcharts/highcharts.js"></script>
+        <script src="https://code.hcharts.cn/highcharts/modules/exporting.js"></script>
+        <script src="https://code.hcharts.cn/plugins/zh_cn.js"></script>
+    </head>
+    <body>
+        <div id="container" style="min-width:400px;height:400px"></div>
+        <script>
+            // JS 代码 
+        </script>
+    </body>
+</html>
+```
+
+```javascript
+// Build the chart
+Highcharts.chart('container', {
+		chart: {
+				plotBackgroundColor: null,
+				plotBorderWidth: null,
+				plotShadow: false,
+				type: 'pie'
+		},
+		title: {
+				text: '2018 年浏览器市场份额'
+		},
+		tooltip: {
+				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+		},
+		plotOptions: {
+				pie: {
+						allowPointSelect: true,
+						cursor: 'pointer',
+						dataLabels: {
+								enabled: false
+						},
+						showInLegend: true
+				}
+		},
+		series: [{
+				name: 'Brands',
+				colorByPoint: true,
+				data: [{
+						name: 'Chrome',
+						y: 61.41,
+						sliced: true,
+						selected: true
+				}, {
+						name: 'Internet Explorer',
+						y: 11.84
+				}, {
+						name: 'Firefox',
+						y: 10.85
+				}, {
+						name: 'Edge',
+						y: 4.67
+				}, {
+						name: 'Safari',
+						y: 4.18
+				}, {
+						name: 'Other',
+						y: 7.05
+				}]
+		}]
+});
+```
+
+
+
 ###### 12.2 柱状图
+
+```html
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8"><link rel="icon" href="https://jscdn.com.cn/highcharts/images/favicon.ico">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            /* css 代码  */
+        </style>
+        <script src="https://code.hcharts.cn/highcharts/highcharts.js"></script>
+        <script src="https://code.hcharts.cn/highcharts/modules/exporting.js"></script>
+        <script src="https://code.hcharts.cn/plugins/zh_cn.js"></script>
+    </head>
+    <body>
+        <div id="container" style="min-width:400px;height:400px"></div>
+        <script>
+            // JS 代码 
+        </script>
+    </body>
+</html>
+```
+
+```javascript
+var chart = Highcharts.chart('container', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: '堆叠柱形图'
+    },
+    xAxis: {
+        categories: ['苹果', '橘子', '梨', '葡萄', '香蕉']
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: '水果消费总量'
+        },
+        stackLabels: {  // 堆叠数据标签
+            enabled: true,
+            style: {
+                fontWeight: 'bold',
+                color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+            }
+        }
+    },
+    legend: {
+        align: 'right',
+        x: -30,
+        verticalAlign: 'top',
+        y: 25,
+        floating: true,
+        backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+        borderColor: '#CCC',
+        borderWidth: 1,
+        shadow: false
+    },
+    tooltip: {
+        formatter: function () {
+            return '<b>' + this.x + '</b><br/>' +
+                this.series.name + ': ' + this.y + '<br/>' +
+                '总量: ' + this.point.stackTotal;
+        }
+    },
+    plotOptions: {
+        column: {
+            stacking: 'normal',
+            dataLabels: {
+                enabled: true,
+                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                style: {
+                    // 如果不需要数据标签阴影，可以将 textOutline 设置为 'none'
+                    textOutline: '1px 1px black'
+                }
+            }
+        }
+    },
+    series: [{
+        name: '小张',
+        data: [5, 3, 4, 7, 2]
+    }, {
+        name: '小彭',
+        data: [2, 2, 3, 2, 1]
+    }, {
+        name: '小潘',
+        data: [3, 4, 4, 2, 5]
+    }]
+});
+```
+
+
 
 - 支付宝支付的沙箱环境（安卓系统）
 
