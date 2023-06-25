@@ -11,8 +11,8 @@ def md5(string):
 
     return hash_object.hexdigest()
 
-def uid(mobile_phone):
+def uid(string):
     ''' 不重复数据 '''
-    data = "{}-{}".format(str(uuid.uuid4()), mobile_phone)
+    data = "{}-{}".format(str(uuid.uuid4()), string)
     # print(data)
     return md5(data)
