@@ -14,7 +14,7 @@ urlpatterns = [
     path('index/', home.index, name='index'),
 
     path('price/', home.price, name='price'),
-    path('payment/<int:policy_id>', home.payment, name='payment'),
+    path('payment/<int:policy_id>/', home.payment, name='payment'),
 
     # 项目管理
     path('project/list/', project.project_list, name='project_list'),

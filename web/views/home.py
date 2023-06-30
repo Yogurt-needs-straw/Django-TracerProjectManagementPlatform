@@ -1,3 +1,4 @@
+import datetime
 
 from django.shortcuts import render, redirect
 
@@ -40,9 +41,31 @@ def payment(request, policy_id):
     # 4.之前购买过套餐
     # 抵扣价格
     balance = 0
+    _object = None
     if request.tracer.price_policy.category == 2:
-        pass
+        # 找到之前订单：总支付费用、开始~结束时间、剩余天数 = 抵扣的钱
+        _object = models.Transaction.objects.filter(user=request.tracer.user, status=2).order_by('-id').first()
+        total_timedelta = _object.end_datetime - _object.start_datetime
+        balance_timedelta = _object.end_datetime - datetime.datetime.now()
+        if total_timedelta.days == balance_timedelta.days:
+            balance = _object.price / total_timedelta.days * (balance_timedelta.days - 1)
+        else:
+            balance = _object.price / total_timedelta.days * balance_timedelta.days
 
-    return None
+    if balance >= origin_price:
+        return redirect('price')
+
+    context = {
+        'policy_id': policy_object.id,
+        'number': number,
+        'origin_price': origin_price,
+        'balance': round(balance, 2),
+        'total_price': origin_price - round(balance, 2),
+    }
+
+    context['policy_object'] = policy_object
+    context['transaction'] = _object
+
+    return render(request, 'web/payment.html', context)
 
 
