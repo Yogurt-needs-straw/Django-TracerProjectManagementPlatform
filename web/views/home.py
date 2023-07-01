@@ -1,7 +1,10 @@
 import datetime
+import json
 
 from django.shortcuts import render, redirect
+from django_redis import get_redis_connection
 
+from utils.encrypt import uid
 from web import models
 
 
@@ -63,9 +66,44 @@ def payment(request, policy_id):
         'total_price': origin_price - round(balance, 2),
     }
 
+    conn = get_redis_connection()
+    key = 'payment_{}'.format(request.tracer.user.mobile_phone)
+    conn.set(key, json.dumps(context), nx=60*30)
+
     context['policy_object'] = policy_object
     context['transaction'] = _object
 
     return render(request, 'web/payment.html', context)
 
+
+def pay(request):
+    ''' 生成订单 & 去支付宝支付 '''
+    # 需要对用户提交的数据再次做校验
+    conn = get_redis_connection()
+    key = 'payment_{}'.format(request.tracer.user.mobile_phone)
+
+    context_string = conn.get(key)
+    if not context_string:
+        return redirect('price')
+
+    context = json.loads(context_string.decode('utf-8'))
+
+    # 1.数据库中生成交易记录（待支付）
+    # 等支付成功之后，我们需要把订单的状态更新为已支付，开始与结束时间
+    order_id = uid(request.tracer.user.mobile_phone)
+    models.Transaction.objects.create(
+        status=1,
+        order=order_id,
+        user=request.tracer.user,
+        price_policy_id=context['policy_id'],
+        count=context['number'],
+        price=context['total_price'],
+    )
+
+    # 2.跳转到支付宝支付
+    # -生成一个支付宝连接
+    # -跳转到这个链接
+    url = "支付宝的支付链接"
+
+    return redirect(url)
 

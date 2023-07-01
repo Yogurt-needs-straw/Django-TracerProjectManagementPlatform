@@ -15,6 +15,7 @@ urlpatterns = [
 
     path('price/', home.price, name='price'),
     path('payment/<int:policy_id>/', home.payment, name='payment'),
+    path('pay/', home.pay, name='pay'),
 
     # 项目管理
     path('project/list/', project.project_list, name='project_list'),
