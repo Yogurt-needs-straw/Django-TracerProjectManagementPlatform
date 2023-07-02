@@ -2493,6 +2493,40 @@ var chart = Highcharts.chart('container', {
 #### 13 支付
 
 - 支付宝支付的沙箱环境（安卓系统）
+- [沙箱环境联调 - 支付宝文档中心 (alipay.com)](https://opendocs.alipay.com/open/00dn7o?pathHash=c1e36251)
+- 沙箱环境，模拟真实环境
+- [沙箱环境 - 支付宝文档中心 (alipay.com)](https://opendocs.alipay.com/common/02kkv7#操作指引)
+
+##### 13.1 申请开通沙箱环境
+
+[支付宝开放平台 (alipay.com)](https://openhome.alipay.com/develop/sandbox/app)
+
+注册成功后，会获得两个值
+
+1. APPID
+2. 支付宝网关
+
+
+
+##### 13.2 生成秘钥
+
+使用支付宝开放平台秘钥工具
+
+- 应用公钥
+- 应用私钥：对以后URL中传入的数据进行签名加密用。
+- 支付宝公钥：通过应用公钥生成，在页面支付成功后跳转回来时候，对支付宝给我们传的值进行校验。
+
+上传应用公钥并获得支付私钥
+
+
+
+##### 13.3 账户信息和测试APP
+
+- 商家信息
+
+- 买家信息
+
+  
 
 ##### 13.1  点击价格展示套餐
 
