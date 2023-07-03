@@ -2523,10 +2523,40 @@ var chart = Highcharts.chart('container', {
 ##### 13.3 账户信息和测试APP
 
 - 商家信息
-
 - 买家信息
 
-  
+
+开发工具包
+
+[概述 - 支付宝文档中心 (alipay.com)](https://opendocs.alipay.com/open/54/103419)
+
+[alipay-sdk-python · PyPI](https://pypi.org/project/alipay-sdk-python/3.3.398/)
+
+- 支付宝网关
+
+  - ```python
+    网关 = https://openapi.alipaydev.com/gateway.do
+    参数 = {
+        app_id:"2026sdfsdfsdfsdf",
+        method:"werwerwerwerwer",
+        format:"JSON",
+        return_url:"支付成功后跳转到的那个页面地址",
+        notify_url:"同时向这个地址发送一个POST请求",
+        charset:"utf-8",
+        sign_type:"RSA2",
+        sign:"",
+        timestamp:"",
+        version:"1.0",
+        biz_content:{
+            out_trade_no:"订单号",
+            product_code:"FAST_INSTANT_TRADE_PAY",
+            total_amount:11.86,
+            subject:"订单标题",
+        },
+    }
+    ```
+
+
 
 ##### 13.1  点击价格展示套餐
 
