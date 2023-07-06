@@ -2601,6 +2601,67 @@ var chart = Highcharts.chart('container', {
 >
 > 使用：from urlib.parse import quote_plus
 
+```python
+# pip3 install pycrypto
+# 如果是 pycryptodom.xxx.whl 下载到本地 pip install pycryptodom.xxx.whl
+https://files.pythonhosted.org/packages/5d/b3/c6008b5993cd616e9078368e7a2b358588c10e4e6b4b8450ff433af9ed72/pycryptodome-3.9.7-cp38-cp38-win_amd64.whl#sha256=c109a26a21f21f695d369ff9b87f5d43e0d6c768d8384e10bc74142bed2e092e
+```
+
+[pycryptodome · PyPI](https://pypi.org/project/pycryptodome/)
+
+```python
+# 构造字典
+params = {
+    app_id:"2026sdfsdfsdfsdf",
+    method:"werwerwerwerwer",
+    format:"JSON",
+    return_url:"支付成功后跳转到的那个页面地址",
+    notify_url:"同时向这个地址发送一个POST请求",
+    charset:"utf-8",
+    sign_type:"RSA2",
+    timestamp:"",
+    version:"1.0",
+    biz_content:json.dumps({
+        out_trade_no:"订单号",
+        product_code:"FAST_INSTANT_TRADE_PAY",
+        total_amount:11.86,
+        subject:"订单标题",
+    },separators=(',',':'))
+}
+
+# 获取带签名的字符串
+unsigned_string = "&".join(["{0}={1}".format(k,params[k]) for k in sorted(params)])
+print(unsigned_string)
+
+# 签名 SHA256withRSA(对应sign_type为RSA2)
+from Crypto.PublicKey import RSA
+from Crypto.Signature import PKCS1_v1_5
+from Crypto.Hash import SHA256
+from base64 import decodebytes, encodebytes
+
+# SHA256withRSA + 应用私钥 对代签名的字符串
+private_key = RSA.importKey(open("files/skd/应用私钥2048.txt").read())
+signer = PKCS1_v1_5.new(private_key)
+signature = signer.sign(SHA256.new(unsigned_string.encode('utf-8')))
+
+# 对签名之后的执行 base64 编码，转为字符串
+sign_string = encodebytes(signature).decode("utf-8").replace('\n','')
+
+# 把生成的签名赋值给sign参数，拼接到请求参数中
+from urllib.parse import quote_plus
+result = "&".join(["{0}={1}".format(k,quote_plus(params[k])) for k in sorted(params)])
+result = result + "&sign=" + quote_plus(sign_string)
+
+gateway = "https://openapi.alipaydev.com/gateway.do"
+pay_url = "{}?{}".format(gateway, result)
+return pay_url
+
+```
+
+
+
+
+
 
 
 
