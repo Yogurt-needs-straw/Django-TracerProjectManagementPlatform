@@ -91,19 +91,64 @@ def pay(request):
     # 1.数据库中生成交易记录（待支付）
     # 等支付成功之后，我们需要把订单的状态更新为已支付，开始与结束时间
     order_id = uid(request.tracer.user.mobile_phone)
+    total_price = context['total_price']
     models.Transaction.objects.create(
         status=1,
         order=order_id,
         user=request.tracer.user,
         price_policy_id=context['policy_id'],
         count=context['number'],
-        price=context['total_price'],
+        price=total_price,
     )
 
     # 2.跳转到支付宝支付
+    # -根据申请的支付信息 + 支付宝的文档 > 跳转链接
     # -生成一个支付宝连接
     # -跳转到这个链接
-    url = "支付宝的支付链接"
+    # 构造字典
+    params = {
+        'app_id': "2016102400754054",
+        'method': 'alipay.trade.page.pay',
+        'format': 'JSON',
+        'return_url': "http://127.0.0.1:8001/pay/notify/",
+        'notify_url': "http://127.0.0.1:8001/pay/notify/",
+        'charset': 'utf-8',
+        'sign_type': 'RSA2',
+        'timestamp': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        'version': '1.0',
+        'biz_content': json.dumps({
+            'out_trade_no': order_id,
+            'product_code': 'FAST_INSTANT_TRADE_PAY',
+            'total_amount': total_price,
+            'subject': "tracer payment"
+        }, separators=(',', ':'))
+    }
 
-    return redirect(url)
+    # 获取待签名的字符串
+    unsigned_string = "&".join(["{0}={1}".format(k, params[k]) for k in sorted(params)])
+
+    # 签名 SHA256WithRSA(对应sign_type为RSA2)
+    from Crypto.PublicKey import RSA
+    from Crypto.Signature import PKCS1_v1_5
+    from Crypto.Hash import SHA256
+    from base64 import decodebytes, encodebytes
+
+    # SHA256WithRSA + 应用私钥 对待签名的字符串 进行签名
+    private_key = RSA.importKey(open("files/应用私钥2048.txt").read())
+    signer = PKCS1_v1_5.new(private_key)
+    signature = signer.sign(SHA256.new(unsigned_string.encode('utf-8')))
+
+    # 对签名之后的执行进行base64 编码，转换为字符串
+    sign_string = encodebytes(signature).decode("utf8").replace('\n', '')
+
+    # 把生成的签名赋值给sign参数，拼接到请求参数中。
+
+    from urllib.parse import quote_plus
+    result = "&".join(["{0}={1}".format(k, quote_plus(params[k])) for k in sorted(params)])
+    result = result + "&sign=" + quote_plus(sign_string)
+
+    gateway = "https://openapi.alipaydev.com/gateway.do"
+    ali_pay_url = "{}?{}".format(gateway, result)
+
+    return redirect(ali_pay_url)
 
