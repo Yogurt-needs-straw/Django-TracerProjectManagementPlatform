@@ -1,7 +1,7 @@
 /*!
  * Code block dialog plugin for Editor.md
  *
- * @file        code-block-dialog.js
+ * @files        code-block-dialog.js
  * @author      pandao
  * @version     1.2.0
  * @updateTime  2015-03-07

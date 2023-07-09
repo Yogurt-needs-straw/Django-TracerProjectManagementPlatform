@@ -1,7 +1,7 @@
 /*!
  * Help dialog plugin for Editor.md
  *
- * @file        help-dialog.js
+ * @files        help-dialog.js
  * @author      pandao
  * @version     1.2.0
  * @updateTime  2015-03-08

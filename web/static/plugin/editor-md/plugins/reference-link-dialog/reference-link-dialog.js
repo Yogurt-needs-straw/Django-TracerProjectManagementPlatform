@@ -1,7 +1,7 @@
 /*!
  * Reference link dialog plugin for Editor.md
  *
- * @file        reference-link-dialog.js
+ * @files        reference-link-dialog.js
  * @author      pandao
  * @version     1.2.1
  * @updateTime  2015-06-09

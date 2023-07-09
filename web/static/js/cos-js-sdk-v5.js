@@ -3069,7 +3069,7 @@ module.exports = request;
  * adapted from https://developer.mozilla.org/en-US/docs/JXON
  *
  * Licensed under the MIT License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this files except in compliance with the License.
  * You may obtain a copy of the License at
  *
  *     https://opensource.org/licenses/MIT
@@ -7703,7 +7703,7 @@ function uploadSliceComplete(params, callback) {
 /*
  AsyncLimit (抛弃上传任务的并发量)，
  UploadId (上传任务的编号，当 Level 为 task 时候需要)
- Level (抛弃分块上传任务的级别，task : 抛弃指定的上传任务，file ： 抛弃指定的文件对应的上传任务，其他值 ：抛弃指定Bucket 的全部上传任务)
+ Level (抛弃分块上传任务的级别，task : 抛弃指定的上传任务，files ： 抛弃指定的文件对应的上传任务，其他值 ：抛弃指定Bucket 的全部上传任务)
  */
 
 

@@ -2,7 +2,7 @@
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
 /**
-* @file smartymixed.js
+* @files smartymixed.js
 * @brief Smarty Mixed Codemirror mode (Smarty + Mixed HTML)
 * @author Ruslan Osmanov <rrosmanov at gmail dot com>
 * @version 3.0

@@ -73,7 +73,7 @@
                     uploadButton     : "Upload",
                     imageURLEmpty    : "Error: picture url address can't be empty.",
                     uploadFileEmpty  : "Error: upload pictures cannot be empty!",
-                    formatNotAllowed : "Error: only allows to upload pictures file, upload allowed image file format:"
+                    formatNotAllowed : "Error: only allows to upload pictures files, upload allowed image files format:"
                 },
                 preformattedText : {
                     title             : "Preformatted text / Codes", 

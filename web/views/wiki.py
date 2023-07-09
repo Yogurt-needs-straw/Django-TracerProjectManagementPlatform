@@ -112,7 +112,7 @@ def upload(request, project_id):
         'url': None
     }
 
-    image_object = request.FILES.get('editormd-image-file')
+    image_object = request.FILES.get('editormd-image-files')
 
     # 判断是否存在文件对象
     if not image_object:

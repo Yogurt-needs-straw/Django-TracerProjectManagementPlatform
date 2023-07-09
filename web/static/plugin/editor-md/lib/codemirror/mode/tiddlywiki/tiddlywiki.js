@@ -143,7 +143,7 @@ CodeMirror.defineMode("tiddlywiki", function () {
       return chain(stream, state, twTokenCode);
     }
 
-    // rudimentary html:// file:// link matching. TW knows much more ...
+    // rudimentary html:// files:// link matching. TW knows much more ...
     if (/[hf]/i.test(ch)) {
       if (/[ti]/i.test(stream.peek()) && stream.match(/\b(ttps?|tp|ile):\/\/[\-A-Z0-9+&@#\/%?=~_|$!:,.;]*[A-Z0-9+&@#\/%=~_|$]/i)) {
         return ret("link", "link");

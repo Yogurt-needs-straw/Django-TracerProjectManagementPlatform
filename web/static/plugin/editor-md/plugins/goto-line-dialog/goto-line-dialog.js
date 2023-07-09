@@ -1,7 +1,7 @@
 /*!
  * Goto line dialog plugin for Editor.md
  *
- * @file        goto-line-dialog.js
+ * @files        goto-line-dialog.js
  * @author      pandao
  * @version     1.2.1
  * @updateTime  2015-06-09

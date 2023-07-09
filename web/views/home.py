@@ -1,5 +1,6 @@
 import datetime
 import json
+import os
 
 from django.shortcuts import render, redirect
 from django_redis import get_redis_connection
@@ -107,11 +108,11 @@ def pay(request):
     # -跳转到这个链接
     # 构造字典
     params = {
-        'app_id': "2016102400754054",
+        'app_id': "9021000122699488",
         'method': 'alipay.trade.page.pay',
         'format': 'JSON',
-        'return_url': "http://127.0.0.1:8001/pay/notify/",
-        'notify_url': "http://127.0.0.1:8001/pay/notify/",
+        'return_url': "http://127.0.0.1:8000/pay/notify/",
+        'notify_url': "http://127.0.0.1:8000/pay/notify/",
         'charset': 'utf-8',
         'sign_type': 'RSA2',
         'timestamp': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -134,7 +135,8 @@ def pay(request):
     from base64 import decodebytes, encodebytes
 
     # SHA256WithRSA + 应用私钥 对待签名的字符串 进行签名
-    private_key = RSA.importKey(open("files/应用私钥2048.txt").read())
+    # print(os.path.join('files', '应用私钥.txt'))
+    private_key = RSA.importKey(open(".\\files\\应用私钥.txt").read())
     signer = PKCS1_v1_5.new(private_key)
     signature = signer.sign(SHA256.new(unsigned_string.encode('utf-8')))
 
@@ -147,7 +149,7 @@ def pay(request):
     result = "&".join(["{0}={1}".format(k, quote_plus(params[k])) for k in sorted(params)])
     result = result + "&sign=" + quote_plus(sign_string)
 
-    gateway = "https://openapi.alipaydev.com/gateway.do"
+    gateway = "https://openapi-sandbox.dl.alipaydev.com/gateway.do"
     ali_pay_url = "{}?{}".format(gateway, result)
 
     return redirect(ali_pay_url)

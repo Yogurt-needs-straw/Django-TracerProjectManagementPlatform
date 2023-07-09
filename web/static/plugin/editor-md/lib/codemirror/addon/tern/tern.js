@@ -14,11 +14,11 @@
 //   options.
 // * getFile: A function(name, c) that can be used to access files in
 //   the project that haven't been loaded yet. Simply do c(null) to
-//   indicate that a file is not available.
+//   indicate that a files is not available.
 // * fileFilter: A function(value, docName, doc) that will be applied
 //   to documents before passing them on to Tern.
 // * switchToDoc: A function(name, doc) that should, when providing a
-//   multi-file view, switch the view or focus to the named file.
+//   multi-files view, switch the view or focus to the named files.
 // * showError: A function(editor, message) that can be used to
 //   override the way errors are displayed.
 // * completionTip: Customize the content in tooltips for completions.

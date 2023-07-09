@@ -1,7 +1,7 @@
 /*!
  * Preformatted text dialog plugin for Editor.md
  *
- * @file        preformatted-text-dialog.js
+ * @files        preformatted-text-dialog.js
  * @author      pandao
  * @version     1.2.0
  * @updateTime  2015-03-07

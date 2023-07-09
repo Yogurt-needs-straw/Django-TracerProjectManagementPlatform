@@ -1,7 +1,7 @@
 /*!
  * Emoji dialog plugin for Editor.md
  *
- * @file        emoji-dialog.js
+ * @files        emoji-dialog.js
  * @author      pandao
  * @version     1.2.0
  * @updateTime  2015-03-08

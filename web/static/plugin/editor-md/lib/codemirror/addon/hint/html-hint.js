@@ -311,7 +311,7 @@
     contextmenu: null,
     dir: ["ltr", "rtl", "auto"],
     draggable: ["true", "false", "auto"],
-    dropzone: ["copy", "move", "link", "string:", "file:"],
+    dropzone: ["copy", "move", "link", "string:", "files:"],
     hidden: ["hidden"],
     id: null,
     inert: ["inert"],

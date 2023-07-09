@@ -1,7 +1,7 @@
 /*!
  * HTML entities dialog plugin for Editor.md
  *
- * @file        html-entities-dialog.js
+ * @files        html-entities-dialog.js
  * @author      pandao
  * @version     1.2.0
  * @updateTime  2015-03-08

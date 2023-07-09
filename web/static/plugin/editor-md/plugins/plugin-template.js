@@ -1,7 +1,7 @@
 /*!
  * Link dialog plugin for Editor.md
  *
- * @file        link-dialog.js
+ * @files        link-dialog.js
  * @author      pandao
  * @version     1.2.0
  * @updateTime  2015-03-07

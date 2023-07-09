@@ -18,4 +18,4 @@ def project_statistics(request, project_id):
 
 # def project_file(request, project_id):
 #
-#     return render(request, 'manage/file.html')
+#     return render(request, 'manage/files.html')

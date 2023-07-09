@@ -41,12 +41,12 @@ urlpatterns = [
         path('wiki/edit/<int:wiki_id>/', wiki.edit, name='wiki_edit'),
         path('wiki/upload/', wiki.upload, name='wiki_upload'),
 
-        # file 路径
-        path('file/', file.file, name='file'),
-        path('file/delete/', file.file_delete, name='file_delete'),
+        # files 路径
+        path('files/', file.file, name='files'),
+        path('files/delete/', file.file_delete, name='file_delete'),
         path('cos/credential/', file.cos_credential, name='cos_credential'),
-        path('file/post/', file.file_post, name='file_post'),
-        path('file/download/<int:file_id>/', file.file_download, name='file_download'),
+        path('files/post/', file.file_post, name='file_post'),
+        path('files/download/<int:file_id>/', file.file_download, name='file_download'),
 
         path('setting/', setting.setting, name='setting'),
         path('setting/delete', setting.delete, name='setting_delete'),

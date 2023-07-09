@@ -1,7 +1,7 @@
 /*!
  * Image (upload) dialog plugin for Editor.md
  *
- * @file        image-dialog.js
+ * @files        image-dialog.js
  * @author      pandao
  * @version     1.3.4
  * @updateTime  2015-06-09
@@ -50,8 +50,8 @@
                                         ( (settings.imageUpload) ? "<iframe name=\"" + iframeName + "\" id=\"" + iframeName + "\" guid=\"" + guid + "\"></iframe>" : "" ) +
                                         "<label>" + imageLang.url + "</label>" +
                                         "<input type=\"text\" data-url />" + (function(){
-                                            return (settings.imageUpload) ? "<div class=\"" + classPrefix + "file-input\">" +
-                                                                                "<input type=\"file\" name=\"" + classPrefix + "image-file\" accept=\"image/*\" />" +
+                                            return (settings.imageUpload) ? "<div class=\"" + classPrefix + "files-input\">" +
+                                                                                "<input type=\"files\" name=\"" + classPrefix + "image-files\" accept=\"image/*\" />" +
                                                                                 "<input type=\"submit\" value=\"" + imageLang.uploadButton + "\" />" +
                                                                             "</div>" : "";
                                         })() +
@@ -125,7 +125,7 @@
                     return ;
                 }
 
-				var fileInput  = dialog.find("[name=\"" + classPrefix + "image-file\"]");
+				var fileInput  = dialog.find("[name=\"" + classPrefix + "image-files\"]");
 
 				fileInput.bind("change", function() {
 					var fileName  = fileInput.val();
@@ -179,7 +179,7 @@
 
 			dialog = editor.find("." + dialogName);
 			dialog.find("[type=\"text\"]").val("");
-			dialog.find("[type=\"file\"]").val("");
+			dialog.find("[type=\"files\"]").val("");
 			dialog.find("[data-link]").val("http://");
 
 			this.dialogShowMask(dialog);

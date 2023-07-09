@@ -31,7 +31,7 @@ CodeMirror.defineMode("mirc", function() {
                             "$dbuh $dbuw $dccignore $dccport $dde $ddename $debug $decode $decompress " +
                             "$deltok $devent $dialog $did $didreg $didtok $didwm $disk $dlevel $dll " +
                             "$dllcall $dname $dns $duration $ebeeps $editbox $emailaddr $encode $error " +
-                            "$eval $event $exist $feof $ferr $fgetc $file $filename $filtered $finddir " +
+                            "$eval $event $exist $feof $ferr $fgetc $files $filename $filtered $finddir " +
                             "$finddirn $findfile $findfilen $findtok $fline $floor $fopen $fread $fserve " +
                             "$fulladdress $fulldate $fullname $fullscreen $get $getdir $getdot $gettok $gmt " +
                             "$group $halted $hash $height $hfind $hget $highlight $hnick $hotline " +

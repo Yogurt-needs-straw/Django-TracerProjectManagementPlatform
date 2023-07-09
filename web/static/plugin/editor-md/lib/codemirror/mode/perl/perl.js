@@ -271,14 +271,14 @@ CodeMirror.defineMode("perl",function(){
                 chown                           :1,     // - change the owership on a list of files
                 chr                             :1,     // - get character this number represents
                 chroot                          :1,     // - make directory new root for path lookups
-                close                           :1,     // - close file (or pipe or socket) handle
+                close                           :1,     // - close files (or pipe or socket) handle
                 closedir                        :1,     // - close directory handle
                 connect                         :1,     // - connect to a remote socket
                 'continue'                      :[1,1], // - optional trailing block in a while or foreach
                 'cos'                           :1,     // - cosine function
                 crypt                           :1,     // - one-way passwd-style encryption
-                dbmclose                        :1,     // - breaks binding on a tied dbm file
-                dbmopen                         :1,     // - create binding on a tied dbm file
+                dbmclose                        :1,     // - breaks binding on a tied dbm files
+                dbmopen                         :1,     // - create binding on a tied dbm files
                 'default'                       :1,     //
                 defined                         :1,     // - test whether a value, variable, or function is defined
                 'delete'                        :1,     // - deletes a value from a hash
@@ -286,21 +286,21 @@ CodeMirror.defineMode("perl",function(){
                 'do'                            :1,     // - turn a BLOCK into a TERM
                 dump                            :1,     // - create an immediate core dump
                 each                            :1,     // - retrieve the next key/value pair from a hash
-                endgrent                        :1,     // - be done using group file
-                endhostent                      :1,     // - be done using hosts file
-                endnetent                       :1,     // - be done using networks file
-                endprotoent                     :1,     // - be done using protocols file
-                endpwent                        :1,     // - be done using passwd file
-                endservent                      :1,     // - be done using services file
+                endgrent                        :1,     // - be done using group files
+                endhostent                      :1,     // - be done using hosts files
+                endnetent                       :1,     // - be done using networks files
+                endprotoent                     :1,     // - be done using protocols files
+                endpwent                        :1,     // - be done using passwd files
+                endservent                      :1,     // - be done using services files
                 eof                             :1,     // - test a filehandle for its end
                 'eval'                          :1,     // - catch exceptions or compile and run code
                 'exec'                          :1,     // - abandon this program to run another
                 exists                          :1,     // - test whether a hash key is present
                 exit                            :1,     // - terminate this program
                 'exp'                           :1,     // - raise I to a power
-                fcntl                           :1,     // - file control system call
-                fileno                          :1,     // - return file descriptor from filehandle
-                flock                           :1,     // - lock an entire file with an advisory lock
+                fcntl                           :1,     // - files control system call
+                fileno                          :1,     // - return files descriptor from filehandle
+                flock                           :1,     // - lock an entire files with an advisory lock
                 fork                            :1,     // - create a new process just like this one
                 format                          :1,     // - declare a picture format with use by the write() function
                 formline                        :1,     // - internal function used for formats
@@ -366,7 +366,7 @@ CodeMirror.defineMode("perl",function(){
                 next                            :1,     // - iterate a block prematurely
                 no                              :1,     // - unimport some module symbols or semantics at compile time
                 oct                             :1,     // - convert a string to an octal number
-                open                            :1,     // - open a file, pipe, or descriptor
+                open                            :1,     // - open a files, pipe, or descriptor
                 opendir                         :1,     // - open a directory
                 ord                             :1,     // - find a character's numeric representation
                 our                             : 2,    // - declare and assign a package variable (lexical scoping)
@@ -388,7 +388,7 @@ CodeMirror.defineMode("perl",function(){
                 rand                            :1,     // - retrieve the next pseudorandom number
                 read                            :1,     // - fixed-length buffered input from a filehandle
                 readdir                         :1,     // - get a directory from a directory handle
-                readline                        :1,     // - fetch a record from a file
+                readline                        :1,     // - fetch a record from a files
                 readlink                        :1,     // - determine where a symbolic link is pointing
                 readpipe                        :1,     // - execute a system command and collect standard output
                 recv                            :1,     // - receive a message over a Socket
@@ -405,21 +405,21 @@ CodeMirror.defineMode("perl",function(){
                 s                               :null,  // - replace a pattern with a string
                 say                             :1,     // - print with newline
                 scalar                          :1,     // - force a scalar context
-                seek                            :1,     // - reposition file pointer for random-access I/O
+                seek                            :1,     // - reposition files pointer for random-access I/O
                 seekdir                         :1,     // - reposition directory pointer
                 select                          :1,     // - reset default output or do I/O multiplexing
                 semctl                          :1,     // - SysV semaphore control operations
                 semget                          :1,     // - get set of SysV semaphores
                 semop                           :1,     // - SysV semaphore operations
                 send                            :1,     // - send a message over a socket
-                setgrent                        :1,     // - prepare group file for use
-                sethostent                      :1,     // - prepare hosts file for use
-                setnetent                       :1,     // - prepare networks file for use
+                setgrent                        :1,     // - prepare group files for use
+                sethostent                      :1,     // - prepare hosts files for use
+                setnetent                       :1,     // - prepare networks files for use
                 setpgrp                         :1,     // - set the process group of a process
                 setpriority                     :1,     // - set a process's nice value
-                setprotoent                     :1,     // - prepare protocols file for use
-                setpwent                        :1,     // - prepare passwd file for use
-                setservent                      :1,     // - prepare services file for use
+                setprotoent                     :1,     // - prepare protocols files for use
+                setpwent                        :1,     // - prepare passwd files for use
+                setservent                      :1,     // - prepare services files for use
                 setsockopt                      :1,     // - set some socket options
                 shift                           :1,     // - remove the first element of an array, and return it
                 shmctl                          :1,     // - SysV shared memory operations
@@ -437,14 +437,14 @@ CodeMirror.defineMode("perl",function(){
                 sprintf                         :1,     // - formatted print into a string
                 'sqrt'                          :1,     // - square root function
                 srand                           :1,     // - seed the random number generator
-                stat                            :1,     // - get a file's status information
+                stat                            :1,     // - get a files's status information
                 state                           :1,     // - declare and assign a state variable (persistent lexical scoping)
                 study                           :1,     // - optimize input data for repeated searches
                 'sub'                           :1,     // - declare a subroutine, possibly anonymously
                 'substr'                        :1,     // - get or alter a portion of a stirng
-                symlink                         :1,     // - create a symbolic link to a file
+                symlink                         :1,     // - create a symbolic link to a files
                 syscall                         :1,     // - execute an arbitrary system call
-                sysopen                         :1,     // - open a file, pipe, or descriptor
+                sysopen                         :1,     // - open a files, pipe, or descriptor
                 sysread                         :1,     // - fixed-length unbuffered input from a filehandle
                 sysseek                         :1,     // - position I/O pointer on handle used with sysread and syswrite
                 system                          :1,     // - run a separate program
@@ -456,17 +456,17 @@ CodeMirror.defineMode("perl",function(){
                 time                            :1,     // - return number of seconds since 1970
                 times                           :1,     // - return elapsed time for self and child processes
                 tr                              :null,  // - transliterate a string
-                truncate                        :1,     // - shorten a file
+                truncate                        :1,     // - shorten a files
                 uc                              :1,     // - return upper-case version of a string
                 ucfirst                         :1,     // - return a string with just the next letter in upper case
-                umask                           :1,     // - set file creation mode mask
+                umask                           :1,     // - set files creation mode mask
                 undef                           :1,     // - remove a variable or function definition
-                unlink                          :1,     // - remove one link to a file
+                unlink                          :1,     // - remove one link to a files
                 unpack                          :1,     // - convert binary structure into normal perl variables
                 unshift                         :1,     // - prepend more elements to the beginning of a list
                 untie                           :1,     // - break a tie binding to a variable
                 use                             :1,     // - load in a module at compile time
-                utime                           :1,     // - set a file's last access and modify times
+                utime                           :1,     // - set a files's last access and modify times
                 values                          :1,     // - return a list of the values in a hash
                 vec                             :1,     // - test or set particular bits in a string
                 wait                            :1,     // - wait for any child process to die

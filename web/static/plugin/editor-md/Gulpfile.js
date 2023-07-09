@@ -23,7 +23,7 @@ pkg.today        = dateFormat;
 var headerComment = ["/*", 
 					" * <%= pkg.name %>",
                     " *",
-					" * @file        <%= fileName(file) %> ",
+					" * @files        <%= fileName(files) %> ",
 					" * @version     v<%= pkg.version %> ",
 					" * @description <%= pkg.description %>",
 					" * @license     MIT License",
@@ -33,7 +33,7 @@ var headerComment = ["/*",
 					" */", 
 					"\r\n"].join("\r\n");
 
-var headerMiniComment = "/*! <%= pkg.name %> v<%= pkg.version %> | <%= fileName(file) %> | <%= pkg.description %> | MIT License | By: <%= pkg.author %> | <%= pkg.homepage %> | <%=pkg.today('Y-m-d') %> */\r\n";
+var headerMiniComment = "/*! <%= pkg.name %> v<%= pkg.version %> | <%= fileName(files) %> | <%= pkg.description %> | MIT License | By: <%= pkg.author %> | <%= pkg.homepage %> | <%=pkg.today('Y-m-d') %> */\r\n";
 
 var scssTask = function(fileName, path) {
     
