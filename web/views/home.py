@@ -2,6 +2,7 @@ import datetime
 import json
 import os
 
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django_redis import get_redis_connection
 
@@ -203,4 +204,21 @@ def pay(request):
     )
     pay_url = "{}?{}".format(settings.ALI_GATEWAY, query_params)
     return redirect(pay_url)
+
+
+def pay_notify(request):
+    ''' 支付成功之后触发的URL '''
+    print(request.method)
+    if request.method == 'GET':
+        # 只做跳转，判断是否支付成功，不做订单的状态更新。
+
+
+    else:
+        # 做订单状态的更新
+
+        pass
+
+
+    return HttpResponse('666')
+
 
