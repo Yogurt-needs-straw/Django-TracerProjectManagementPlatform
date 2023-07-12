@@ -208,17 +208,65 @@ def pay(request):
 
 def pay_notify(request):
     ''' 支付成功之后触发的URL '''
-    print(request.method)
+
+    ali_pay = AliPay(
+        appid=settings.ALI_APPID,
+        app_notify_url=settings.ALI_NOTIFY_URL,
+        return_url=settings.ALI_RETURN_URL,
+        app_private_key_path=settings.ALI_PRI_KEY_PATH,
+        alipay_public_key_path=settings.ALI_PUB_KEY_PATH
+    )
+
     if request.method == 'GET':
         # 只做跳转，判断是否支付成功，不做订单的状态更新。
+        # 支付宝会将订单号返回：获取订单ID，然后根据订单ID做状态更新 + 认证。
+        # 支付宝公钥对支付给我返回的数据request.GET 进行检查，通过则表示这是支付宝返还的接口。
+        params = request.GET.dict()
+        sign = params.pop('sign', None)
+        status = ali_pay.verify(params, sign)
+        if status:
+            # 支付宝沙箱环境
+            '''
+            current_datetime = datetime.datetime.now()
+            out_trade_no = params['out_trade_no']
+            _object = models.Transaction.objects.filter(order=out_trade_no).first()
 
+            _object.status = 2
+            _object.start_datetime = current_datetime
+            _object.end_datetime = current_datetime + datetime.timedelta(days=365 * _object.count)
+            _object.save()
+            '''
+            ####
+
+            return HttpResponse('支付成功')
+        return HttpResponse('支付失败')
 
     else:
         # 做订单状态的更新
+        from urllib.parse import parse_qs
+        body_str = request.body.decode('utf-8')
+        post_data = parse_qs(body_str)
 
-        pass
+        post_dict = {}
+        for k, v in post_data.items():
+            post_dict[k] = v[0]
+
+        sign = post_dict.pop('sign', None)
+        status = ali_pay.verify(post_dict, sign)
+        if status:
+            current_datetime = datetime.datetime.now()
+            out_trade_no = post_dict['out_trade_no']
+            _object = models.Transaction.objects.filter(order=out_trade_no).first()
+
+            _object.status = 2
+            _object.start_datetime = current_datetime
+            _object.end_datetime = current_datetime + datetime.timedelta(days=365*_object.count)
+            _object.save()
+
+            return HttpResponse('success')
+
+        return HttpResponse('error')
 
 
-    return HttpResponse('666')
 
 
